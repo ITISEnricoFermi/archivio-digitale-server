@@ -1,0 +1,43 @@
+.popup {
+  background-color: rgba($color-black, 0.75);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+
+  &-box {
+    height: auto;
+    background-color: $color-white;
+    border: 1px solid $color-white-3;
+    border-radius: 1rem;
+    padding: 7vh;
+    position: absolute;
+    @include absCenter;
+  }
+
+  &-close {
+    position: absolute;
+    top: 2vh;
+    right: 2vh;
+    cursor: pointer;
+    font-size: 2rem;
+
+    i {
+      display: block;
+    }
+
+  }
+
+  &-title {
+    font-size: 2rem;
+    font-weight: lighter;
+  }
+
+  &-description {
+
+  }
+
+}

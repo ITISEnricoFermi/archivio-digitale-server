@@ -1,0 +1,20 @@
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: $font-default-1;
+  color: $color-tertiary;
+  -webkit-font-smoothing: antialiased; // se si vuole
+}
+
+.heading-primary {
+  font-size: 4rem;
+  font-weight: lighter;
+}
+
+.heading-secondary {
+
+}
+
+.heading-tertiary {
+  font-size: 2rem;
+  font-weight: lighter;
+}

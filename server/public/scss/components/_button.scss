@@ -1,0 +1,44 @@
+.module-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 3px;
+  border: none;
+  font-weight: bold;
+  color: $color-white;
+  padding: 0.9rem 0.8rem;
+  font-size: 1.4rem;
+  width: 100%;
+  cursor: pointer;
+
+  &--green {
+    background-color: $color-button-green;
+    border: 1px solid darken($color-button-green, 3%);
+
+    &:focus {
+      box-shadow: 0rem 0rem 0.75rem rgba($color-button-green, 0.7);
+    }
+
+  }
+
+  &--blue {
+    background-color: $color-button-blue;
+    border: 1px solid darken($color-button-blue, 3%);
+
+    &:focus {
+      box-shadow: 0rem 0rem 0.75rem rgba($color-button-blue, 0.7);
+    }
+
+  }
+
+  &--red {
+    background-color: $color-button-red;
+    border: 1px solid darken($color-button-red, 3%);
+
+    &:focus {
+      box-shadow: 0rem 0rem 0.75rem rgba($color-button-red, 0.7);
+    }
+
+  }
+
+}

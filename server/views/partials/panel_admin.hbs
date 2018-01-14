@@ -1,0 +1,66 @@
+<!-- PANEL ADMIN -->
+<div class="panel panel--admin">
+  <div class="module">
+    <div class="row">
+      <div class="col-1-of-1">
+        <div class="module__admin-request">
+          <p class="module__admin-request--name">Justin Timberlake</p>
+          <p class="module__admin-request--choice module__admin-request--choice--accept" data-tiporichiesta="1" data-idrichiesta="16" data-iduser="16">
+            <i class="fa fa-check" aria-hidden="true"></i>
+          </p>
+          <p class="module__admin-request--choice module__admin-request--choice--refuse" data-tiporichiesta="2" data-idrichiesta="16" data-iduser="16">
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="module">
+    <div class="row">
+      <div class="col-1-of-2">
+        <input type="text" id="admin__create-user--firstname" class="module-input-text" placeholder="Nome" autocomplete="off">
+      </div>
+      <div class="col-1-of-2">
+        <input type="text" id="admin__create-user--lastname" class="module-input-text" placeholder="Cognome" autocomplete="off">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-2">
+        <input type="email" id="admin__create-user--email" class="module-input-text" placeholder="Email" autocomplete="off">
+      </div>
+      <div class="col-1-of-2">
+        <input type="password" id="admin__create-user--password" class="module-input-text" placeholder="Password" autocomplete="off">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-2">
+        <select class="module-input-select" id="admin__create-user--privileges">
+          <option class="module-input-option" disabled>Privilegi</option>
+          <option class="module-input-option" value="1">Utente</option>
+          <option class="module-input-option" value="2">Admin</option>
+        </select>
+      </div>
+      <div class="col-1-of-2">
+        <button class="module-button module-button--green" id="admin__create-user--submit">Crea account</button>
+      </div>
+    </div>
+  </div>
+  <div class="module" id="module-admin-users-search">
+    <div class="row">
+      <div class="col-1-of-1">
+        <input type="text" class="module-input-text" placeholder="Cerca utenti" autocomplete="off" v-model="key" v-on:keyup="search">
+      </div>
+    </div>
+    <div class="row" v-for="user in users">
+      <div class="col-1-of-1">
+          <article class="module-admin-users-search-article">
+            <p class="module-admin-users-search-article--name u-margin-bottom-medium">\{{user.firstname}} \{{user.lastname}}</p>
+            <p class="module-admin-users-search-article--privileges u-margin-bottom-medium"></p>
+            <a v-bind:href="`mailto:${user.email}`" class="module-admin-users-search-article--email u-margin-bottom-medium"><span>Email: </span>\{{user.email}}</a>
+            <p class="module-admin-users-search-article--password-reset">Reimposta password</p>
+            <p class="module-admin-users-search-article--account-disable">Disattiva</p>
+          </article>
+      </div>
+    </div>
+  </div>
+</div>

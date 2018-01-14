@@ -1,0 +1,75 @@
+<!-- PANEL UPLOAD -->
+<div class="panel panel--upload">
+  <div class="module">
+    <div class="row">
+      <div class="col-1-of-1">
+        <input type="text" class="module-input-text" placeholder="Titolo" autocomplete="off" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-1">
+        <textarea class="module-input-textarea" placeholder="Descrizione"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="module-input-select-upload--type">
+          <option class="module-input-option" disabled selected>Tipo</option>
+          <option class="module-input-option" v-bind:value="type._id" v-for="type in types">
+            \{{ type.type }}
+          </option>
+        </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="module-input-select-upload--faculty">
+          <option class="module-input-option" disabled selected>Specializzazione</option>
+          <option class="module-input-option" v-bind:value="faculty._id" v-for="faculty in faculties">
+            \{{ faculty.faculty }}
+          </option>
+        </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="module-input-select-upload--subject">
+          <option class="module-input-option" disabled>Materia</option>
+          <optgroup class="module-input-optgroup" v-bind:label="faculty.faculty" v-for="faculty in faculties">
+            <option class="module-input-option" v-bind:value="subject._id" v-for="subject in faculty.subjects">
+              \{{ subject.subject }}
+            </option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-3">
+        <select class="module-input-select">
+          <option class="module-input-option" disabled selected>Classe</option>
+          <option class="module-input-option" value="1">1</option>
+          <option class="module-input-option" value="2">2</option>
+          <option class="module-input-option" value="3">3</option>
+          <option class="module-input-option" value="4">4</option>
+          <option class="module-input-option" value="5">5</option>
+        </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select">
+            <option class="module-input-option" disabled selected>Sezione</option>
+          </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select">
+          <option class="module-input-option" disabled selected>Visibilità</option>
+          <option class="module-input-option" value="1">Pubblico</option>
+          <option class="module-input-option" value="2">Area riservata</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-2">
+        <button class="module-button module-button--blue">Carica file</button>
+      </div>
+      <div class="col-1-of-2">
+        <button class="module-button module-button--green">Invia</button>
+      </div>
+    </div>
+  </div>
+</div>

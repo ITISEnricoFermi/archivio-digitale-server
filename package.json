@@ -1,0 +1,26 @@
+{
+  "name": "archivio",
+  "version": "1.0.0",
+  "description": "Archivio Digitale - ITIS Enrico Fermi",
+  "main": "server/server.js",
+  "scripts": {
+    "compile:scss": "node-sass server/public/scss/main.scss server/public/css/main.css -w",
+    "compile:scss-home": "node-sass server/public/scss/mainHome.scss server/public/css/mainHome.css -w"
+  },
+  "author": "Riccardo Sangiorgio",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
+    "hbs": "^4.0.1",
+    "jsonwebtoken": "^8.1.0",
+    "lodash": "^4.17.4",
+    "mongoose": "^5.0.0-rc2",
+    "validator": "^9.2.0"
+  },
+  "devDependencies": {
+    "node-sass": "^4.7.2"
+  }
+}

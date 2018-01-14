@@ -1,0 +1,33 @@
+.clearfix {
+
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+}
+
+.u-margin-bottom-big {
+  margin-bottom: 1.5rem;
+}
+
+.u-margin-bottom-medium {
+  margin-bottom: 1rem;
+}
+
+.u-margin-bottom-small {
+  margin-bottom: 0.5rem;
+}
+
+.u-margin-top-big {
+  margin-bottom: 1.5rem;
+}
+
+.u-margin-top-medium {
+  margin-bottom: 1rem;
+}
+
+.u-margin-top-small {
+  margin-bottom: 0.5rem;
+}

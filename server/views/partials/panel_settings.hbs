@@ -1,0 +1,46 @@
+<!-- PANEL SETTINGS -->
+<div class="panel panel--settings">
+  <div class="module">
+    <div class="row">
+      <div class="col-1-of-1">
+        <select class="module-input-select" id="module-input-select-settings--subject">
+          <option class="module-input-option" disabled>Materia</option>
+          <optgroup class="module-input-optgroup" v-bind:label="faculty.faculty" v-for="faculty in faculties">
+            <option class="module-input-option" v-bind:value="subject._id" v-for="subject in faculty.subjects">
+              \{{ subject.subject }}
+            </option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-2">
+        <input type="password" class="module-input-text" placeholder="Password attuale" autocomplete="off">
+      </div>
+      <div class="col-1-of-2">
+        <input type="password" class="module-input-text" placeholder="Nuova password" autocomplete="off">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-2">
+        <button class="module-button module-button--blue">Carica foto profilo</button>
+      </div>
+      <div class="col-1-of-2">
+        <button class="module-button module-button--green">Salva impostazioni</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-1">
+        <button class="module-button module-button--red">Elimina account</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-1">
+        <p class="module__info">
+          <span>L'account verrà disattivato. Puoi riattivarlo in qualunque momento contattando l'amministratore.</span>
+          <br/><span>Le tue pubblicazioni rimarranno sulla piattaforma.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

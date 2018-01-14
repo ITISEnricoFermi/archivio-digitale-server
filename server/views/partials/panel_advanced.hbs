@@ -1,0 +1,84 @@
+<!-- PANEL ADVANCED SEARCH -->
+<div class="panel panel--advanced-search" id="panel-advanced-search">
+  <div class="module">
+    <div class="row">
+      <div class="col-1-of-1">
+        <input type="text" class="module-input-text" id="advanced-search-name" placeholder="Titolo" autocomplete="off">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="advanced-search-type">
+          <option class="module-input-option" value="" disabled selected>Tipo</option>
+          <option class="module-input-option" v-bind:value="type._id" v-for="type in types">
+            \{{ type.type }}
+          </option>
+        </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="advanced-search-faculty">
+          <option class="module-input-option" value="" disabled selected>Specializzazione</option>
+          <option class="module-input-option" v-bind:value="faculty._id" v-for="faculty in faculties">
+            \{{ faculty.faculty }}
+          </option>
+        </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="advanced-search-subject">
+          <option class="module-input-option" value="" disabled>Materia</option>
+          <optgroup class="module-input-optgroup" v-bind:label="faculty.faculty" v-for="faculty in faculties">
+            <option class="module-input-option" v-bind:value="subject._id" v-for="subject in faculty.subjects">
+              \{{ subject.subject }}
+            </option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="advanced-search-class">
+          <option class="module-input-option" value="" disabled selected>Classe</option>
+          <option class="module-input-option" value=1>1</option>
+          <option class="module-input-option" value=2>2</option>
+          <option class="module-input-option" value=3>3</option>
+          <option class="module-input-option" value=4>4</option>
+          <option class="module-input-option" value=5>5</option>
+        </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="advanced-search-section">
+            <option class="module-input-option" value="" value="" disabled>Sezione</option>
+          </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="advanced-search-visibility">
+          <option class="module-input-option" value="" disabled selected>Visibilità</option>
+          <option class="module-input-option" value="1">Pubblico</option>
+          <option class="module-input-option" value="2">Area riservata</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div clas="col-1-of-1">
+        <button class="module-button module-button--green" v-on:click="search">Invia</button>
+      </div>
+    </div>
+  </div>
+  <div class="module module-advanced-search" v-if="documents">
+    <div class="row" v-for="document in documents">
+      <div class="col-1-of-1">
+        <article class="module-advanced-document-search-article">
+          <p class="module-advanced-document-search-article--name u-margin-bottom-medium">\{{document.name}}</p>
+          <p class="module-advanced-document-search-article--delete u-margin-bottom-medium">Elimina</p>
+          <p class="module-advanced-document-search-article--description u-margin-bottom-medium">\{{document.description}}</p>
+          <p class="module-advanced-document-search-article--info"><span>Tipo: </span>\{{document.type.type}}, <span>Specializzazione: </span>\{{document.faculty.faculty}}, <span>Materia: </span>\{{document.subject.subject}}, <span>Classe: </span>\{{document.class}}, <span>Sezione: </span>\{{document.section}}, <span>Pubblicato da: </span>\{{document.author.firstname}} \{{document.author.lastname}}</p>
+        </article>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-1" v-if="documents.length === 0">
+        <p class="">Nessun risultato</p>
+      </div>
+    </div>
+  </div>
+</div>

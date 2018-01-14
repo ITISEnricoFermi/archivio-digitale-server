@@ -1,0 +1,132 @@
+main {
+  width: 100%;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 3fr 2fr;
+  grid-template-areas: "search login";
+}
+
+.section-search {
+  background-color: $color-white-2;
+  height: 100vh;
+  position: relative;
+  grid-area: search;
+  width: 100%;
+
+  & > * {
+    padding: 8rem;
+  }
+
+  .header {
+
+    .logo {
+      height: 6rem;
+    }
+
+  }
+
+  .search-box {
+    width: 100%;
+    position: absolute;
+    @include absCenter;
+
+  }
+
+  .footer {
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 3rem;
+
+    ul {
+
+      li {
+        display: inline-block;
+        list-style: none;
+
+        a {
+          color: $color-grey-1;
+          text-decoration: none;
+          text-transform: uppercase;
+          padding: 1rem 1.5rem;
+          font-size: 1.4rem;
+          font-weight: bold;
+
+        }
+
+      }
+
+    }
+
+  }
+
+}
+
+.section-login {
+  background-color: $color-primary;
+  height: 100vh;
+  position: relative;
+  grid-area: login;
+  color: $color-white;
+  display: table;
+  width: 100%;
+
+  .login-box {
+    padding: 8rem;
+    display: table-cell;
+    vertical-align: middle;
+
+    &__email-field {
+      border-color: $color-white;
+
+      &::placeholder {
+        color: $color-white;
+      }
+
+    }
+
+    &__password-field {
+      border-color: $color-white;
+
+      &::placeholder {
+        color: $color-white;
+      }
+
+    }
+
+    &__submit {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      box-sizing: border-box;
+      background-color: $color-white;
+      color: $color-primary;
+      font-weight: bold;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 0px;
+      outline: none;
+      transition: all 0.5s ease;
+      cursor: pointer;
+      margin-right: 0.5rem;
+
+      &:hover {
+        color: $color-white;
+        background-color: $color-tertiary;
+      }
+
+    }
+
+    &__forgot {
+      display: inline-block;
+      text-decoration: none;
+      font-weight: lighter;
+      font-size: 12px;
+      margin: 5px;
+      color: $color-white;
+    }
+
+  }
+
+}
