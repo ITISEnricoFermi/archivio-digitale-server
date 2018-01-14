@@ -30,42 +30,18 @@ popUpClose.addEventListener("click", function() {
 
 // PANEL UPLOAD
 
-var moduleInputSelectUploadType = new Vue({
-  el: '#module-input-select-upload--type',
+var panelUpload = new Vue({
+  el: "#panel-upload",
   created() {
-    axios.post(`/api/getDocumentTypes/`)
+    axios.post("/api/getDocumentTypes/")
       .then((response) => {
         this.types = response.data
       })
       .catch((e) => {
         this.errors.push(e)
-      })
-  },
-  data: {
-    types: ""
-  }
-});
+      });
 
-var moduleInputSelectsUploadFaculty = new Vue({
-  el: '#module-input-select-upload--faculty',
-  created() {
-    axios.post(`/api/getFaculties/`)
-      .then((response) => {
-        this.faculties = response.data
-      })
-      .catch((e) => {
-        this.errors.push(e)
-      })
-  },
-  data: {
-    faculties: ""
-  }
-});
-
-var moduleInputSelectsUploadSubject = new Vue({
-  el: '#module-input-select-upload--subject',
-  created() {
-    axios.post(`/api/getFaculties/`)
+    axios.post("/api/getFaculties/")
       .then((response) => {
         this.faculties = response.data
       })
@@ -73,8 +49,24 @@ var moduleInputSelectsUploadSubject = new Vue({
         this.errors.push(e)
       });
   },
+  methods: {
+    changeFaculty: function() {
+      axios.post("/api/getSubjectsByFaculty/", {
+          _id: this.selectedFaculty
+        })
+        .then((response) => {
+          this.subjects = response.data
+        })
+        .catch((e) => {
+          this.errors.push(e)
+        });
+    }
+  },
   data: {
-    faculties: ""
+    types: "",
+    faculties: "",
+    selectedFaculty: "",
+    subjects: ""
   }
 });
 
@@ -83,7 +75,7 @@ var moduleInputSelectsUploadSubject = new Vue({
 var panelAdvancedSearch = new Vue({
   el: "#panel-advanced-search",
   created() {
-    axios.post(`/api/getFaculties/`)
+    axios.post("/api/getFaculties/")
       .then((response) => {
         this.faculties = response.data
       })
@@ -91,7 +83,7 @@ var panelAdvancedSearch = new Vue({
         this.errors.push(e)
       });
 
-    axios.post(`/api/getDocumentTypes/`)
+    axios.post("/api/getDocumentTypes/")
       .then((response) => {
         this.types = response.data
       })
@@ -112,36 +104,50 @@ var panelAdvancedSearch = new Vue({
         })
         .then((response) => {
           this.documents = response.data
-          console.log(this.documents);
         })
         .catch((e) => {
-          console.log(e);
+          this.erros.push(e);
+        });
+    },
+
+    changeFaculty: function() {
+      axios.post("/api/getSubjectsByFaculty/", {
+          _id: this.selectedFaculty
+        })
+        .then((response) => {
+          this.subjects = response.data
+        })
+        .catch((e) => {
+          this.errors.push(e)
         });
     }
+
   },
   data: {
     faculties: "",
     types: "",
-    documents: ""
+    documents: "",
+    selectedFaculty: "",
+    subjects: ""
   }
 });
 
 
 // PANEL ADMIN
 
-var moduleAdminUsersSearch = new Vue({
-  el: '#module-admin-users-search',
+var panelAdmin = new Vue({
+  el: "#panel-admin",
   data: {
-    key: "Riccardo",
+    key: "",
     users: ""
   },
   methods: {
     search: function() {
-      axios.post(`/admin/getUsers/`, {
+      axios.post("/admin/getUsers/", {
           key: this.key
         })
         .then((response) => {
-          this.users = response.data
+          this.users = response.data;
         })
         .catch((e) => {
           this.errors.push(e)
@@ -153,9 +159,9 @@ var moduleAdminUsersSearch = new Vue({
 // PANEL SETTINGS
 
 var moduleInputSelectsSettingsSubject = new Vue({
-  el: '#module-input-select-settings--subject',
+  el: "#module-input-select-settings--subject",
   created() {
-    axios.post(`/api/getFaculties/`)
+    axios.post("/api/getFaculties/")
       .then((response) => {
         this.faculties = response.data
       })

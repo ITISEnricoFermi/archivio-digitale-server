@@ -44,11 +44,15 @@ const {
   updateInformations
 } = require("./functions/settings");
 
+// Routes
+const admin = require("./routes/admin");
+
 var app = express();
 
 const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use("/admin", admin);
 
 hbs.registerPartials(__dirname + "/views/partials/");
 
@@ -132,28 +136,7 @@ app.post("/settings/updateInformations", authenticate, (req, res) => {
   });
 });
 
-app.post("/admin/createUser", (req, res) => {
-  console.log(req.body);
-  var body = _.pick(req.body, ["firstname", "lastname", "email", "password", "privileges"]);
-  var user = new User(body);
 
-  user.save().then((user) => {
-    res.status(200).send(user);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
-
-});
-
-app.post("/admin/getUsers", (req, res) => {
-
-  User.findUser(req.body.key).then((users) => {
-    res.status(200).send(users);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
-
-});
 
 app.post("/api/getFaculties", authenticate, (req, res) => {
   Faculty.getFaculties().then((faculties) => {
@@ -211,9 +194,17 @@ app.post("/api/getDocument/", (req, res) => {
   Document.findDocumentById(req.body._id).then((document) => {
     res.status(200).send(document);
   }).catch((e) => {
-    res.status(401).send(2);
+    res.status(401).send(e);
   });
 
+});
+
+app.post("/api/getSubjectsByFaculty", (req, res) => {
+  Faculty.getSubjectsByFaculty(req.body._id).then((subjects) => {
+    res.status(200).send(subjects);
+  }).catch((e) => {
+    res.status(401).send(e);
+  });
 });
 
 app.listen(port, () => {

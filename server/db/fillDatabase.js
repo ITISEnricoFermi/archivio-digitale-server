@@ -32,24 +32,16 @@ var facultyArray = [{
   faculty: "Biennio",
   subjects: ["phy", "chm", "ttrg", "it", "sta", "sci", "bio", "diritto", "geo"]
 }, {
-  _id: "informatica",
-  faculty: "Informatica",
+  _id: "infTlc",
+  faculty: "Informatica e Telecomunicazioni",
   subjects: ["sysnet", "tpsit", "gpo", "informatica", "tlc"]
 }, {
-  _id: "telecomunicazioni",
-  faculty: "Telecomunicazioni",
-  subjects: ["sysnet", "tpsit", "gpo", "informatica", "tlc"]
-}, {
-  _id: "automazione",
-  faculty: "Automazione",
+  _id: "eleAuto",
+  faculty: "Elettronica, Elettrotecnica e Automazione",
   subjects: ["tpsee", "elettronica", "sysaut"]
 }, {
-  _id: "elettronica",
-  faculty: "Elettronica",
-  subjects: ["tpsee", "elettronica", "sysaut"]
-}, {
-  _id: "energia",
-  faculty: "Energia",
+  _id: "mecEne",
+  faculty: "Meccanica e meccatronica ed Energia",
   subjects: ["meccanica", "sysandaut", "tmpp", "iedp"]
 }];
 

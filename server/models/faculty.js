@@ -38,6 +38,19 @@ FacultySchema.statics.getFaculties = function() {
 
 };
 
+FacultySchema.statics.getSubjectsByFaculty = function(facultyId) {
+  var Faculty = this;
+
+  return Faculty.findById(facultyId)
+    .populate("subjects")
+    .then((results) => {
+      return Promise.resolve(results.subjects);
+    }, (e) => {
+      return Promise.reject(e);
+    });
+
+};
+
 var Faculty = mongoose.model("Faculty", FacultySchema);
 
 module.exports = {

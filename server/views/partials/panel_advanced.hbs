@@ -16,7 +16,7 @@
         </select>
       </div>
       <div class="col-1-of-3">
-        <select class="module-input-select" id="advanced-search-faculty">
+        <select class="module-input-select" id="upload-faculty" v-model="selectedFaculty" v-on:change="changeFaculty">
           <option class="module-input-option" value="" disabled selected>Specializzazione</option>
           <option class="module-input-option" v-bind:value="faculty._id" v-for="faculty in faculties">
             \{{ faculty.faculty }}
@@ -25,12 +25,10 @@
       </div>
       <div class="col-1-of-3">
         <select class="module-input-select" id="advanced-search-subject">
-          <option class="module-input-option" value="" disabled>Materia</option>
-          <optgroup class="module-input-optgroup" v-bind:label="faculty.faculty" v-for="faculty in faculties">
-            <option class="module-input-option" v-bind:value="subject._id" v-for="subject in faculty.subjects">
+          <option class="module-input-option" value="" disabled selected>Materia</option>
+            <option class="module-input-option" v-bind:value="subject._id" v-for="subject in subjects">
               \{{ subject.subject }}
             </option>
-          </optgroup>
         </select>
       </div>
     </div>
@@ -75,9 +73,9 @@
         </article>
       </div>
     </div>
-    <div class="row">
-      <div class="col-1-of-1" v-if="documents.length === 0">
-        <p class="">Nessun risultato</p>
+    <div class="row" v-if="documents.length === 0">
+      <div class="col-1-of-1">
+        <p class="module-advanced-document-search-noresults">Nessun risultato</p>
       </div>
     </div>
   </div>
