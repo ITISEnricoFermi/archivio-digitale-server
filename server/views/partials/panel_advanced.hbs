@@ -16,7 +16,7 @@
         </select>
       </div>
       <div class="col-1-of-3">
-        <select class="module-input-select" id="upload-faculty" v-model="selectedFaculty" v-on:change="changeFaculty">
+        <select class="module-input-select" id="advanced-search-faculty" v-model="selectedFaculty" v-on:change="changeFaculty">
           <option class="module-input-option" value="" disabled selected>Specializzazione</option>
           <option class="module-input-option" v-bind:value="faculty._id" v-for="faculty in faculties">
             \{{ faculty.faculty }}
