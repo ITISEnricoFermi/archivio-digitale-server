@@ -160,13 +160,13 @@ subjectArray.forEach((subject) => {
 
 });
 
-// documentTypeArray.forEach((documentType) => {
-//   var documentTypeToInsert = new DocumentType(documentType);
-//
-//   documentTypeToInsert.save().then((documentType) => {
-//     return documentType;
-//   }).catch((e) => {
-//     return e;
-//   });
-//
-// });
+documentTypeArray.forEach((documentType) => {
+  var documentTypeToInsert = new DocumentType(documentType);
+
+  documentTypeToInsert.save().then((documentType) => {
+    return documentType;
+  }).catch((e) => {
+    return e;
+  });
+
+});
