@@ -176,6 +176,18 @@ DocumentSchema.statics.searchDocuments = function(search) {
       path: "subject",
       select: "subject"
     })
+    .populate({
+      path: "DocumentVisibility",
+      select: "visibility"
+    })
+    .populate({
+      path: "Class",
+      select: "class"
+    })
+    .populate({
+      path: "Section",
+      select: "section"
+    })
     .limit(10)
     .then((results) => {
       return Promise.resolve(results);
@@ -202,6 +214,14 @@ DocumentSchema.statics.findDocumentById = function(id) {
     .populate({
       path: "DocumentVisibility",
       select: "visibility"
+    })
+    .populate({
+      path: "Class",
+      select: "class"
+    })
+    .populate({
+      path: "Section",
+      select: "section"
     }).then((document) => {
       return Promise.resolve(document);
     }, (e) => {

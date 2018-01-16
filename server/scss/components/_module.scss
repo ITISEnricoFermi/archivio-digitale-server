@@ -20,6 +20,10 @@
     display: table;
     width: 100%;
 
+    &:not(:last-child) {
+      border-bottom: 1px solid $color-white-4;
+    }
+
     &--name {
       display: table-cell;
       vertical-align: middle;

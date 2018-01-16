@@ -3,8 +3,8 @@
   <div class="module">
     <div class="row">
       <div class="col-1-of-1">
-        <div class="module__admin-request">
-          <p class="module__admin-request--name">Justin Timberlake</p>
+        <div class="module__admin-request" v-for="request in requests">
+          <p class="module__admin-request--name">\{{ request.userId.firstname }} \{{ request.userId.lastname }}</p>
           <p class="module__admin-request--choice module__admin-request--choice--accept" data-tiporichiesta="1" data-idrichiesta="16" data-iduser="16">
             <i class="fa fa-check" aria-hidden="true"></i>
           </p>

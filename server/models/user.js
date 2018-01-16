@@ -63,15 +63,15 @@ var UserSchema = new mongoose.Schema({
   }],
   privileges: {
     type: String,
-    required: true,
+    required: false,
     trim: true,
     minlength: 1,
     unique: false,
     default: "user",
-    validate: {
-      validator: validator.isAlpha,
-      message: "{VALUE} non è un privilegio valido."
-    },
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: "{VALUE} non è un privilegio valido."
+    // },
     ref: "Privilege"
   },
   tokens: [{

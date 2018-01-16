@@ -1,4 +1,4 @@
-function openTab() {
+function openTab(event) {
 
   var li = this;
   var tabName = li.getAttribute("data-tab");

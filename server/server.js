@@ -63,6 +63,7 @@ const upload = require("./routes/upload");
 const search = require("./routes/search");
 const api = require("./routes/api");
 const documents = require("./routes/documents");
+const signup = require("./routes/signup");
 
 var app = express();
 
@@ -82,6 +83,7 @@ app.use("/upload", upload);
 app.use("/search", search);
 app.use("/api", api);
 app.use("/documents", documents);
+app.use("/signup", signup);
 
 hbs.registerPartials(__dirname + "/views/partials/");
 
@@ -96,26 +98,8 @@ app.set("view engine", "hbs");
 
 app.get("/", authenticate, (req, res) => {
   res.render("index", {
-    pageTitle: "Archivio Digitale - ITIS Enrico Fermi",
-    faculties: Faculty.getFaculties()
+    pageTitle: "Archivio Digitale - ITIS Enrico Fermi"
   });
-});
-
-
-
-app.post("/signup", (req, res) => {
-
-  var body = _.pick(req.body, ["firstname", "lastname", "email", "password"]);
-  var user = new User(body);
-
-  user.save().then((user) => {
-    return user.generateAuthToken();
-  }).then((token) => {
-    res.header("x-auth", token).send(user);
-  }).catch((e) => {
-    res.status(400).send(e);
-  });
-
 });
 
 app.post("/login", (req, res) => {
@@ -180,16 +164,6 @@ app.post("/api/createDocument", (req, res) => {
   var document = new Document(body);
 
   document.save().then((document) => {
-    res.status(200).send(document);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
-
-});
-
-app.post("/api/getDocument/", (req, res) => {
-
-  Document.findDocumentById(req.body._id).then((document) => {
     res.status(200).send(document);
   }).catch((e) => {
     res.status(401).send(e);

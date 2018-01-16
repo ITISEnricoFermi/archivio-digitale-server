@@ -237,72 +237,6 @@ body {
     .module-button--red:focus {
       box-shadow: 0rem 0rem 0.75rem rgba(255, 68, 71, 0.7); }
 
-.popup {
-  background-color: rgba(0, 0, 0, 0.75);
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  visibility: hidden; }
-  .popup-box {
-    height: auto;
-    background-color: #FFFFFF;
-    border: 1px solid #EAEAEA;
-    border-radius: 1rem;
-    padding: 7vh;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); }
-  .popup-close {
-    position: absolute;
-    top: 2vh;
-    right: 2vh;
-    cursor: pointer;
-    font-size: 2rem; }
-    .popup-close i {
-      display: block; }
-  .popup-title {
-    font-size: 2rem;
-    font-weight: lighter; }
-
-.menu-left {
-  background-color: #1A8D4C;
-  position: relative; }
-  .menu-left__header {
-    display: table;
-    padding: 5rem; }
-    .menu-left__header .menu-left__logo {
-      width: 90%;
-      display: table-cell;
-      vertical-align: middle;
-      margin: 0 auto; }
-  .menu-left__main .menu-left__li {
-    color: #FFFFFF;
-    padding: 2rem;
-    width: 100%;
-    display: block;
-    font-weight: bold;
-    cursor: pointer; }
-    .menu-left__main .menu-left__li--active, .menu-left__main .menu-left__li:hover {
-      background-color: #166c43; }
-    .menu-left__main .menu-left__li span:first-child {
-      margin: 1rem; }
-  .menu-left__footer {
-    font-size: 1.3rem;
-    color: #FFFFFF;
-    text-align: center;
-    position: absolute;
-    bottom: 0rem;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 2rem;
-    width: 100%; }
-    .menu-left__footer--a {
-      color: #FFFFFF; }
-
 .row {
   max-width: 100%;
   margin: 0 auto; }
@@ -332,25 +266,3 @@ body {
     width: calc(((100% - 1rem * 3) / 4) * 3 + 1rem * 2); }
   .row .col-1-of-5 {
     width: calc((100% - 1rem * 4) / 5); }
-
-body {
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: 250px auto;
-  grid-template-areas: "menu main";
-  background-color: #F7F7F7; }
-
-main {
-  grid-area: main;
-  overflow-y: scroll; }
-
-.menu-left {
-  grid-area: menu; }
-
-.panel {
-  display: none;
-  width: 100%;
-  height: 100%;
-  font-size: 1.4rem;
-  padding: 3vh;
-  overflow-y: scroll; }

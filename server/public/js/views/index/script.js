@@ -184,7 +184,8 @@ var panelAdmin = new Vue({
   data: {
     key: "",
     users: "",
-    privileges: ""
+    privileges: "",
+    requests: []
   },
   created() {
     axios.post("/api/getPrivileges")
@@ -192,6 +193,14 @@ var panelAdmin = new Vue({
         this.privileges = response.data;
       })
       .catch((e) =>  {
+        this.errors.push(e);
+      });
+
+    axios.post("/admin/getRequests")
+      .then((response) => {
+        this.requests = response.data;
+      })
+      .catch((e) => {
         this.errors.push(e);
       });
   },

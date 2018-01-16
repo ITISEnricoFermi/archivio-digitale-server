@@ -13,6 +13,10 @@ const {
   User
 } = require("./../models/user");
 
+const {
+  Request
+} = require("./../models/request");
+
 router.post("/createUser", (req, res) => {
   console.log(req.body);
   var body = _.pick(req.body, ["firstname", "lastname", "email", "password", "privileges"]);
@@ -34,6 +38,16 @@ router.post("/getUsers", (req, res) => {
     res.status(401).send(e);
   });
 
+});
+
+router.post("/getRequests", (req, res) => {
+
+  Request.getRequests()
+    .then((requests) => {
+      res.status(200).send(requests);
+    }).catch((e) => {
+      res.status(400).send(e);
+    });
 });
 
 module.exports = router;

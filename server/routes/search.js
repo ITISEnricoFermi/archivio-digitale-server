@@ -26,5 +26,15 @@ router.post("/searchDocuments", (req, res) => {
 
 });
 
+router.post("/getDocumentById/", (req, res) => {
+
+  Document.findDocumentById(req.body._id).then((document) => {
+    res.status(200).send(document);
+  }).catch((e) => {
+    res.status(401).send(e);
+  });
+
+});
+
 
 module.exports = router;
