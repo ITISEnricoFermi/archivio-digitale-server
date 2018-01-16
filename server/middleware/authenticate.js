@@ -1,4 +1,5 @@
 const cookieParser = require("cookie-parser");
+const _ = require('lodash');
 
 var {
   User
@@ -18,7 +19,7 @@ var authenticate = (req, res, next) => {
       return Promise.reject();
     }
 
-    req.user = user;
+    req.user = _.pick(user, ["_id", "firstname", "lastname", "email"]);
     req.token = token;
     next();
 

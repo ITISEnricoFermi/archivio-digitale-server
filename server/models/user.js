@@ -48,13 +48,31 @@ var UserSchema = new mongoose.Schema({
     minlength: 1,
     default: "profile.jpg"
   },
-  privileges: {
-    type: Number,
+  accesses: [{
+    _id: {
+      type: String,
+      required: false,
+      trim: true,
+      minlength: 1,
+      validate: {
+        validator: validator.isAlpha,
+        message: "{VALUE} non è un accesso valido."
+      },
+      ref: "Subject"
+    }
+  }],
+  privleges: {
+    type: String,
     required: true,
     trim: true,
     minlength: 1,
-    maxlength: 1,
-    default: 1
+    unique: false,
+    default: "user",
+    validate: {
+      validator: validator.isAlpha,
+      message: "{VALUE} non è un privilegio valido."
+    },
+    ref: "Privilege"
   },
   tokens: [{
     access: {

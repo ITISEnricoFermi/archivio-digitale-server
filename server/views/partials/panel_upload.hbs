@@ -51,13 +51,13 @@
       <div class="col-1-of-3">
         <select class="module-input-select" id="upload-section">
             <option class="module-input-option" value="" disabled selected>Sezione</option>
+            <option class="modile-input-option" v-for="section in sections" v-bind:value="section._id">\{{section.section}}</option>
           </select>
       </div>
       <div class="col-1-of-3">
         <select class="module-input-select" id="upload-visibility">
           <option class="module-input-option" value="" disabled selected>Visibilità</option>
-          <option class="module-input-option" value="1">Pubblico</option>
-          <option class="module-input-option" value="2">Area riservata</option>
+          <option class="module-input-option" v-for="visibility in visibilities" v-bind:value="visibility._id">\{{visibility.visibility}}</option>
         </select>
       </div>
     </div>

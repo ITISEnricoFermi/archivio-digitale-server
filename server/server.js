@@ -1,4 +1,5 @@
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
 const _ = require("lodash");
@@ -19,6 +20,10 @@ const {
 } = require("./models/user");
 
 const {
+  Document
+} = require("./models/document");
+
+const {
   Faculty
 } = require("./models/faculty");
 
@@ -27,12 +32,20 @@ const {
 } = require("./models/subject");
 
 const {
-  Document
-} = require("./models/document");
+  Class
+} = require("./models/class");
+
+const {
+  Section
+} = require("./models/section");
 
 const {
   DocumentType
 } = require("./models/document_type");
+
+const {
+  DocumentVisibility
+} = require("./models/document_visibility");
 
 // Middleware
 const {
@@ -46,17 +59,39 @@ const {
 
 // Routes
 const admin = require("./routes/admin");
+const upload = require("./routes/upload");
+const search = require("./routes/search");
+const api = require("./routes/api");
+const documents = require("./routes/documents");
 
 var app = express();
 
 const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(fileUpload({
+  limits: {
+    fileSize: 1024 * 1024 * 100
+  },
+  safeFileNames: true
+}));
+
+// Routes
 app.use("/admin", admin);
+app.use("/upload", upload);
+app.use("/search", search);
+app.use("/api", api);
+app.use("/documents", documents);
 
 hbs.registerPartials(__dirname + "/views/partials/");
 
+
+app.get("/documents/*", authenticate, (req, res) => {
+  console.log(req.params.file);
+});
+
 app.use(express.static(__dirname + "/public"));
+
 app.set("view engine", "hbs");
 
 app.get("/", authenticate, (req, res) => {
@@ -65,6 +100,8 @@ app.get("/", authenticate, (req, res) => {
     faculties: Faculty.getFaculties()
   });
 });
+
+
 
 app.post("/signup", (req, res) => {
 
@@ -137,23 +174,6 @@ app.post("/settings/updateInformations", authenticate, (req, res) => {
 });
 
 
-
-app.post("/api/getFaculties", authenticate, (req, res) => {
-  Faculty.getFaculties().then((faculties) => {
-    res.status(200).send(faculties);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
-});
-
-app.post("/api/getDocumentTypes", (req, res) => {
-  DocumentType.getDocumentTypes().then((documentTypes) => {
-    res.status(200).send(documentTypes);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
-});
-
 app.post("/api/getDocuments", (req, res) => {
   Document.getDocuments().then((documents) => {
     res.status(200).send(documents);
@@ -162,22 +182,9 @@ app.post("/api/getDocuments", (req, res) => {
   });
 });
 
-app.post("/api/searchAdvancedDocuments", (req, res) => {
-
-  var body = _.pick(req.body, ["name", "type", "faculty", "subject", "class", "section", "visibility"]);
-
-  Document.searchAdvancedDocuments(body)
-    .then((documents) => {
-      res.status(200).send(documents);
-    }).catch((e) => {
-      res.status(401).send(e);
-    });
-
-});
-
 app.post("/api/createDocument", (req, res) => {
 
-  var body = _.pick(req.body, ["name", "type", "author", "faculty", "subject", "class", "section", "description", "directory"]);
+  var body = _.pick(req.body, ["name", "type", "author", "faculty", "subject", "class", "section", "description", "directory", "visibility"]);
 
   var document = new Document(body);
 
@@ -197,14 +204,6 @@ app.post("/api/getDocument/", (req, res) => {
     res.status(401).send(e);
   });
 
-});
-
-app.post("/api/getSubjectsByFaculty", (req, res) => {
-  Faculty.getSubjectsByFaculty(req.body._id).then((subjects) => {
-    res.status(200).send(subjects);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
 });
 
 app.listen(port, () => {

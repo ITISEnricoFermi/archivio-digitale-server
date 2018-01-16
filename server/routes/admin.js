@@ -3,6 +3,12 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const _ = require("lodash");
 
+// Middleware
+const {
+  authenticate
+} = require("./../middleware/authenticate");
+
+// Models
 const {
   User
 } = require("./../models/user");

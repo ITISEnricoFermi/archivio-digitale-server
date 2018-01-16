@@ -8,6 +8,10 @@ const {
 
 // Models
 const {
+  Document
+} = require("./../models/document");
+
+const {
   Faculty
 } = require("./../models/faculty");
 
@@ -16,12 +20,24 @@ const {
 } = require("./../models/subject");
 
 const {
-  Document
-} = require("./../models/document");
-
-const {
   DocumentType
 } = require("./../models/document_type");
+
+const {
+  Class
+} = require("./../models/class");
+
+const {
+  Section
+} = require("./../models/section");
+
+const {
+  Privilege
+} = required("./../models/privilege");
+
+const {
+  DocumentVisibility
+} = require("./../models/document_visibility");
 
 var facultyArray = [{
   _id: "comune",
@@ -142,31 +158,161 @@ var documentTypeArray = [{
   type: "Prove comuni"
 }];
 
-facultyArray.forEach((faculty) => {
-  var facultyToInsert = new Faculty(faculty);
+var classArray = [{
+  _id: 1,
+  class: 1
+}, {
+  _id: 2,
+  class: 2
+}, {
+  _id: 3,
+  class: 3
+}, {
+  _id: 4,
+  class: 4
+}, {
+  _id: 5,
+  class: 5
+}];
 
-  facultyToInsert.save().then((faculty) => {
-    return faculty;
-  });
+var sectionArray = [{
+  _id: "a",
+  section: "A"
+}, {
+  _id: "b",
+  section: "B"
+}, {
+  _id: "c",
+  section: "C"
+}, {
+  _id: "d",
+  section: "D"
+}, {
+  _id: "e",
+  section: "E"
+}, {
+  _id: "f",
+  section: "F"
+}, {
+  _id: "g",
+  section: "G"
+}, {
+  _id: "h",
+  section: "H"
+}, {
+  _id: "i",
+  section: "I"
+}, {
+  _id: "l",
+  section: "L"
+}, {
+  _id: "m",
+  section: "M"
+}, {
+  _id: "n",
+  section: "N"
+}, {
+  _id: "o",
+  section: "O"
+}, {
+  _id: "p",
+  section: "P"
+}, {
+  _id: "q",
+  section: "Q"
+}];
 
-});
+var documentVisibilityArray = [{
+  _id: "pubblico",
+  visibility: "Pubblico"
+}, {
+  _id: "areariservata",
+  visibility: "Area riservata"
+}, {
+  _id: "materia",
+  visibility: "Per materia"
+}];
 
-subjectArray.forEach((subject) => {
-  var subjectToInsert = new Subject(subject);
+var privilegeArray = [{
+  _id: "user",
+  privilege: "Utente"
+}, {
+  _id: "admin",
+  privilege: "Admin"
+}];
 
-  subjectToInsert.save().then((subject) => {
-    return subject;
-  });
 
-});
+// documentVisibilityArray.forEach((visibility) => {
+//   var documentVisibilityToInsert = new DocumentVisibility(visibility);
+//
+//   documentVisibilityToInsert.save().then((visibility) => {
+//     return visibility;
+//   }).catch((e) => {
+//     return e;
+//   });
+//
+// });
 
-documentTypeArray.forEach((documentType) => {
-  var documentTypeToInsert = new DocumentType(documentType);
+privilegeArray.forEach((privilege) => {
+  var privlegeToInsert = new Privlege(privilege);
 
-  documentTypeToInsert.save().then((documentType) => {
-    return documentType;
+  privlegeToInsert.save().then((privilege) => {
+    return privilege;
   }).catch((e) => {
     return e;
   });
 
-});
+})
+
+
+
+// classArray.forEach((classObj) => {
+//   var classToInsert = new Class(classObj);
+//
+//   classToInsert.save().then((classObj) => {
+//     return classObj;
+//   }).catch((e) => {
+//     return e;
+//   });
+//
+// });
+
+// sectionArray.forEach((section) => {
+//   var sectionToInsert = new Section(section);
+//
+//   sectionToInsert.save().then((section) => {
+//     return section;
+//   }).catch((e) => {
+//     return e;
+//   });
+//
+// });
+
+// facultyArray.forEach((faculty) => {
+//   var facultyToInsert = new Faculty(faculty);
+//
+//   facultyToInsert.save().then((faculty) => {
+//     return faculty;
+//   });
+//
+// });
+//
+// subjectArray.forEach((subject) => {
+//   var subjectToInsert = new Subject(subject);
+//
+//   subjectToInsert.save().then((subject) => {
+//     return subject;
+//   });
+//
+// });
+//
+// documentTypeArray.forEach((documentType) => {
+//   var documentTypeToInsert = new DocumentType(documentType);
+//
+//   documentTypeToInsert.save().then((documentType) => {
+//     return documentType;
+//   }).catch((e) => {
+//     return e;
+//   });
+//
+// });

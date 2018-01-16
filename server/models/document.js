@@ -50,7 +50,8 @@ var DocumentSchema = new mongoose.Schema({
       minlength: 1,
       maxlength: 1,
       unique: false,
-      trim: true
+      trim: true,
+      ref: "Class"
   },
   section: {
     type: String,
@@ -61,7 +62,20 @@ var DocumentSchema = new mongoose.Schema({
     validate: {
       validator: validator.isAlpha,
       message: "{VALUE} non è una sezione valida."
-    }
+    },
+    ref: "Section"
+  },
+  visibility: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 1,
+    unique: false,
+    validate: {
+      validator: validator.isAlpha,
+      message: "{VALUE} non è un criterio di visibilità valido."
+    },
+    ref: "DocumentVisibility"
   },
   description: {
     type: String,
@@ -184,6 +198,10 @@ DocumentSchema.statics.findDocumentById = function(id) {
     .populate({
       path: "subject",
       select: "subject"
+    })
+    .populate({
+      path: "DocumentVisibility",
+      select: "visibility"
     }).then((document) => {
       return Promise.resolve(document);
     }, (e) => {
