@@ -13,11 +13,11 @@ const {
   Document
 } = require("./../models/document");
 
-router.post("/searchAdvancedDocuments", (req, res) => {
+router.post("/searchDocuments", (req, res) => {
 
   var body = _.pick(req.body, ["name", "type", "faculty", "subject", "class", "section", "visibility"]);
 
-  Document.searchAdvancedDocuments(body)
+  Document.searchDocuments(body)
     .then((documents) => {
       res.status(200).send(documents);
     }).catch((e) => {

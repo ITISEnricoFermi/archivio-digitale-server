@@ -104,7 +104,7 @@ DocumentSchema.statics.getDocuments = function() {
 
 };
 
-DocumentSchema.statics.searchAdvancedDocuments = function(search) {
+DocumentSchema.statics.searchDocuments = function(search) {
   var Document = this;
 
   var andQuery = [];

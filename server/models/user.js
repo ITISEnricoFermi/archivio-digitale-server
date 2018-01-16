@@ -61,7 +61,7 @@ var UserSchema = new mongoose.Schema({
       ref: "Subject"
     }
   }],
-  privleges: {
+  privileges: {
     type: String,
     required: true,
     trim: true,

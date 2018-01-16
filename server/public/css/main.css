@@ -140,25 +140,25 @@ body {
     .module-admin-users-search-article--account-disable {
       color: #FF4447;
       margin-left: 1rem; }
-  .module-advanced-document-search-article {
+  .module-document-search-article {
     text-align: left;
     padding: 1rem; }
-    .module-advanced-document-search-article--name {
+    .module-document-search-article--name {
       font-size: 1.6rem;
       display: inline-block;
       text-decoration: underline; }
-    .module-advanced-document-search-article--delete {
+    .module-document-search-article--delete {
       color: #FF4447;
       display: inline-block;
       text-decoration: underline; }
-    .module-advanced-document-search-article--description {
+    .module-document-search-article--description {
       font-size: 1.3rem;
       color: #53585E;
       display: block; }
-    .module-advanced-document-search-article--info {
+    .module-document-search-article--info {
       font-size: 1.3rem;
       display: block; }
-      .module-advanced-document-search-article--info span {
+      .module-document-search-article--info span {
         font-weight: bold; }
 
 .module-input-text {

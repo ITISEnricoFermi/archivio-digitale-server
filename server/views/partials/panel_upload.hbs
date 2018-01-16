@@ -41,18 +41,18 @@
       <div class="col-1-of-3">
         <select class="module-input-select" id="upload-class">
           <option class="module-input-option" value="" disabled selected>Classe</option>
-          <option class="module-input-option" value="1">1</option>
-          <option class="module-input-option" value="2">2</option>
-          <option class="module-input-option" value="3">3</option>
-          <option class="module-input-option" value="4">4</option>
-          <option class="module-input-option" value="5">5</option>
+          <option class="module-input-option" v-bind:value="schoolClass._id" v-for="schoolClass in schoolClasses">
+            \{{ schoolClass.class }}
+          </option>
         </select>
       </div>
       <div class="col-1-of-3">
         <select class="module-input-select" id="upload-section">
-            <option class="module-input-option" value="" disabled selected>Sezione</option>
-            <option class="modile-input-option" v-for="section in sections" v-bind:value="section._id">\{{section.section}}</option>
-          </select>
+          <option class="module-input-option" value="" disabled selected>Sezione</option>
+          <option class="module-input-option" v-for="section in sections" v-bind:value="section._id">
+            \{{ section.section }}
+          </option>
+        </select>
       </div>
       <div class="col-1-of-3">
         <select class="module-input-select" id="upload-visibility">

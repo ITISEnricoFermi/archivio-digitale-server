@@ -173,15 +173,6 @@ app.post("/settings/updateInformations", authenticate, (req, res) => {
   });
 });
 
-
-app.post("/api/getDocuments", (req, res) => {
-  Document.getDocuments().then((documents) => {
-    res.status(200).send(documents);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
-});
-
 app.post("/api/createDocument", (req, res) => {
 
   var body = _.pick(req.body, ["name", "type", "author", "faculty", "subject", "class", "section", "description", "directory", "visibility"]);

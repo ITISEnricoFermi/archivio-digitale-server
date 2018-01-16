@@ -33,7 +33,7 @@ const {
 
 const {
   Privilege
-} = required("./../models/privilege");
+} = require("./../models/privilege");
 
 const {
   DocumentVisibility
@@ -158,23 +158,6 @@ var documentTypeArray = [{
   type: "Prove comuni"
 }];
 
-var classArray = [{
-  _id: 1,
-  class: 1
-}, {
-  _id: 2,
-  class: 2
-}, {
-  _id: 3,
-  class: 3
-}, {
-  _id: 4,
-  class: 4
-}, {
-  _id: 5,
-  class: 5
-}];
-
 var sectionArray = [{
   _id: "a",
   section: "A"
@@ -241,6 +224,34 @@ var privilegeArray = [{
   privilege: "Admin"
 }];
 
+var classArray = [{
+  _id: 1,
+  class: 1
+}, {
+  _id: 2,
+  class: 2
+}, {
+  _id: 3,
+  class: 3
+}, {
+  _id: 4,
+  class: 4
+}, {
+  _id: 5,
+  class: 5
+}];
+
+// classArray.forEach((classObj) => {
+//   var classToInsert = new Class(classObj);
+//
+//   classToInsert.save().then((classObj) => {
+//     return classObj;;
+//   }).catch((e) => {
+//     return e;
+//   });
+//
+// });
+
 
 // documentVisibilityArray.forEach((visibility) => {
 //   var documentVisibilityToInsert = new DocumentVisibility(visibility);
@@ -253,24 +264,11 @@ var privilegeArray = [{
 //
 // });
 
-privilegeArray.forEach((privilege) => {
-  var privlegeToInsert = new Privlege(privilege);
-
-  privlegeToInsert.save().then((privilege) => {
-    return privilege;
-  }).catch((e) => {
-    return e;
-  });
-
-})
-
-
-
-// classArray.forEach((classObj) => {
-//   var classToInsert = new Class(classObj);
+// privilegeArray.forEach((privilege) => {
+//   var privilegeToInsert = new Privilege(privilege);
 //
-//   classToInsert.save().then((classObj) => {
-//     return classObj;
+//   privilegeToInsert.save().then((privilege) => {
+//     return privilege;
 //   }).catch((e) => {
 //     return e;
 //   });

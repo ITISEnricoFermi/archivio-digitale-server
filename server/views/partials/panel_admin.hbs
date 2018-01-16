@@ -36,8 +36,7 @@
       <div class="col-1-of-2">
         <select class="module-input-select" id="admin__create-user--privileges">
           <option class="module-input-option" disabled>Privilegi</option>
-          <option class="module-input-option" value="1">Utente</option>
-          <option class="module-input-option" value="2">Admin</option>
+          <option class="module-input-option" v-for="privilege in privileges" v-bind:value="privilege._id">\{{privilege.privilege}}</option>
         </select>
       </div>
       <div class="col-1-of-2">
@@ -66,7 +65,7 @@
     </div>
     <div class="row" v-if="users.length === 0">
       <div class="col-1-of-1">
-        <p class="module-advanced-document-search-noresults">Nessun risultato</p>
+        <p class="module-document-search-noresults">Nessun risultato</p>
       </div>
     </div>
   </div>

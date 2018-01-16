@@ -26,8 +26,19 @@ var PrivilegeSchema = new mongoose.Schema({
   }
 });
 
+PrivilegeSchema.statics.getPrivileges = function() {
+  var Privilege = this;
+
+  return Privilege.find()
+    .then((privilege) => {
+      return Promise.resolve(privilege);
+    }, (e) => {
+      return Promise.reject(e);
+    });
+};
+
 var Privilege = mongoose.model("Privlege", PrivilegeSchema);
 
 module.exports = {
-  Privlege
+  Privilege
 };

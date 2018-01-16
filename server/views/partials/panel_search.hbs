@@ -1,0 +1,84 @@
+<!-- PANEL SEARCH -->
+<div class="panel panel--search" id="panel-search">
+  <div class="module">
+    <div class="row">
+      <div class="col-1-of-1">
+        <input type="text" class="module-input-text" id="search-name" placeholder="Titolo" autocomplete="off">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="search-type">
+          <option class="module-input-option" value="" disabled selected>Tipo</option>
+          <option class="module-input-option" v-bind:value="type._id" v-for="type in types">
+            \{{ type.type }}
+          </option>
+        </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="search-faculty" v-model="selectedFaculty" v-on:change="changeFaculty">
+          <option class="module-input-option" value="" disabled selected>Specializzazione</option>
+          <option class="module-input-option" v-bind:value="faculty._id" v-for="faculty in faculties">
+            \{{ faculty.faculty }}
+          </option>
+        </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="search-subject">
+          <option class="module-input-option" value="" disabled selected>Materia</option>
+            <option class="module-input-option" v-bind:value="subject._id" v-for="subject in subjects">
+              \{{ subject.subject }}
+            </option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="search-class">
+          <option class="module-input-option" value="" disabled selected>Classe</option>
+          <option class="module-input-option" v-bind:value="schoolClass._id" v-for="schoolClass in schoolClasses">
+            \{{ schoolClass.class }}
+          </option>
+        </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="search-section">
+          <option class="module-input-option" value="" disabled selected>Sezione</option>
+          <option class="module-input-option" v-bind:value="section._id" v-for="section in sections">
+            \{{ section.section }}
+          </option>
+        </select>
+      </div>
+      <div class="col-1-of-3">
+        <select class="module-input-select" id="search-visibility">
+          <option class="module-input-option" value="" disabled selected>Visibilità</option>
+          <option class="module-input-option" v-for="visibility in visibilities" v-bind:value="visibility._id">
+            \{{ visibility.visibility }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div clas="col-1-of-1">
+        <button class="module-button module-button--green" v-on:click="search">Invia</button>
+      </div>
+    </div>
+  </div>
+  <div class="module module-search" v-if="documents">
+    <div class="row" v-for="document in documents">
+      <div class="col-1-of-1">
+        <article class="module-document-search-article">
+          <p class="module-document-search-article--name u-margin-bottom-medium">\{{document.name}}</p>
+          <p class="module-document-search-article--delete u-margin-bottom-medium">Elimina</p>
+          <p class="module-document-search-article--description u-margin-bottom-medium">\{{document.description}}</p>
+          <p class="module-document-search-article--info"><span>Tipo: </span>\{{document.type.type}}, <span>Specializzazione: </span>\{{document.faculty.faculty}}, <span>Materia: </span>\{{document.subject.subject}}, <span>Classe: </span>\{{document.class}}, <span>Sezione: </span>\{{document.section}}, <span>Pubblicato da: </span>\{{document.author.firstname}} \{{document.author.lastname}}</p>
+        </article>
+      </div>
+    </div>
+    <div class="row" v-if="documents.length === 0">
+      <div class="col-1-of-1">
+        <p class="module-document-search-noresults">Nessun risultato</p>
+      </div>
+    </div>
+  </div>
+</div>

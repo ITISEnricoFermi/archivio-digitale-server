@@ -36,16 +36,14 @@ var panelUpload = new Vue({
     axios.post("/api/getDocumentTypes/")
       .then((response) => {
         this.types = response.data
-      })
-      .catch((e) => {
+      }).catch((e) => {
         this.errors.push(e)
       });
 
     axios.post("/api/getFaculties/")
       .then((response) => {
         this.faculties = response.data
-      })
-      .catch((e) => {
+      }).catch((e) => {
         this.errors.push(e)
       });
 
@@ -60,7 +58,14 @@ var panelUpload = new Vue({
       .then((response) => {
         this.sections = response.data
       }).catch((e) => {
-        this.erros.push(e);
+        this.errors.push(e);
+      });
+
+    axios.post("/api/getClasses")
+      .then((response) => {
+        this.schoolClasses = response.data;
+      }).catch((e) => {
+        this.errors.push(e);
       });
 
   },
@@ -71,8 +76,7 @@ var panelUpload = new Vue({
         })
         .then((response) => {
           this.subjects = response.data
-        })
-        .catch((e) => {
+        }).catch((e) => {
           this.errors.push(e)
         });
     }
@@ -83,61 +87,67 @@ var panelUpload = new Vue({
     selectedFaculty: "",
     subjects: "",
     visibilities: "",
-    sections: ""
+    sections: "",
+    schoolClasses: ""
   }
 });
 
-// PANEL ADVANCED SEARCH
+// PANEL SEARCH
 
-var panelAdvancedSearch = new Vue({
-  el: "#panel-advanced-search",
+var panelSearch = new Vue({
+  el: "#panel-search",
   created() {
     axios.post("/api/getFaculties/")
       .then((response) => {
-        this.faculties = response.data
-      })
-      .catch((e) => {
-        this.errors.push(e)
+        this.faculties = response.data;
+      }).catch((e) => {
+        this.errors.push(e);
       });
 
     axios.post("/api/getSections")
       .then((response) => {
-        this.sections = response.data
+        this.sections = response.data;
       }).catch((e) => {
-        this.erros.push(e);
+        this.errors.push(e);
       });
 
     axios.post("/api/getDocumentTypes/")
       .then((response) => {
-        this.types = response.data
-      })
-      .catch((e) => {
-        this.errors.push(e)
+        this.types = response.data;
+      }).catch((e) => {
+        this.errors.push(e);
       });
 
-    axios.post("/api/getDocumentVisibilityList")
+    axios.post("/api/getDocumentVisibilityList/")
       .then((response) => {
-        this.visibilities = response.data
+        this.visibilities = response.data;
       }).catch((e) => {
-        this.errors.push(e)
+        this.errors.push(e);
+      });
+
+    axios.post("/api/getClasses/")
+      .then((response) => {
+        this.schoolClasses = response.data;
+      }).catch((e) => {
+        this.errors.push(e);
       });
   },
   methods: {
     search: function() {
-      axios.post("/search/searchAdvancedDocuments/", {
-          name: document.getElementById("advanced-search-name").value,
-          type: document.getElementById("advanced-search-type").value,
-          faculty: document.getElementById("advanced-search-faculty").value,
-          subject: document.getElementById("advanced-search-subject").value,
-          class: document.getElementById("advanced-search-class").value,
-          section: document.getElementById("advanced-search-section").value,
-          visibility: document.getElementById("advanced-search-visibility").value
+      axios.post("/search/searchDocuments/", {
+          name: document.getElementById("search-name").value,
+          type: document.getElementById("search-type").value,
+          faculty: document.getElementById("search-faculty").value,
+          subject: document.getElementById("search-subject").value,
+          class: document.getElementById("search-class").value,
+          section: document.getElementById("search-section").value,
+          visibility: document.getElementById("search-visibility").value
         })
         .then((response) => {
           this.documents = response.data
         })
         .catch((e) => {
-          this.erros.push(e);
+          this.errors.push(e);
         });
     },
 
@@ -155,13 +165,14 @@ var panelAdvancedSearch = new Vue({
 
   },
   data: {
+    selectedFaculty: "",
     faculties: "",
     types: "",
     documents: "",
-    selectedFaculty: "",
     subjects: "",
     visibilities: "",
-    sections: ""
+    sections: "",
+    schoolClasses: ""
   }
 });
 
@@ -172,10 +183,17 @@ var panelAdmin = new Vue({
   el: "#panel-admin",
   data: {
     key: "",
-    users: ""
+    users: "",
+    privileges: ""
   },
   created() {
-
+    axios.post("/api/getPrivileges")
+      .then((response) => {
+        this.privileges = response.data;
+      })
+      .catch((e) =>  {
+        this.errors.push(e);
+      });
   },
   methods: {
     search: function() {

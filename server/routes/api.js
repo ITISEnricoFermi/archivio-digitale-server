@@ -29,6 +29,22 @@ const {
   Section
 } = require("./../models/section");
 
+const {
+  Privilege
+} = require("./../models/privilege");
+
+const {
+  Class
+} = require("./../models/class");
+
+router.post("/getDocuments", (req, res) => {
+  Document.getDocuments().then((documents) => {
+    res.status(200).send(documents);
+  }).catch((e) => {
+    res.status(401).send(e);
+  });
+});
+
 router.post("/getFaculties", authenticate, (req, res) => {
   Faculty.getFaculties().then((faculties) => {
     res.status(200).send(faculties);
@@ -67,7 +83,25 @@ router.post("/getSections", (req, res) => {
     .then((sections) => {
       res.status(200).send(sections);
     }).catch((e) => {
-      res.status(200).send(e)
+      res.status(400).send(e)
+    });
+});
+
+router.post("/getPrivileges", (req, res) => {
+  Privilege.getPrivileges()
+    .then((privileges) => {
+      res.status(200).send(privileges);
+    }).catch((e) => {
+      res.status(400).send(e);
+    });
+});
+
+router.post("/getClasses", (req, res) => {
+  Class.getClasses()
+    .then((classes) => {
+      res.status(200).send(classes);
+    }).catch((e) => {
+      res.status(400).send(e);
     });
 });
 
