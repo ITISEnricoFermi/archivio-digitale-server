@@ -68,6 +68,7 @@ const signup = require("./routes/signup");
 var app = express();
 
 const port = process.env.PORT || 3000;
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(fileUpload({
