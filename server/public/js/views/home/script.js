@@ -1,10 +1,40 @@
-var loginSubmit = document.getElementsByClassName("login-box__submit")[0];
+// var loginSubmit = document.getElementsByClassName("login-box__submit")[0];
+//
+// loginSubmit.addEventListener("click", function() {
+//
+//   var loginEmail = document.getElementsByClassName("login-box__email-field")[0].value;
+//   var loginPassword = document.getElementsByClassName("login-box__password-field")[0].value;
+//
+//   login(loginEmail, loginPassword);
+//
+// });
 
-loginSubmit.addEventListener("click", function() {
+let loginApp = new Vue({
+  el: "#loginApp",
+  data: {
+    error: false,
+    errorMessage: ""
+  },
+  methods: {
+    login: function() {
+      let user = {
+        email: this.$refs.loginEmail.value,
+        password: this.$refs.loginPassword.value
+      };
 
-  var loginEmail = document.getElementsByClassName("login-box__email-field")[0].value;
-  var loginPassword = document.getElementsByClassName("login-box__password-field")[0].value;
+      console.log(user);
 
-  login(loginEmail, loginPassword);
-
+      axios.post("/login", user)
+        .then((token) => {
+          console.log(token);
+          localStorage.setItem('token', token);
+          window.location.replace("/");
+        })
+        .catch((e) => {
+          console.log("Errore: ", e);
+          this.error = true;
+          this.errorMessage = e.response.data;
+        });
+    }
+  }
 });

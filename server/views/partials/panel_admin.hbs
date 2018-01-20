@@ -1,9 +1,9 @@
 <!-- PANEL ADMIN -->
 <div class="panel panel--admin" id="panel-admin">
   <div class="module">
-    <div class="row">
+    <div class="row" v-for="request in requests">
       <div class="col-1-of-1">
-        <div class="module__admin-request" v-for="request in requests">
+        <div class="module__admin-request">
           <p class="module__admin-request--name">\{{ request.userId.firstname }} \{{ request.userId.lastname }}</p>
           <p class="module__admin-request--choice module__admin-request--choice--accept" data-tiporichiesta="1" data-idrichiesta="16" data-iduser="16">
             <i class="fa fa-check" aria-hidden="true"></i>
@@ -12,6 +12,11 @@
             <i class="fa fa-times" aria-hidden="true"></i>
           </p>
         </div>
+      </div>
+    </div>
+    <div class="row" v-if="requests.length === 0">
+      <div class="col-1-of-1">
+        <p>Nessuna richiesta di registrazione.</p>
       </div>
     </div>
   </div>

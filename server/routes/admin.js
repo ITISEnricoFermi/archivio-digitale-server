@@ -50,4 +50,14 @@ router.post("/getRequests", (req, res) => {
     });
 });
 
+router.post("/acceptRequestById", (req, res) => {
+
+  Request.acceptRequestById(req.body._id)
+    .then((request) => {
+      res.status(200).send(request);
+    }).catch((e) => {
+      res.status(400).send(e);
+    });
+});
+
 module.exports = router;

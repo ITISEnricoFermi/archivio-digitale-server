@@ -209,6 +209,9 @@ body {
   .module-input-select:focus {
     box-shadow: 0 0 0.75rem rgba(21, 26, 34, 0.7); }
 
+.module-input-file {
+  display: none; }
+
 .module-button {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -220,6 +223,7 @@ body {
   padding: 0.9rem 0.8rem;
   font-size: 1.4rem;
   width: 100%;
+  display: block;
   cursor: pointer; }
   .module-button--green {
     background-color: #0FC47A;

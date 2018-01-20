@@ -297,14 +297,7 @@ main {
   width: 100%;
   height: 100%; }
 
-.signup-box {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20vw; }
-
-.success-box {
+.login-box {
   position: absolute;
   top: 50%;
   left: 50%;

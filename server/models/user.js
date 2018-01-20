@@ -74,6 +74,18 @@ var UserSchema = new mongoose.Schema({
     // },
     ref: "Privilege"
   },
+  state: {
+    type: String,
+    reuired: true,
+    trim: true,
+    minlength: 1,
+    unique: false,
+    default: "pending",
+    validate: {
+      validator: validator.isAlpha,
+      message: "{VALUE} non è un stato valido."
+    }
+  },
   tokens: [{
     access: {
       type: String,
@@ -106,9 +118,10 @@ UserSchema.methods.generateAuthToken = function() {
     token
   });
 
-  return user.save().then(() => {
-    return token;
-  });
+  return user.save()
+    .then(() => {
+      return token;
+    });
 }
 
 UserSchema.methods.removeToken = function(token) {
@@ -146,22 +159,24 @@ UserSchema.statics.findByCredentials = function(email, password) {
   var User = this;
 
   return User.findOne({
-    email
-  }).then((user) => {
+      email
+    })
+    .then((user) => {
 
-    if (!user) {
-      return Promise.reject("Nessun utente registrato con l'email inserita.");
-    }
-
-    return bcrypt.compare(password, user.password).then((result) => {
-      if (result) {
-        return Promise.resolve(user);
-      } else {
-        return Promise.reject("Password errata");
+      if (!user) {
+        return Promise.reject("Nessun utente registrato con l'email inserita.");
       }
-    });
 
-  });
+      return bcrypt.compare(password, user.password)
+        .then((result) => {
+          if (result) {
+            return Promise.resolve(user);
+          } else {
+            return Promise.reject("Password errata");
+          }
+        });
+
+    });
 }
 
 UserSchema.statics.findUser = function(key) {

@@ -10,12 +10,12 @@ function openTab(event) {
   // }
 
   // Rimuove la classe attiva da tutte le voci del menù
-  for (let i = 0; i < menuLeftLi.length; i++) {
+  for (var i = 0; i < menuLeftLi.length; i++) {
     menuLeftLi[i].classList.remove("menu-left__li--active");
   }
 
   // Nasconde tutti i pannelli
-  for (let i = 0; i < panel.length; i++) {
+  for (var i = 0; i < panel.length; i++) {
     panel[i].style.display = "none";
   }
 
@@ -33,7 +33,7 @@ class Admin {
 
   addUser(firstname, lastname, email, password, privileges) {
 
-    let user = {
+    var user = {
       firstname,
       lastname,
       email,

@@ -32,13 +32,13 @@ var DocumentSchema = new mongoose.Schema({
   faculty: {
     type: String,
     unique: false,
-    required: false,
+    required: true,
     trim: true,
     ref: "Faculty"
   },
   subject: {
     type: String,
-    required: false,
+    required: true,
     trim: true,
     minlength: 1,
     unique: false,
@@ -46,7 +46,7 @@ var DocumentSchema = new mongoose.Schema({
   },
   class: {
     type: Number,
-      required: true,
+      required: false,
       minlength: 1,
       maxlength: 1,
       unique: false,
@@ -55,7 +55,7 @@ var DocumentSchema = new mongoose.Schema({
   },
   section: {
     type: String,
-    required: true,
+    required: false,
     minlength: 1,
     unique: false,
     trim: true,
@@ -70,12 +70,11 @@ var DocumentSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 1,
-    unique: false,
     validate: {
       validator: validator.isAlpha,
       message: "{VALUE} non è un criterio di visibilità valido."
     },
-    ref: "DocumentVisibility"
+    ref: "document_visibility"
   },
   description: {
     type: String,
@@ -177,10 +176,6 @@ DocumentSchema.statics.searchDocuments = function(search) {
       select: "subject"
     })
     .populate({
-      path: "DocumentVisibility",
-      select: "visibility"
-    })
-    .populate({
       path: "Class",
       select: "class"
     })
@@ -188,6 +183,7 @@ DocumentSchema.statics.searchDocuments = function(search) {
       path: "Section",
       select: "section"
     })
+    .populate("visibility", "visibility")
     .limit(10)
     .then((results) => {
       return Promise.resolve(results);
@@ -212,7 +208,7 @@ DocumentSchema.statics.findDocumentById = function(id) {
       select: "subject"
     })
     .populate({
-      path: "DocumentVisibility",
+      path: "document_visibility",
       select: "visibility"
     })
     .populate({

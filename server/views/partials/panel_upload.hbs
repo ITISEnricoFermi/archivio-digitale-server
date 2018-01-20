@@ -3,17 +3,17 @@
   <div class="module">
     <div class="row">
       <div class="col-1-of-1">
-        <input type="text" class="module-input-text" placeholder="Titolo" autocomplete="off" required>
+        <input type="text" class="module-input-text" placeholder="Titolo" autocomplete="off" required ref="uploadName">
       </div>
     </div>
     <div class="row">
       <div class="col-1-of-1">
-        <textarea class="module-input-textarea" placeholder="Descrizione"></textarea>
+        <textarea class="module-input-textarea" placeholder="Descrizione" ref="uploadDescription"></textarea>
       </div>
     </div>
     <div class="row">
       <div class="col-1-of-3">
-        <select class="module-input-select" id="upload-type">
+        <select class="module-input-select" id="upload-type" ref="uploadType">
           <option class="module-input-option" value="" disabled selected>Tipo</option>
           <option class="module-input-option" v-bind:value="type._id" v-for="type in types">
             \{{ type.type }}
@@ -21,7 +21,7 @@
         </select>
       </div>
       <div class="col-1-of-3">
-        <select class="module-input-select" id="upload-faculty" v-model="selectedFaculty" v-on:change="changeFaculty">
+        <select class="module-input-select" id="upload-faculty" v-model="selectedFaculty" v-on:change="changeFaculty" ref="uploadFaculty">
           <option class="module-input-option" value="" disabled selected>Specializzazione</option>
           <option class="module-input-option" v-bind:value="faculty._id" v-for="faculty in faculties">
             \{{ faculty.faculty }}
@@ -29,7 +29,7 @@
         </select>
       </div>
       <div class="col-1-of-3">
-        <select class="module-input-select" id="upload-subject">
+        <select class="module-input-select" id="upload-subject" ref="uploadSubject">
           <option class="module-input-option" value="" disabled selected>Materia</option>
             <option class="module-input-option" v-bind:value="subject._id" v-for="subject in subjects">
               \{{ subject.subject }}
@@ -39,7 +39,7 @@
     </div>
     <div class="row">
       <div class="col-1-of-3">
-        <select class="module-input-select" id="upload-class">
+        <select class="module-input-select" id="upload-class" ref="uploadClass">
           <option class="module-input-option" value="" disabled selected>Classe</option>
           <option class="module-input-option" v-bind:value="schoolClass._id" v-for="schoolClass in schoolClasses">
             \{{ schoolClass.class }}
@@ -47,7 +47,7 @@
         </select>
       </div>
       <div class="col-1-of-3">
-        <select class="module-input-select" id="upload-section">
+        <select class="module-input-select" id="upload-section" ref="uploadSection">
           <option class="module-input-option" value="" disabled selected>Sezione</option>
           <option class="module-input-option" v-for="section in sections" v-bind:value="section._id">
             \{{ section.section }}
@@ -55,7 +55,7 @@
         </select>
       </div>
       <div class="col-1-of-3">
-        <select class="module-input-select" id="upload-visibility">
+        <select class="module-input-select" id="upload-visibility" ref="uploadVisibility">
           <option class="module-input-option" value="" disabled selected>Visibilità</option>
           <option class="module-input-option" v-for="visibility in visibilities" v-bind:value="visibility._id">\{{visibility.visibility}}</option>
         </select>
@@ -63,10 +63,23 @@
     </div>
     <div class="row">
       <div class="col-1-of-2">
-        <button class="module-button module-button--blue">Carica file</button>
+        <input type="file" class="module-input-file" id="upload-file" ref="uploadFile">
+        <label class="module-button module-button--blue" for="upload-file">Carica file</label>
       </div>
       <div class="col-1-of-2">
-        <button class="module-button module-button--green">Invia</button>
+        <button class="module-button module-button--green" @click="upload">Invia</button>
+      </div>
+    </div>
+  </div>
+  <div class="module" v-if="response">
+    <div class="row" v-if="uploading">
+      <div class="col-1-of-1">
+        <p>\{{progress}}</p>
+      </div>
+    </div>
+    <div class="row" v-else>
+      <div class="col-1-of-1">
+        <p>\{{responseMessage}}</p>
       </div>
     </div>
   </div>

@@ -99,6 +99,24 @@ body {
   .home-text-field::placeholder {
     color: #151A22; }
 
+.footer {
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 3rem !important; }
+  .footer ul li {
+    display: inline-block;
+    list-style: none; }
+    .footer ul li a {
+      color: #53585E;
+      text-decoration: none;
+      text-transform: uppercase;
+      padding: 1rem 1.5rem;
+      font-size: 1.4rem;
+      font-weight: bold; }
+
 main {
   width: 100%;
   display: grid;
@@ -122,23 +140,6 @@ main {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); }
-  .section-search .footer {
-    text-align: center;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 3rem; }
-    .section-search .footer ul li {
-      display: inline-block;
-      list-style: none; }
-      .section-search .footer ul li a {
-        color: #53585E;
-        text-decoration: none;
-        text-transform: uppercase;
-        padding: 1rem 1.5rem;
-        font-size: 1.4rem;
-        font-weight: bold; }
 
 .section-login {
   background-color: #1A8D4C;

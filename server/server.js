@@ -1,5 +1,4 @@
 const express = require('express');
-const fileUpload = require('express-fileupload');
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
 const _ = require("lodash");
@@ -49,7 +48,8 @@ const {
 
 // Middleware
 const {
-  authenticate
+  authenticate,
+  authenticateAdmin
 } = require("./middleware/authenticate");
 
 // Settings functions
@@ -64,6 +64,7 @@ const search = require("./routes/search");
 const api = require("./routes/api");
 const documents = require("./routes/documents");
 const signup = require("./routes/signup");
+const login = require("./routes/login");
 
 var app = express();
 
@@ -71,12 +72,6 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(fileUpload({
-  limits: {
-    fileSize: 1024 * 1024 * 100
-  },
-  safeFileNames: true
-}));
 
 // Routes
 app.use("/admin", admin);
@@ -85,10 +80,12 @@ app.use("/search", search);
 app.use("/api", api);
 app.use("/documents", documents);
 app.use("/signup", signup);
+app.use("/login", login);
 
 hbs.registerPartials(__dirname + "/views/partials/");
 
 
+// DIRECTORY DOCUMENTI PRIVATA
 app.get("/documents/*", authenticate, (req, res) => {
   console.log(req.params.file);
 });
@@ -97,28 +94,13 @@ app.use(express.static(__dirname + "/public"));
 
 app.set("view engine", "hbs");
 
+
 app.get("/", authenticate, (req, res) => {
   res.render("index", {
     pageTitle: "Archivio Digitale - ITIS Enrico Fermi"
   });
 });
 
-app.post("/login", (req, res) => {
-  var body = _.pick(req.body, ["email", "password"]);
-
-  console.log(body);
-  User.findByCredentials(body.email, body.password).then((user) => {
-    return user.generateAuthToken().then((token) => {
-      res.cookie("token", token)
-        .header("x-auth", token).send(JSON.stringify({
-          token
-        }));
-    });
-  }).catch((e) => {
-    res.status(400).send(e);
-  });
-
-});
 
 app.get("/logout", authenticate, (req, res) => {
   req.user.removeToken(req.token).then(() => {
@@ -158,19 +140,6 @@ app.post("/settings/updateInformations", authenticate, (req, res) => {
   });
 });
 
-app.post("/api/createDocument", (req, res) => {
-
-  var body = _.pick(req.body, ["name", "type", "author", "faculty", "subject", "class", "section", "description", "directory", "visibility"]);
-
-  var document = new Document(body);
-
-  document.save().then((document) => {
-    res.status(200).send(document);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
-
-});
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}.`);

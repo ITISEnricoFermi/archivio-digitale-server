@@ -37,7 +37,7 @@ PrivilegeSchema.statics.getPrivileges = function() {
     });
 };
 
-var Privilege = mongoose.model("Privlege", PrivilegeSchema);
+var Privilege = mongoose.model("Privilege", PrivilegeSchema);
 
 module.exports = {
   Privilege

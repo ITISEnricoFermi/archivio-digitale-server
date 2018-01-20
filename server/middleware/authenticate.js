@@ -19,15 +19,44 @@ var authenticate = (req, res, next) => {
       return Promise.reject();
     }
 
-    req.user = _.pick(user, ["_id", "firstname", "lastname", "email"]);
+    req.user = _.pick(user, ["_id", "firstname", "lastname", "email", "privileges"]);
     req.token = token;
     next();
 
   }).catch((e) => {
-    res.render("home");
+    console.log(req.url);
+    if (req.url === "/") {
+      return res.render("home");
+    }
+
+    res.redirect("/login");
   });
 };
 
+var authenticateAdmin = (req, res, next) => {
+
+  var id = req.user._id;
+
+  if (!req.user) {
+    return Promise.reject();
+  }
+
+  return User.findById(id)
+    .then((user) => {
+      var privileges = user.privileges;
+
+      if (privileges != "admin") {
+        return Promise.reject("L'utente non è un admin.");
+      }
+
+      next();
+
+    }).catch((e) => {
+      return Promise.reject(e);
+    });
+};
+
 module.exports = {
-  authenticate
+  authenticate,
+  authenticateAdmin
 };

@@ -8,13 +8,7 @@ main {
   height: 100%;
 }
 
-.signup-box {
-  position: absolute;
-  @include absCenter;
-  width: 20vw;
-}
-
-.success-box {
+.login-box {
   position: absolute;
   @include absCenter;
   width: 20vw;

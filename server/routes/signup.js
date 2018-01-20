@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
+const validator = require('validator');
 
 // Models
 const {
@@ -25,13 +26,26 @@ router.post("/", (req, res) => {
   var body = _.pick(req.body, ["firstname", "lastname", "email", "password"]);
   var user = new User(body);
 
-  user.save().then((user) => {
-    return user.generateAuthToken();
-  }).then((token) => {
-    res.header("x-auth", token).send(user);
-  }).catch((e) => {
-    res.status(400).send(e);
-  });
+  if (validator.isEmpty(body.firstname) || !validator.isAlpha(body.firstname)) {
+    return res.status(400).send("Nome non valido.");
+  } else if (validator.isEmpty(body.lastname) || !validator.isAlpha(body.lastname)) {
+    return res.status(400).send("Cognome non valido");
+  } else if (validator.isEmpty(body.email) || !validator.isEmail(body.email)) {
+    return res.status(400).send("Email non valida.");
+  } else if (validator.isEmpty(body.password) || body.password.length < 6) {
+    return res.status(400).send("Password non valida o troppo breve. (min. 6).");
+  }
+
+
+  user.save()
+    .then((user) => {
+      return user.generateAuthToken();
+    }).then((token) => {
+      res.header("x-auth", token).send(user);
+    }).catch((e) => {
+      res.status(400).send(e);
+      console.log(e);
+    });
 
 });
 

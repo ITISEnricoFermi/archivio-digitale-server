@@ -1,6 +1,6 @@
 var menuLeftLi = document.getElementsByClassName("menu-left__li");
 
-for (let i = 0; i < menuLeftLi.length; i++) {
+for (var i = 0; i < menuLeftLi.length; i++) {
   menuLeftLi[i].addEventListener("click", openTab);
 }
 
@@ -11,11 +11,11 @@ var adminCreateSubmit = document.getElementById("admin__create-user--submit");
 
 adminCreateSubmit.addEventListener("click", () => {
 
-  let adminCreateFirstName = document.getElementById("admin__create-user--firstname").value;
-  let adminCreateLastName = document.getElementById("admin__create-user--lastname").value;
-  let adminCreateEmail = document.getElementById("admin__create-user--email").value;
-  let adminCreatePassword = document.getElementById("admin__create-user--password").value;
-  let adminCreatePrivileges = document.getElementById("admin__create-user--privileges").value;
+  var adminCreateFirstName = document.getElementById("admin__create-user--firstname").value;
+  var adminCreateLastName = document.getElementById("admin__create-user--lastname").value;
+  var adminCreateEmail = document.getElementById("admin__create-user--email").value;
+  var adminCreatePassword = document.getElementById("admin__create-user--password").value;
+  var adminCreatePrivileges = document.getElementById("admin__create-user--privileges").value;
 
   userAdmin.addUser(adminCreateFirstName, adminCreateLastName, adminCreateEmail, adminCreatePassword, adminCreatePrivileges)
 });
@@ -33,6 +33,7 @@ popUpClose.addEventListener("click", function() {
 var panelUpload = new Vue({
   el: "#panel-upload",
   created() {
+
     axios.post("/api/getDocumentTypes/")
       .then((response) => {
         this.types = response.data
@@ -67,7 +68,6 @@ var panelUpload = new Vue({
       }).catch((e) => {
         this.errors.push(e);
       });
-
   },
   methods: {
     changeFaculty: function() {
@@ -79,6 +79,66 @@ var panelUpload = new Vue({
         }).catch((e) => {
           this.errors.push(e)
         });
+    },
+    upload: function() {
+
+      let formData = new FormData();
+      let config = {
+        onUploadProgress: function(progressEvent) {
+          let actualProgress = progressEvent.loaded;
+          let totalProgress = progressEvent.total;
+          let progress = Math.floor((actualProgress * 100) / totalProgress);
+          this.uploading = true;
+          this.progress = progress;
+          this.response = true;
+
+          if (progress === 100) {
+            this.uploading = false;
+          }
+
+        }
+      };
+
+      let document = {
+        name: this.$refs.uploadName.value,
+        type: this.$refs.uploadType.value,
+        faculty: this.$refs.uploadFaculty.value,
+        subject: this.$refs.uploadSubject.value,
+        class: this.$refs.uploadClass.value,
+        section: this.$refs.uploadSection.value,
+        visibility: this.$refs.uploadVisibility.value,
+        description: this.$refs.uploadDescription.value
+      }
+
+      document = JSON.stringify(document);
+
+      let file = this.$refs.uploadFile.files[0];
+
+      formData.append("document", document);
+      formData.append("fileToUpload", file)
+
+      console.log(document);
+
+      axios.post("upload/documentUpload", formData, config)
+        .then((response) => {
+          this.response = true;
+          this.responseMessage = response.data;
+
+          this.$refs.uploadName.value = "";
+          this.$refs.uploadType.value = "";
+          this.$refs.uploadFaculty.value = "";
+          this.$refs.uploadSubject.value = "";
+          this.$refs.uploadClass.value = "";
+          this.$refs.uploadSection.value = "";
+          this.$refs.uploadVisibility.value = "";
+          this.$refs.uploadDescription.value = "";
+
+        })
+        .catch((e) => {
+          console.log(e.response.data);
+          this.response = true;
+          this.responseMessage = e.response.data;
+        });
     }
   },
   data: {
@@ -88,7 +148,11 @@ var panelUpload = new Vue({
     subjects: "",
     visibilities: "",
     sections: "",
-    schoolClasses: ""
+    schoolClasses: "",
+    response: false,
+    responseMessage: "",
+    progress: 0,
+    uploading: false
   }
 });
 
@@ -162,7 +226,6 @@ var panelSearch = new Vue({
           this.errors.push(e)
         });
     }
-
   },
   data: {
     selectedFaculty: "",
