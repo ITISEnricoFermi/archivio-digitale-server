@@ -52,11 +52,6 @@ const {
   authenticateAdmin
 } = require("./middleware/authenticate");
 
-// Settings functions
-const {
-  updateInformations
-} = require("./functions/settings");
-
 // Routes
 const admin = require("./routes/admin");
 const upload = require("./routes/upload");
@@ -65,6 +60,7 @@ const api = require("./routes/api");
 const documents = require("./routes/documents");
 const signup = require("./routes/signup");
 const login = require("./routes/login");
+const settings = require("./routes/settings");
 
 var app = express();
 
@@ -81,14 +77,9 @@ app.use("/api", api);
 app.use("/documents", documents);
 app.use("/signup", signup);
 app.use("/login", login);
+app.use("/settings", settings);
 
 hbs.registerPartials(__dirname + "/views/partials/");
-
-
-// DIRECTORY DOCUMENTI PRIVATA
-app.get("/documents/*", authenticate, (req, res) => {
-  console.log(req.params.file);
-});
 
 app.use(express.static(__dirname + "/public"));
 
@@ -107,36 +98,6 @@ app.get("/logout", authenticate, (req, res) => {
     res.status(200).send();
   }, () => {
     res.status(400).send();
-  });
-});
-
-app.post("/settings/updateInformations", authenticate, (req, res) => {
-
-  var body = _.pick(req.body, ["subject", "oldPassword", "newPassword", "token"]);
-  var token = body.token;
-
-  User.findByToken(token).then((user) => {
-    // if (!user) {
-    //   return Promise.reject();
-    // } else {
-    //
-    //   // updateInformations(user, body.oldPassword, body.newPassword).then((newuser) => {
-    //   //   res.status(200).send(newUser);
-    //   // }).catch((eee) => {
-    //   //   res.status(400).send(eee);
-    //   // });
-    //
-    //
-    //
-    //
-    // }
-    user.firstname = "Sara";
-    user.save();
-
-    next();
-
-  }).catch((e) => {
-    res.status(401).send(e);
   });
 });
 

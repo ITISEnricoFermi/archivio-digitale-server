@@ -26,40 +26,6 @@ function openTab(event) {
 
 }
 
-class Admin {
-  constructor() {
-
-  }
-
-  addUser(firstname, lastname, email, password, privileges) {
-
-    var user = {
-      firstname,
-      lastname,
-      email,
-      password,
-      privileges
-    }
-
-    var request = new XMLHttpRequest();
-    request.open("POST", "/admin/createUser", true);
-    request.setRequestHeader("Content-Type", "application/json");
-
-    request.onreadystatechange = function() {
-      if (request.readyState === 4 && request.status === 200) {
-        var response = request.responseText;
-        var json = JSON.parse(response);
-        console.log(json);
-      }
-    };
-
-    var data = JSON.stringify(user);
-    request.send(data);
-
-  }
-
-}
-
 class PopUp {
   constructor(popUp, popUpTitle, popUpDescription, popUpClose) {
     this.popUp = popUp;

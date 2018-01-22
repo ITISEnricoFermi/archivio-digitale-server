@@ -24,7 +24,7 @@ var authenticate = (req, res, next) => {
     next();
 
   }).catch((e) => {
-    console.log(req.url);
+    console.log("Url:", req.url);
     if (req.url === "/") {
       return res.render("home");
     }
@@ -54,6 +54,23 @@ var authenticateAdmin = (req, res, next) => {
     }).catch((e) => {
       return Promise.reject(e);
     });
+};
+
+var authenticateUser = (req, res, next) => {
+
+  var userId = req.user._id;
+  var id = req.body._id;
+
+  if (userId != id) {
+    return Promise.reject("L'utente non detiene i privilegi necessari.");
+  }
+
+  next();
+
+};
+
+var authenticateAcesses = (req, res, next) => {
+
 };
 
 module.exports = {

@@ -1,25 +1,26 @@
 <!-- PANEL SETTINGS -->
-<div class="panel panel--settings">
+<div class="panel panel--settings" id="panel-settings">
   <div class="module">
     <div class="row">
       <div class="col-1-of-2">
-        <input type="password" class="module-input-text" placeholder="Password attuale" autocomplete="off">
+        <input type="password" class="module-input-text" placeholder="Password attuale" autocomplete="off" ref="settingsOldPassword">
       </div>
       <div class="col-1-of-2">
-        <input type="password" class="module-input-text" placeholder="Nuova password" autocomplete="off">
+        <input type="password" class="module-input-text" placeholder="Nuova password" autocomplete="off" ref="settingsNewPassword">
       </div>
     </div>
     <div class="row">
       <div class="col-1-of-2">
-        <button class="module-button module-button--blue">Carica foto profilo</button>
+        <input type="file" class="module-input-file" id="upload-img-profile" @change="uploadProfilePic" ref="settingsProfilePic">
+        <label class="module-button module-button--blue" for="upload-img-profile">Carica foto profilo</label>
       </div>
       <div class="col-1-of-2">
-        <button class="module-button module-button--green">Salva impostazioni</button>
+        <button class="module-button module-button--green" @click="saveSettings">Salva impostazioni</button>
       </div>
     </div>
     <div class="row">
       <div class="col-1-of-1">
-        <button class="module-button module-button--red">Elimina account</button>
+        <button class="module-button module-button--red" @click="disableAccount">Elimina account</button>
       </div>
     </div>
     <div class="row">
@@ -28,6 +29,13 @@
           <span>L'account verrà disattivato. Puoi riattivarlo in qualunque momento contattando l'amministratore.</span>
           <br/><span>Le tue pubblicazioni rimarranno sulla piattaforma.</span>
         </p>
+      </div>
+    </div>
+  </div>
+  <div class="module" v-if="response">
+    <div class="row">
+      <div class="col-1-of-1">
+        <p>\{{responseMessage}}</p>
       </div>
     </div>
   </div>

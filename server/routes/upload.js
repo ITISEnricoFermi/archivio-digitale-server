@@ -11,12 +11,42 @@ const storage = multer.diskStorage({
   },
   filename: function(req, file, cb) {
     cb(null, file.originalname);
+    // cb(null, String(req.user._id) + path.extname(file.originalname));
   }
 });
 
+const fileFilter = (req, file, cb) => {
+
+  const mimeypes = ["audio/aac", "video/x-msvideo", "text/csv", "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/epub+zip", "image/gif", "image/x-icon", "image/jpeg", "audio/midi",
+    "video/mpeg", "application/vnd.oasis.opendocument.presentation",
+    "application/vnd.oasis.opendocument.spreadsheet", "application/vnd.oasis.opendocument.text",
+    "audio/ogg", "video/ogg", "application/ogg", "image/png", "application/pdf",
+    "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/x-rar-compressed", "application/rtf", "application/x-tar", "image/tiff", "application/vnd.visio",
+    "audio/x-wav", "audio/webm", "video/webm", "image/webp", "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/zip", "application/x-7z-compressed"
+  ];
+
+  if (mimeypes.indexOf(file.mimetype) === -1) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+
+};
+
+const limits = {
+  fileSize: 1024 * 1024 * 100 // 100 MB
+}
+
 const upload = multer({
-  storage
+  storage,
+  limits,
+  fileFilter
 });
+
 
 // Middleware
 const {

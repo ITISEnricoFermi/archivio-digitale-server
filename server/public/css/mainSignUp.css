@@ -147,6 +147,7 @@ body {
     padding: 1rem; }
     .module-document-search-article--name {
       font-size: 1.6rem;
+      color: #151A22;
       display: inline-block;
       text-decoration: underline; }
     .module-document-search-article--delete {

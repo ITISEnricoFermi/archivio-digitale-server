@@ -31,6 +31,9 @@ SectionSchema.statics.getSections = function() {
   var Section = this;
 
   return Section.find()
+    .sort({
+      section: 1
+    })
     .then((sections) => {
       return Promise.resolve(sections);
     }, (e) => {

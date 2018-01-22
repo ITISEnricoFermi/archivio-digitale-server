@@ -7,8 +7,9 @@ const {
 } = require("./../middleware/authenticate");
 
 
-router.get("/*", authenticate, (req, res) => {
-
+router.get("/*", authenticate, (req, res, next) => {
+  console.log("Url:", req.url);
+  next();
 });
 
 module.exports = router;

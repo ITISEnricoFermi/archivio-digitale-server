@@ -4,22 +4,6 @@ for (var i = 0; i < menuLeftLi.length; i++) {
   menuLeftLi[i].addEventListener("click", openTab);
 }
 
-var userAdmin = new Admin();
-
-
-var adminCreateSubmit = document.getElementById("admin__create-user--submit");
-
-adminCreateSubmit.addEventListener("click", () => {
-
-  var adminCreateFirstName = document.getElementById("admin__create-user--firstname").value;
-  var adminCreateLastName = document.getElementById("admin__create-user--lastname").value;
-  var adminCreateEmail = document.getElementById("admin__create-user--email").value;
-  var adminCreatePassword = document.getElementById("admin__create-user--password").value;
-  var adminCreatePrivileges = document.getElementById("admin__create-user--privileges").value;
-
-  userAdmin.addUser(adminCreateFirstName, adminCreateLastName, adminCreateEmail, adminCreatePassword, adminCreatePrivileges)
-});
-
 var popUpClose = document.getElementsByClassName("popup-close")[0];
 var popUp = document.getElementsByClassName("popup")[0];
 
@@ -115,9 +99,7 @@ var panelUpload = new Vue({
       let file = this.$refs.uploadFile.files[0];
 
       formData.append("document", document);
-      formData.append("fileToUpload", file)
-
-      console.log(document);
+      formData.append("fileToUpload", file);
 
       axios.post("upload/documentUpload", formData, config)
         .then((response) => {
@@ -278,6 +260,52 @@ var panelAdmin = new Vue({
         .catch((e) => {
           this.errors.push(e)
         });
+    }
+  }
+});
+
+var panelSettings = new Vue({
+  el: "#panel-settings",
+  data: {
+    response: false,
+    responseMessage: ""
+  },
+  methods: {
+    saveSettings: function() {
+      let oldPassword = this.$refs.settingsOldPassword.value;
+      let newPassword = this.$refs.settingsNewPassword.value;
+
+      axios.post("/settings/updateInformations", {
+          oldPassword,
+          newPassword
+        })
+        .then(() => {
+          window.location.replace("/login");
+        })
+        .catch((e) => {
+          this.response = true;
+          this.responseMessage = e.response.data;
+        });
+    },
+    uploadProfilePic: function() {
+      let profilePic = this.$refs.settingsProfilePic.files[0];
+
+      let formData = new FormData();
+
+      formData.append("picToUpload", profilePic);
+
+      axios.post("/settings/updateProfilePic", formData)
+        .then((message) => {
+          this.response = true;
+          this.responseMessage = message.data;
+        })
+        .catch((e) => {
+          this.response = true;
+          this.responseMessage = e.response.data;
+        });
+    },
+    disableAccount: function() {
+
     }
   }
 });
