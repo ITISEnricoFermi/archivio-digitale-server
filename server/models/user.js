@@ -102,7 +102,7 @@ UserSchema.methods.toJSON = function() {
   var user = this;
   var userObject = user.toObject();
 
-  return _.pick(userObject, ["_id", "firstname", "lastname", "email"]);
+  return _.pick(userObject, ["_id", "firstname", "lastname", "email", "state"]);
 }
 
 UserSchema.methods.generateAuthToken = function() {
@@ -111,7 +111,7 @@ UserSchema.methods.generateAuthToken = function() {
   var token = jwt.sign({
     _id: user._id.toHexString(),
     access
-  }, "abc123").toString();
+  }, process.env.JWT_SECRET).toString();
 
   user.tokens.push({
     access,
@@ -141,7 +141,7 @@ UserSchema.statics.findByToken = function(token) {
   var User = this;
   // var decoded;
 
-  return jwt.verify(token, "abc123", function(err, decoded) {
+  return jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
     if (err) {
       return Promise.reject(err);
     } else {

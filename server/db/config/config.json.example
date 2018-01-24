@@ -1,0 +1,7 @@
+{
+  "development": {
+    "port": 3000,
+    "MONGODB_URI": "mongodb://localhost:27017/archivio",
+    "JWT_SECRET": "jwtSecret"
+  }
+}

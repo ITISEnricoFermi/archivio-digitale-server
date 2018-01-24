@@ -264,16 +264,16 @@ var classArray = [{
 //
 // });
 
-privilegeArray.forEach((privilege) => {
-  var privilegeToInsert = new Privilege(privilege);
-
-  privilegeToInsert.save().then((privilege) => {
-    return privilege;
-  }).catch((e) => {
-    return e;
-  });
-
-});
+// privilegeArray.forEach((privilege) => {
+//   var privilegeToInsert = new Privilege(privilege);
+//
+//   privilegeToInsert.save().then((privilege) => {
+//     return privilege;
+//   }).catch((e) => {
+//     return e;
+//   });
+//
+// });
 
 // sectionArray.forEach((section) => {
 //   var sectionToInsert = new Section(section);

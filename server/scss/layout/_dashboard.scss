@@ -1,0 +1,19 @@
+.panel__dashboard {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: "recentPosts profile" "topProfiles topProfiles";
+
+
+  &--recent-posts {
+    grid-area: recentPosts;
+  }
+
+  &--profile {
+    grid-area: profile;
+  }
+
+  &--top-profiles {
+    grid-area: topProfiles;
+  }
+}

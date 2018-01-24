@@ -106,8 +106,23 @@ router.post("/updateProfilePic", authenticate, upload.single("picToUpload"), (re
 
 });
 
-router.post("/disableAccount", authenticate, (req, user) => {
+router.post("/disableAccount", authenticate, (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
 
+      user.state = "disabled";
+      user.save()
+        .then((user) => {
+          res.status(200).send(user);
+        })
+        .catch((e) => {
+          res.status(400).send(e);
+        });
+
+    })
+    .catch((e) => {
+      res.status(404).send((e));
+    });
 });
 
 

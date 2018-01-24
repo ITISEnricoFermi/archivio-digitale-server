@@ -338,6 +338,18 @@ body {
   .row .col-1-of-5 {
     width: calc((100% - 1rem * 4) / 5); }
 
+.panel__dashboard {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: "recentPosts profile" "topProfiles topProfiles"; }
+  .panel__dashboard--recent-posts {
+    grid-area: recentPosts; }
+  .panel__dashboard--profile {
+    grid-area: profile; }
+  .panel__dashboard--top-profiles {
+    grid-area: topProfiles; }
+
 body {
   display: grid;
   grid-template-rows: 1fr;

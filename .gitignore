@@ -1,3 +1,5 @@
 node_modules/
 server/public/documents/*
 server/public/pics/*
+config.json
+.DS_Store

@@ -4,14 +4,14 @@ const mongoose = require('mongoose');
 const _ = require("lodash");
 const multer = require('multer');
 const validator = require('validator');
+const path = require('path');
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, "./public/documents");
   },
   filename: function(req, file, cb) {
-    cb(null, file.originalname);
-    // cb(null, String(req.user._id) + path.extname(file.originalname));
+    cb(null, new Date().toISOString() + path.extname(file.originalname));
   }
 });
 
