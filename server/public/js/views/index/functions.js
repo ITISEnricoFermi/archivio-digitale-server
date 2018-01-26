@@ -5,9 +5,9 @@ function openTab(event) {
   var menuLeftLi = document.getElementsByClassName("menu-left__li");
   var panel = document.getElementsByClassName("panel");
 
-  // if (li.dataset.tab = "panel--logout") {
-  //   return window.location.replace("/logout");
-  // }
+  if (tabName === "panel--logout") {
+    return window.location.replace("/logout");
+  }
 
   // Rimuove la classe attiva da tutte le voci del menù
   for (var i = 0; i < menuLeftLi.length; i++) {
@@ -22,7 +22,11 @@ function openTab(event) {
   // Aggiunge la classe attiva alla voce del menù
   li.classList.add("menu-left__li--active");
   // Rende visibile il pannello corrispondente
-  document.getElementsByClassName(tabName)[0].style.display = "block";
+  if (tabName === "panel__dashboard") {
+    document.getElementsByClassName(tabName)[0].style.display = "grid";
+  } else {
+    document.getElementsByClassName(tabName)[0].style.display = "block";
+  }
 
 }
 

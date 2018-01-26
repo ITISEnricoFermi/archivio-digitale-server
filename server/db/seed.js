@@ -145,17 +145,26 @@ var subjectArray = [{ // Comune
 }];
 
 var documentTypeArray = [{
+  _id: "videoLezione",
   type: "Video lezione"
 }, {
+  _id: "audioLezione",
   type: "Audio lezione"
 }, {
+  _id: "appunti",
   type: "Appunti"
 }, {
+  _id: "progettiStudenti",
   type: "Progetti studenti"
 }, {
+  _id: "programmazioni",
   type: "Programmazioni"
 }, {
+  _id: "proveComuni",
   type: "Prove comuni"
+}, {
+  _id: "altro",
+  type: "Altro"
 }];
 
 var sectionArray = [{

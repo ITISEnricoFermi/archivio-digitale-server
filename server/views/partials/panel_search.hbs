@@ -9,7 +9,7 @@
     <div class="row">
       <div class="col-1-of-3">
         <select class="module-input-select" id="search-type">
-          <option class="module-input-option" value="" disabled selected>Tipo</option>
+          <option class="module-input-option" value="" selected>Tipo</option>
           <option class="module-input-option" v-bind:value="type._id" v-for="type in types">
             \{{ type.type }}
           </option>
@@ -17,7 +17,7 @@
       </div>
       <div class="col-1-of-3">
         <select class="module-input-select" id="search-faculty" v-model="selectedFaculty" v-on:change="changeFaculty">
-          <option class="module-input-option" value="" disabled selected>Specializzazione</option>
+          <option class="module-input-option" value="" selected>Specializzazione</option>
           <option class="module-input-option" v-bind:value="faculty._id" v-for="faculty in faculties">
             \{{ faculty.faculty }}
           </option>
@@ -25,7 +25,7 @@
       </div>
       <div class="col-1-of-3">
         <select class="module-input-select" id="search-subject">
-          <option class="module-input-option" value="" disabled selected>Materia</option>
+          <option class="module-input-option" value="" selected>Materia</option>
             <option class="module-input-option" v-bind:value="subject._id" v-for="subject in subjects">
               \{{ subject.subject }}
             </option>
@@ -35,7 +35,7 @@
     <div class="row">
       <div class="col-1-of-3">
         <select class="module-input-select" id="search-class">
-          <option class="module-input-option" value="" disabled selected>Classe</option>
+          <option class="module-input-option" value="" selected>Classe</option>
           <option class="module-input-option" v-bind:value="schoolClass._id" v-for="schoolClass in schoolClasses">
             \{{ schoolClass.class }}
           </option>
@@ -43,7 +43,7 @@
       </div>
       <div class="col-1-of-3">
         <select class="module-input-select" id="search-section">
-          <option class="module-input-option" value="" disabled selected>Sezione</option>
+          <option class="module-input-option" value="" selected>Sezione</option>
           <option class="module-input-option" v-bind:value="section._id" v-for="section in sections">
             \{{ section.section }}
           </option>
@@ -51,7 +51,7 @@
       </div>
       <div class="col-1-of-3">
         <select class="module-input-select" id="search-visibility">
-          <option class="module-input-option" value="" disabled selected>Visibilità</option>
+          <option class="module-input-option" value="" selected>Visibilità</option>
           <option class="module-input-option" v-for="visibility in visibilities" v-bind:value="visibility._id">
             \{{ visibility.visibility }}
           </option>

@@ -38,35 +38,39 @@ const {
 } = require("./../models/class");
 
 router.post("/getDocuments", (req, res) => {
-  Document.getDocuments().then((documents) => {
-    res.status(200).send(documents);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
+  Document.getDocuments()
+    .then((documents) => {
+      res.status(200).send(documents);
+    }).catch((e) => {
+      res.status(401).send(e);
+    });
 });
 
 router.post("/getFaculties", authenticate, (req, res) => {
-  Faculty.getFaculties().then((faculties) => {
-    res.status(200).send(faculties);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
+  Faculty.getFaculties()
+    .then((faculties) => {
+      res.status(200).send(faculties);
+    }).catch((e) => {
+      res.status(401).send(e);
+    });
 });
 
 router.post("/getDocumentTypes", (req, res) => {
-  DocumentType.getDocumentTypes().then((documentTypes) => {
-    res.status(200).send(documentTypes);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
+  DocumentType.getDocumentTypes()
+    .then((documentTypes) => {
+      res.status(200).send(documentTypes);
+    }).catch((e) => {
+      res.status(401).send(e);
+    });
 });
 
 router.post("/getSubjectsByFaculty", (req, res) => {
-  Faculty.getSubjectsByFaculty(req.body._id).then((subjects) => {
-    res.status(200).send(subjects);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
+  Faculty.getSubjectsByFaculty(req.body._id)
+    .then((subjects) => {
+      res.status(200).send(subjects);
+    }).catch((e) => {
+      res.status(401).send(e);
+    });
 });
 
 router.post("/getDocumentVisibilityList", (req, res) => {

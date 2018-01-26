@@ -16,10 +16,13 @@ main {
 }
 
 .panel {
-  display: none;
   width: 100%;
   height: 100%;
   font-size: 1.4rem;
   padding: 3vh;
   overflow-y: scroll;
+
+  &:not(.panel__dashboard) {
+    display: none;
+  }
 }

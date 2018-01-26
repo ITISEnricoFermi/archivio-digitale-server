@@ -7,6 +7,16 @@ const {
 } = require("mongodb");
 
 var DocumentTypeSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true,
+    minlength: 1,
+    trim: true,
+    validate: {
+      validator: validator.isAlpha,
+      message: "{VALUE} non è un ID valido."
+    }
+  },
   type: {
     type: String,
     unique: true,

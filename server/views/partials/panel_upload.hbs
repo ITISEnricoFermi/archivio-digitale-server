@@ -40,7 +40,7 @@
     <div class="row">
       <div class="col-1-of-3">
         <select class="module-input-select" id="upload-class" ref="uploadClass">
-          <option class="module-input-option" value="" disabled selected>Classe</option>
+          <option class="module-input-option" value="" selected>Classe</option>
           <option class="module-input-option" v-bind:value="schoolClass._id" v-for="schoolClass in schoolClasses">
             \{{ schoolClass.class }}
           </option>
@@ -48,7 +48,7 @@
       </div>
       <div class="col-1-of-3">
         <select class="module-input-select" id="upload-section" ref="uploadSection">
-          <option class="module-input-option" value="" disabled selected>Sezione</option>
+          <option class="module-input-option" value="" selected>Sezione</option>
           <option class="module-input-option" v-for="section in sections" v-bind:value="section._id">
             \{{ section.section }}
           </option>

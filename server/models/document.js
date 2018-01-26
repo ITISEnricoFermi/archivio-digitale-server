@@ -14,11 +14,14 @@ var DocumentSchema = new mongoose.Schema({
     unique: false
   },
   type: {
-    type: mongoose.Schema.ObjectId,
+    type: String,
     required: true,
     minlength: 1,
-    unique: false,
     trim: true,
+    validate: {
+      validator: validator.isAlpha,
+      message: "{VALUE} non è un ID valido."
+    },
     ref: "document_type"
   },
   author: {
@@ -95,11 +98,12 @@ var DocumentSchema = new mongoose.Schema({
 DocumentSchema.statics.getDocuments = function() {
   var Document = this;
 
-  return Document.find({}).then((results) => {
-    return Promise.resolve(results);
-  }, (e) => {
-    return Promise.reject(e);
-  });
+  return Document.find({})
+    .then((results) => {
+      return Promise.resolve(results);
+    }, (e) => {
+      return Promise.reject(e);
+    });
 
 };
 

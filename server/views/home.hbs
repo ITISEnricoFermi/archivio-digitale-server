@@ -43,19 +43,18 @@
           </ul>
         </footer>
       </section>
-      <section class="section-login">
+      <section class="section-login" id="loginApp">
 
         <div class="login-box">
           <h3 class="heading-tertiary login-box__heading-tertiary u-margin-bottom-big">Sei un professore? Entra con il tuo account</h3>
-          <input type="email" class="home-text-field login-box__email-field u-margin-top-big u-margin-bottom-big" name="login-email" id="login-email" placeholder="Email" autocomplete="off" required>
-          <input type="password" class="home-text-field login-box__password-field u-margin-top-big u-margin-bottom-big" name="login-password" id="login-password" placeholder="Password" autocomplete="off" required>
-          <button class="login-box__submit" name="login-submit u-margin-top-big u-margin-bottom-big" id="login-submit">Login</button>
+          <input type="email" class="home-text-field login-box__email-field u-margin-top-big u-margin-bottom-big" name="login-email" placeholder="Email" autocomplete="off" required ref="loginEmail" @keyup.enter="login">
+          <input type="password" class="home-text-field login-box__password-field u-margin-top-big u-margin-bottom-big" name="login-password" placeholder="Password" autocomplete="off" required ref="loginPassword" @keyup.enter="login">
+          <button class="login-box__submit" name="login-submit u-margin-top-big u-margin-bottom-big" @click="login">Login</button>
           <a href="mailto:richard.sangiorgio@gmail.com" class="login-box__forgot">Password dimenticata?</a>
         </div>
 
       </section>
     </main>
-    <script src="js/views/home/functions.js" type="text/javascript"></script>
     <script src="js/views/home/script.js" type="text/javascript"></script>
   </body>
 </html>

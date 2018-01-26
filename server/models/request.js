@@ -64,34 +64,29 @@ RequestSchema.statics.getRequests = function() {
 };
 
 RequestSchema.statics.acceptRequestById = function(id) {
-  var Request = this;
+    var Request = this;
 
-  return Request.findById(id)
-    .then((request) => {
-      return User.findById(request.userId)
-        .then((user) => {
-          return user.update({
-            state: "active"
-          }).then((user) => {
-            return Request.findByIdAndRemove(request.id)
-              .then((request) => {
-                return Promise.resolve(request);
-              }).catch((e) => {
-                return Promise.reject(e);
-              });
-          }).catch((e) => {
-            return Promise.reject(e);
-          });
-        }).catch((e) => {
-          return Promise.reject();
+    return Request.findById(id)
+      .then((request) => {
+        return User.findById(request.userId);
+      })
+      .then((user) => {
+        return user.update({
+          state: "active"
         });
-    }).catch((e) => {
-      return Promise.reject(e);
-    });
-}
+      })
+      .then((user) => {
+        return Request.findByIdAndRemove(request.id);
+      })
+      .then((request) => {
+        return Promise.resolve(request);
+      })
+      .catch((e) => {
+        return Promise.reject(e);
+      });
 
-var Request = mongoose.model("Request", RequestSchema);
+    var Request = mongoose.model("Request", RequestSchema);
 
-module.exports = {
-  Request
-};
+    module.exports = {
+      Request
+    };

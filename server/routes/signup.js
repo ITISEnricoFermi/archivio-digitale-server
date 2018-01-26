@@ -9,9 +9,9 @@ const {
   User
 } = require("./../models/user");
 
-const {
-  Request
-} = require("./../models/request");
+// const {
+//   Request
+// } = require("./../models/request");
 
 //GET
 router.get("/", (req, res) => {
@@ -49,15 +49,15 @@ router.post("/", (req, res) => {
 
 });
 
-router.post("/addRequest", (req, res) => {
-  var id = req.body._id;
-  Request.addRequest(id)
-    .then((request) => {
-      res.status(200).send(request);
-    }).catch((e) => {
-      res.status(400).send(e);
-    });
-});
+// router.post("/addRequest", (req, res) => {
+//   var id = req.body._id;
+//   Request.addRequest(id)
+//     .then((request) => {
+//       res.status(200).send(request);
+//     }).catch((e) => {
+//       res.status(400).send(e);
+//     });
+// });
 
 
 module.exports = router;

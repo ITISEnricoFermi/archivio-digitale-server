@@ -58,8 +58,20 @@ body {
   font-size: 4rem;
   font-weight: lighter; }
 
+.heading-secondary {
+  font-size: 3rem;
+  font-weight: lighter; }
+
 .heading-tertiary {
   font-size: 2rem;
+  font-weight: lighter; }
+
+.heading-fourth {
+  font-size: 1.5rem;
+  font-weight: lighter; }
+
+.heading-fifth {
+  font-size: 1rem;
   font-weight: lighter; }
 
 .clearfix::after {
@@ -339,14 +351,61 @@ body {
     width: calc((100% - 1rem * 4) / 5); }
 
 .panel__dashboard {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas: "recentPosts profile" "topProfiles topProfiles"; }
+  display: grid; }
+  .panel__dashboard-box {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "recentPosts profile" "recentPosts topProfiles";
+    grid-gap: 3vh;
+    width: 100%;
+    height: 100%; }
+    .panel__dashboard-box .module {
+      margin: 0; }
   .panel__dashboard--recent-posts {
-    grid-area: recentPosts; }
+    grid-area: recentPosts;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
+    grid-gap: 3vh; }
+    .panel__dashboard--recent-posts .document-box__content {
+      height: 100%; }
+      .panel__dashboard--recent-posts .document-box__content--img {
+        height: 100%;
+        float: left; }
+        .panel__dashboard--recent-posts .document-box__content--img-src {
+          height: 100%; }
+      .panel__dashboard--recent-posts .document-box__content--info {
+        text-align: left;
+        float: left;
+        padding: 1rem;
+        height: 100%; }
+        .panel__dashboard--recent-posts .document-box__content--info * {
+          word-break: break-all; }
+        .panel__dashboard--recent-posts .document-box__content--info-title {
+          height: 100%; }
   .panel__dashboard--profile {
-    grid-area: profile; }
+    grid-area: profile;
+    display: table;
+    height: 100%; }
+    .panel__dashboard--profile .profile-box {
+      display: table-cell;
+      vertical-align: middle; }
+      .panel__dashboard--profile .profile-box .profile-img {
+        width: 20vh;
+        height: 20vh;
+        display: inline-block;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        -webkit-clip-path: circle(50% at 50% 50%);
+        clip-path: circle(50% at 50% 50%); }
+      .panel__dashboard--profile .profile-box .profile-info {
+        margin: 1rem; }
+        .panel__dashboard--profile .profile-box .profile-info--name {
+          margin: 0.5rem; }
+        .panel__dashboard--profile .profile-box .profile-info--documents {
+          margin: 0.5rem; }
   .panel__dashboard--top-profiles {
     grid-area: topProfiles; }
 
@@ -365,9 +424,10 @@ main {
   grid-area: menu; }
 
 .panel {
-  display: none;
   width: 100%;
   height: 100%;
   font-size: 1.4rem;
   padding: 3vh;
   overflow-y: scroll; }
+  .panel:not(.panel__dashboard) {
+    display: none; }

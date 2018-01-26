@@ -19,7 +19,7 @@ var authenticate = (req, res, next) => {
       return Promise.reject();
     }
 
-    req.user = _.pick(user, ["_id", "firstname", "lastname", "email", "privileges"]);
+    req.user = _.pick(user, ["_id", "firstname", "lastname", "email", "privileges", "accesses", "img"]);
     req.token = token;
     next();
 

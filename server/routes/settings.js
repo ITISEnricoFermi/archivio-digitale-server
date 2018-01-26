@@ -54,7 +54,6 @@ router.post("/updateInformations", authenticate, (req, res) => {
 
   var body = _.pick(req.body, ["oldPassword", "newPassword"]);
 
-  console.log(body);
   User.findByCredentials(req.user.email, body.oldPassword)
     .then((user) => {
       console.log(user);
@@ -64,16 +63,13 @@ router.post("/updateInformations", authenticate, (req, res) => {
 
       user.password = body.newPassword;
       user.tokens = [];
-      user.save()
-        .then((user) => {
-          res.status(200).send();
-        })
-        .catch((e) => {
-          res.status(400).send(e);
-        });
+      return user.save();
+    })
+    .then((user) => {
+      res.status(200).send();
     })
     .catch((e) => {
-      res.status(401).send(e);
+      res.status(400).send(e);
     });
 
 });
@@ -89,19 +85,13 @@ router.post("/updateProfilePic", authenticate, upload.single("picToUpload"), (re
   User.findById(req.user._id)
     .then((user) => {
       user.img = file.filename;
-      return user.save()
-        .then(() => {
-          res.status(200).send("Immagine di profilo cambiata con successo.");
-          console.log(req.file);
-        })
-        .catch((e) => {
-          console.log("Problema 2");
-          return Promise.reject(e);
-        });
+      return user.save();
+    })
+    .then(() => {
+      res.status(200).send("Immagine di profilo cambiata con successo.");
     })
     .catch((e) => {
-      console.log("Problema 1");
-      res.status(404).send(e);
+      return Promise.reject(e);
     });
 
 });
@@ -111,18 +101,16 @@ router.post("/disableAccount", authenticate, (req, res) => {
     .then((user) => {
 
       user.state = "disabled";
-      user.save()
-        .then((user) => {
-          res.status(200).send(user);
-        })
-        .catch((e) => {
-          res.status(400).send(e);
-        });
+      return user.save()
 
     })
+    .then(() => {
+      res.status(200).send();
+    })
     .catch((e) => {
-      res.status(404).send((e));
+      res.status(400).send(e);
     });
+
 });
 
 

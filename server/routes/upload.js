@@ -30,9 +30,9 @@ const fileFilter = (req, file, cb) => {
   ];
 
   if (mimeypes.indexOf(file.mimetype) === -1) {
-    cb(null, true);
+    cb(null, false); // Il file usa un formato non ammesso
   } else {
-    cb(null, false);
+    cb(null, true); // Il file usa un formato permesso
   }
 
 };

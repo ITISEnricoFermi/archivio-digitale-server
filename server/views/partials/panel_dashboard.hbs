@@ -1,12 +1,47 @@
 <!-- PANEL DASHBOARD -->
-<div class="panel panel__dashboard">
-  <div class="module panel__dashboard--recent-posts">
+<div class="panel panel__dashboard" id="panel-dashboard">
+  <div class="panel__dashboard-box">
+    <div class="panel__dashboard--recent-posts">
+      <div class="module document-box" v-if="response">
+        <p>\{{ responseMessage }}</p>
+      </div>
+      <div class="module document-box" v-for="document in recentDocuments" v-else>
+        <div class="document-box__content">
+          <div class="document-box__content--img">
+            <img src="images/mimes/svg.svg" alt="Logo documento" class="document-box__content--img-src">
+          </div>
+          <div class="document-box__content--info">
+            <div class="row">
+              <div class="col-1-of-1">
+                <p class="docuent-box__content--info-title heading-tertiary">\{{document.name}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-1-of-1">
+                <p class="document-box__content--info-name heading-fourth">\{{document.author.firstname}} \{{document.author.lastname}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-1-of-1">
+                <p class="document-box__content--info-name heading-fourth">\{{document.description}}</p>
+              </div>
+            </div>
 
-  </div>
-  <div class="module panel__dashboard--profile">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="module panel__dashboard--profile">
+      <div class="profile-box">
+        <div v-bind:style="'background-image: url(pics/' + user.img + ');'" class="profile-img"></div>
+        <div class="profile-info">
+          <p class="profile-info--name heading-secondary">\{{user.firstname}} \{{user.lastname}}</p>
+          <p class="profile-info--documents heading-tertiary">Pubblicazioni: \{{user.documents}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="module panel__dashboard--top-profiles">
 
-  </div>
-  <div class="module panel__dashboard--top-profiles">
-
+    </div>
   </div>
 </div>

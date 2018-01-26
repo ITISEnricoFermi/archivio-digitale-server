@@ -13,10 +13,6 @@ const {
   User
 } = require("./../models/user");
 
-const {
-  Request
-} = require("./../models/request");
-
 router.post("/createUser", (req, res) => {
   console.log(req.body);
   var body = _.pick(req.body, ["firstname", "lastname", "email", "password", "privileges"]);
@@ -42,22 +38,48 @@ router.post("/getUsers", (req, res) => {
 
 router.post("/getRequests", (req, res) => {
 
-  Request.getRequests()
-    .then((requests) => {
-      res.status(200).send(requests);
-    }).catch((e) => {
+  User.find({
+      state: "pending"
+    })
+    .then((users) => {
+      res.status(200).send(users);
+    })
+    .catch((e) => {
       res.status(400).send(e);
     });
+
 });
 
 router.post("/acceptRequestById", (req, res) => {
 
-  Request.acceptRequestById(req.body._id)
-    .then((request) => {
-      res.status(200).send(request);
-    }).catch((e) => {
+  let id = req.body._id;
+
+  User.findById(id)
+    .then((user) => {
+      user.state = "active";
+      return user.save();
+    })
+    .then(() => {
+      res.status(200).send("Richiesta d'iscrizione accettata.");
+    })
+    .catch((e) => {
       res.status(400).send(e);
     });
+
+});
+
+router.post("/refuseRequestById", (req, res) => {
+
+  let id = req.body._id;
+
+  User.findByIdAndRemove(id)
+    .then(() => {
+      res.status(200).send("Richiesta d'iscrizione rifiutata.");
+    })
+    .catch((e) => {
+      res.status(400).send(e);
+    });
+
 });
 
 module.exports = router;
