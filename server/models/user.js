@@ -102,7 +102,7 @@ UserSchema.methods.toJSON = function() {
   var user = this;
   var userObject = user.toObject();
 
-  return _.pick(userObject, ["_id", "firstname", "lastname", "email", "state"]);
+  return _.pick(userObject, ["_id", "firstname", "lastname", "email", "state", "privileges"]);
 }
 
 UserSchema.methods.generateAuthToken = function() {
@@ -183,22 +183,24 @@ UserSchema.statics.findUser = function(key) {
   var User = this;
 
   return User.find({
-    $text: {
-      $search: key
-    }
-  }, {
-    score: {
-      $meta: "textScore"
-    }
-  }).sort({
-    score: {
-      $meta: "textScore"
-    }
-  }).then((results) => {
-    return Promise.resolve(results);
-  }, (e) => {
-    return Promise.reject(e);
-  });
+      $text: {
+        $search: key
+      }
+    }, {
+      score: {
+        $meta: "textScore"
+      }
+    }).sort({
+      score: {
+        $meta: "textScore"
+      }
+    })
+    .then((results) => {
+      return Promise.resolve(results);
+    })
+    .catch((e) => {
+      return Promise.reject(e);
+    });
 
 };
 

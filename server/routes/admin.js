@@ -28,11 +28,12 @@ router.post("/createUser", (req, res) => {
 
 router.post("/getUsers", (req, res) => {
 
-  User.findUser(req.body.key).then((users) => {
-    res.status(200).send(users);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
+  User.findUser(req.body.key)
+    .then((users) => {
+      res.status(200).send(users);
+    }).catch((e) => {
+      res.status(401).send(e);
+    });
 
 });
 
@@ -78,6 +79,51 @@ router.post("/refuseRequestById", (req, res) => {
     })
     .catch((e) => {
       res.status(400).send(e);
+    });
+
+});
+
+router.post("/resetPassword", (req, res) => {
+  let id = req.body._id;
+});
+
+router.post("/togglePrivileges", (req, res) => {
+  let id = req.body._id;
+  User.findById(id)
+    .then((user) => {
+      if (user.privileges === "admin") {
+        user.privileges = "user";
+      } else {
+        user.privileges = "admin";
+      }
+
+      return user.save();
+    })
+    .then(() => {
+      res.status(200).send();
+    })
+    .catch((e) => {
+      res.status(400).send(e);
+    });
+});
+
+router.post("/toggleState", (req, res) => {
+  let id = req.body._id;
+  User.findById(id)
+    .then((user) => {
+      if (user.state === "active") {
+        user.state = "disabled";
+      } else {
+        user.state = "active";
+      }
+
+      return user.save();
+    })
+    .then(() => {
+      res.status(200).send();
+    })
+    .catch((e) => {
+      res.status(400).send();
     });
 
 });

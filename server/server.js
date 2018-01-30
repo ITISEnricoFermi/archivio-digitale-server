@@ -97,6 +97,16 @@ app.use(express.static(__dirname + "/public"));
 app.set("view engine", "hbs");
 
 
+io.on("connection", (socket) => {
+  console.log("User connected.");
+
+  socket.on("createDocument", () => {
+    console.log("Document created.");
+    io.emit("newDocument");
+  });
+
+});
+
 app.get("/", authenticate, (req, res) => {
   res.render("index", {
     pageTitle: "Archivio Digitale - ITIS Enrico Fermi",

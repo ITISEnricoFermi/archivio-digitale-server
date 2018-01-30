@@ -33,4 +33,23 @@ router.post("/me/", authenticate, (req, res) => {
 
 });
 
+router.post("/me/documents", authenticate, (req, res) => {
+  var body = _.pick(req.body, ["visibility"]);
+
+  Document.find({
+      author: req.user._id,
+      visibility: body.visibility
+    })
+    .sort({
+      _id: 1
+    })
+    .then((documents) => {
+      res.status(200).send(documents);
+    })
+    .catch((e) => {
+      res.status(400).send(e);
+    });
+
+});
+
 module.exports = router;

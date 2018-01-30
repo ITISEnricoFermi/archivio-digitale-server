@@ -75,19 +75,11 @@
 
       }
 
-      &--password-reset, &--account-disable {
+      &--password-reset, &--account-disable , &--toggle-privileges{
         display: inline-block;
         text-decoration: underline;
         font-size: $font-default-2;
-      }
-
-      &--password-reset {
-        color: $color-button-blue;
-      }
-
-      &--account-disable {
-        color: $color-button-red;
-        margin-left: 1rem;
+        cursor: pointer;
       }
 
     }

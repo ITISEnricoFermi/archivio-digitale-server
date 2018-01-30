@@ -12,39 +12,51 @@ popUpClose.addEventListener("click", function() {
   popUp.style.visibility == "hidden";
 });
 
+var socket = io();
 
-// PANEL dashboard
+socket.on("newDocument", function() {
+  panelDashboard.getRecentDocuments();
+  panelDashboard.getProfileInfo();
+});
+
+
+// PANEL DASHBOARD
 
 var panelDashboard = new Vue({
   el: "#panel-dashboard",
   data: {
     recentDocuments: [],
-    user: "",
+    user: {
+      img: "profile.jpg"
+    },
     response: false,
     responseMessage: ""
   },
   created: function() {
-    axios.post("/dashboard/recentPosts")
-      .then((documents) => {
-        this.recentDocuments = documents.data;
-      })
-      .catch((e) => {
-        this.response = true;
-        this.responseMessage = e.response.data;
-      });
-
-    axios.post("/user/me")
-      .then((user) => {
-        this.user = user.data;
-      })
-      .catch((e) => {
-        this.respomse = true;
-        this.responseMessage = e.response.data;
-      });
+    this.getRecentDocuments();
+    this.getProfileInfo();
   },
   methods: {
     getRecentDocuments: function() {
-
+      return axios.post("/dashboard/recentPosts")
+        .then((documents) => {
+          this.recentDocuments = documents.data;
+        })
+        .catch((e) => {
+          this.response = true;
+          this.responseMessage = e.response.data;
+        });
+    },
+    getProfileInfo: function() {
+      return axios.post("/user/me")
+        .then((user) => {
+          this.user = user.data;
+          panelProfile.user = user.data;
+        })
+        .catch((e) => {
+          this.response = true;
+          this.responseMessage = e.response.data;
+        });
     }
   }
 })
@@ -152,9 +164,10 @@ var panelUpload = new Vue({
           this.$refs.uploadVisibility.value = "";
           this.$refs.uploadDescription.value = "";
 
+          socket.emit("createDocument");
+
         })
         .catch((e) => {
-          console.log(e.response.data);
           this.response = true;
           this.responseMessage = e.response.data;
         });
@@ -330,7 +343,34 @@ var panelAdmin = new Vue({
         .catch((e) => {
           this.response = true;
           this.responseMessage = e.response.data;
-        }):
+        });
+    },
+    resetPassword: function(id) {
+
+    },
+    togglePrivileges: function(id) {
+      axios.post("/admin/togglePrivileges", {
+          _id: id
+        })
+        .then(() => {
+          this.search();
+        })
+        .catch((e) => {
+          this.response = true;
+          this.responseMessage = e.response.data;
+        });
+    },
+    toggleState: function(id) {
+      axios.post("/admin/toggleState", {
+          _id: id
+        })
+        .then(() => {
+          this.search();
+        })
+        .catch((e) => {
+          this.response = true;
+          this.responseMessage = e.response.data;
+        });
     }
   }
 });
@@ -382,6 +422,42 @@ var panelSettings = new Vue({
       axios.post("/settings/disableAccount")
         .then(() => {
           window.location.replace("/");
+        })
+        .catch((e) => {
+          this.response = true;
+          this.responseMessage = e.response.data;
+        });
+    }
+  }
+});
+
+// PANEL PROFILE
+
+var panelProfile = new Vue({
+  el: "#panel-profile",
+  data: {
+    user: {
+      img: "profile.jpg"
+    },
+    tab: "pubblico",
+    response: false,
+    responseMessage: "",
+    documents: []
+  },
+  created: function() {
+    this.getDocuments();
+  },
+  methods: {
+    showTab: function(privileges) {
+      this.tab = privileges;
+      this.getDocuments();
+    },
+    getDocuments: function() {
+      axios.post("/user/me/documents", {
+          visibility: this.tab
+        })
+        .then((documents) => {
+          this.documents = documents.data;
         })
         .catch((e) => {
           this.response = true;

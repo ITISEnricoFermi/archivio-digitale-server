@@ -20,6 +20,9 @@ ClassSchema.statics.getClasses = function() {
   var Class = this;
 
   return Class.find()
+    .sort({
+      class: 1
+    })
     .then((classes) => {
       return Promise.resolve(classes);
     }, (e) => {
