@@ -240,6 +240,7 @@ var panelSearch = new Vue({
           visibility: document.getElementById("search-visibility").value
         })
         .then((response) => {
+          console.log(response.data);
           this.documents = response.data
         })
         .catch((e) => {
