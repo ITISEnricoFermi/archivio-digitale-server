@@ -50,6 +50,10 @@
             display: inline-block;
             margin: 0 1.5rem;
             vertical-align: middle;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 70%;
+            white-space: nowrap;
 
             span {
               font-weight: 400;
