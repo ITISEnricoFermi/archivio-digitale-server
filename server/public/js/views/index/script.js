@@ -39,7 +39,26 @@ var panelDashboard = new Vue({
     getRecentDocuments: function() {
       return axios.post("/dashboard/recentPosts")
         .then((documents) => {
-          this.recentDocuments = documents.data;
+
+          let documents = response.data;
+
+          for (let i = 0; i < documents.length; i++) {
+            if (documents[i].class == null) {
+              documents[i].class = {
+                _id: "comune",
+                  class: "Comune"
+              }
+            }
+
+            if (documents[i].section == null) {
+              documents[i].section = {
+                _id: "comune",
+                section: "Comune"
+              }
+            }
+          }
+
+          this.recentDocuments = documents;
         })
         .catch((e) => {
           this.response = true;
