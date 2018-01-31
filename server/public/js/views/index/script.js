@@ -38,7 +38,7 @@ var panelDashboard = new Vue({
   methods: {
     getRecentDocuments: function() {
       return axios.post("/dashboard/recentPosts")
-        .then((documents) => {
+        .then((response) => {
 
           let documents = response.data;
 
