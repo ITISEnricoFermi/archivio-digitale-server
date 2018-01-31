@@ -48,17 +48,11 @@ main {
     display: table-cell;
     vertical-align: middle;
 
-    &__email-field {
+
+
+    &__email-field, &__password-field {
       border-color: $color-white;
-
-      &::placeholder {
-        color: $color-white;
-      }
-
-    }
-
-    &__password-field {
-      border-color: $color-white;
+      color: inherit;
 
       &::placeholder {
         color: $color-white;
