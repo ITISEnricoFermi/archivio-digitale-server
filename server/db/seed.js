@@ -260,7 +260,8 @@ var userArray = [{
   "firstname": "Alan",
   "lastname": "Turing",
   "email": "alan.turing@test.com",
-  "password": "alanturing"
+  "password": "alanturing",
+  "img": "../images/elements/alan.jpg"
 }];
 
 userArray.forEach((user) => {

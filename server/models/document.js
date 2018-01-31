@@ -180,11 +180,11 @@ DocumentSchema.statics.searchDocuments = function(search) {
       select: "subject"
     })
     .populate({
-      path: "Class",
+      path: "class",
       select: "class"
     })
     .populate({
-      path: "Section",
+      path: "section",
       select: "section"
     })
     .populate("visibility", "visibility")

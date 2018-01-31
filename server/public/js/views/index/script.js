@@ -155,10 +155,6 @@ var panelUpload = new Vue({
           this.response = true;
           this.responseMessage = response.data;
 
-          this.$refs.forEach(function(ref) {
-            ref.value = "";
-          });
-
           this.$refs.uploadName.value = "";
           this.$refs.uploadType.value = "";
           this.$refs.uploadFaculty.value = "";
