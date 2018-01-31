@@ -6,37 +6,28 @@
         <p>\{{ responseMessage }}</p>
       </div>
       <div class="module document-box" v-for="document in recentDocuments" v-else>
-        <div class="document-box__content">
-          <div class="document-box__content--img">
-            <img src="images/mimes/svg.svg" alt="Logo documento" class="document-box__content--img-src">
+        <div class="document-box-content">
+          <div class="document-box-content__header">
+            <div class="document-box-content__header--img">
+              <img v-bind:src="'pics/' + document.author.img" alt="Foto profilo utente">
+            </div>
+            <p class="document-box-content__header--heading heading-fourth">
+              <span>\{{document.author.firstname}} \{{document.author.lastname}}</span> ha pubblicato
+              <span>\{{document.name}}</span>.
+            </p>
+            <a v-bind:href="'documents/' + document.directory" class="document-box-content__header--download" download>
+                <i class="fas fa-download"></i>
+            </a>
           </div>
-          <div class="document-box__content--info">
-            <div class="row">
-              <div class="col-1-of-1">
-                <a v-bind:href="'documents/' + document.directory" class="document-box__content--info-title heading-tertiary" download>\{{document.name}}</a>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-1-of-1">
-                <p class="document-box__content--info-name heading-fourth">\{{document.author.firstname}} \{{document.author.lastname}}</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-1-of-1">
-                <p class="document-box__content--info-name heading-fourth">\{{document.description}}</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-1-of-3">
-                <p class="document-box__content--info-name heading-fourth">\{{document.type.type}}</p>
-              </div>
-              <div class="col-1-of-3">
-                <p class="document-box__content--info-name heading-fourth">\{{document.faculty.faculty}}</p>
-              </div>
-              <div class="col-1-of-3">
-                <p class="document-box__content--info-name heading-fourth">\{{document.subject.subject}}</p>
-              </div>
-            </div>
+          <div class="document-box-content__info">
+            <p class="document-box-content__info--description">\{{document.description}}</p>
+          </div>
+          <div class="document-box-content__footer">
+            <ul class="document-box-content__footer--info">
+              <li>\{{document.subject.subject}}</li>
+              <li>\{{document.class.class}} \{{document.section.section}}</li>
+              <li>\{{document.type.type}}</li>
+            </ul>
           </div>
         </div>
       </div>

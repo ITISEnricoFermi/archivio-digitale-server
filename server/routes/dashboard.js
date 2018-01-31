@@ -26,7 +26,7 @@ router.post("/recentPosts", authenticate, (req, res) => {
     .sort({
       _id: -1
     })
-    .populate("author", "firstname lastname")
+    .populate("author", "firstname lastname img")
     .populate("type")
     .populate("faculty")
     .populate("subject")
