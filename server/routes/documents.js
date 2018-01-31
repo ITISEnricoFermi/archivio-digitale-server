@@ -8,7 +8,6 @@ const {
 
 
 router.get("/*", authenticate, (req, res, next) => {
-  console.log("Url:", req.url);
   next();
 });
 

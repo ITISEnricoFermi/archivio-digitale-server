@@ -27,7 +27,7 @@ var panelDashboard = new Vue({
   data: {
     recentDocuments: [],
     user: {
-      img: "profile.jpg"
+      img: "../images/elements/profile.jpg"
     },
     response: false,
     responseMessage: ""
@@ -155,6 +155,10 @@ var panelUpload = new Vue({
           this.response = true;
           this.responseMessage = response.data;
 
+          this.$refs.forEach(function(ref) {
+            ref.value = "";
+          });
+
           this.$refs.uploadName.value = "";
           this.$refs.uploadType.value = "";
           this.$refs.uploadFaculty.value = "";
@@ -280,11 +284,15 @@ var panelAdmin = new Vue({
     key: "",
     users: "",
     privileges: "",
+    subjects: [],
     requests: [],
     response: false,
-    responseMessage: ""
+    responseMessage: "",
+    multipleSelectField: "",
+    multipleSelectResults: [],
+    multipleSelectOutput: []
   },
-  created() {
+  created: function() {
     axios.post("/api/getPrivileges")
       .then((response) => {
         this.privileges = response.data;
@@ -294,9 +302,69 @@ var panelAdmin = new Vue({
         this.responseMessage = e.response.data;
       });
 
+    axios.post("/api/getSubjects")
+      .then((response) => {
+        this.subjects = response.data;
+      })
+      .catch((e) => {
+        this.reponse = true;
+        this.responseMessage = e.response.data;
+      });
+
     this.getRequests();
   },
   methods: {
+
+    // ACCESSIBILITÀ COMPONENTE
+    typing: function(event) {
+
+      if (event.key == "Enter") {
+        if (this.multipleSelectOutput.length != this.subjects.length) {
+          this.multipleSelectOutput.push(this.multipleSelectResults[0]);
+          this.multipleSelectField = "";
+          return this.multipleSelectResults = [];
+        }
+      }
+
+      this.multipleSelectResults = [];
+      if (this.multipleSelectField) {
+        this.subjects.forEach((subject) => {
+          if (this.multipleSelectOutput.indexOf(subject) != -1) {
+            return true;
+          }
+          if ((new RegExp(this.multipleSelectField)).test(subject.subject.toLowerCase())) {
+            this.multipleSelectResults.push(subject);
+          }
+        });
+      }
+    },
+
+    click: function(event) {
+      var id = event.target.getAttribute("value");
+      var element = (this.multipleSelectResults.filter(function(object) {
+        return object._id == id;
+      }))[0];
+
+      this.multipleSelectOutput.push(element);
+      this.multipleSelectField = "";
+      return this.multipleSelectResults = [];
+    },
+
+    remove: function(event) {
+      var id = event.target.getAttribute("value");
+
+      var element = (this.multipleSelectOutput.filter(function(object) {
+        return object._id == id;
+      }))[0];
+      var index = this.multipleSelectOutput.indexOf(element);
+
+      this.multipleSelectOutput.splice(index, 1);
+      this.multipleSelectField = "";
+      return this.multipleSelectResults = [];
+    },
+
+
+    // ALTRE FUNZIONI
     search: function() {
       axios.post("/admin/getUsers/", {
           key: this.key
@@ -371,6 +439,34 @@ var panelAdmin = new Vue({
           this.response = true;
           this.responseMessage = e.response.data;
         });
+    },
+    createUser: function() {
+      let user = {
+        firstname: this.$refs.adminCreateUserFirstname.value,
+        lastname: this.$refs.adminCreateUserLastname.value,
+        email: this.$refs.adminCreateUserEmail.value,
+        password: this.$refs.adminCreateUserPassword.value,
+        privileges: this.$refs.adminCreateUserPrivileges.value,
+        accesses: this.multipleSelectOutput
+      }
+
+      axios.post("/admin/createUser", user)
+        .then((user) => {
+
+          this.$refs.adminCreateUserFirstname.value = "";
+          this.$refs.adminCreateUserLastname.value = "";
+          this.$refs.adminCreateUserEmail.value = "";
+          this.$refs.adminCreateUserPassword.value = "";
+          this.$refs.adminCreateUserPrivileges.value = "";
+          this.multipleSelectOutput = [];
+
+          this.response = true;
+          this.responseMessage = "Utente creato correttamente!";
+        })
+        .catch((e) => {
+          this.response = true;
+          this.responseMessage = e.response.data;
+        });
     }
   }
 });
@@ -437,7 +533,7 @@ var panelProfile = new Vue({
   el: "#panel-profile",
   data: {
     user: {
-      img: "profile.jpg"
+      img: "../images/elements/profile.jpg"
     },
     tab: "pubblico",
     response: false,

@@ -1,0 +1,68 @@
+.module-multiple-select {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+
+  &__results {
+    margin: 0px;
+    width: 100%;
+    position: absolute;
+
+    ul {
+      padding: 0px;
+      margin: 0px;
+    }
+
+    li {
+      padding: 9px 8px;
+      color: #FFFFFF;
+      background: #FFFFFF;
+      width: 100%;
+      border-color: #DBDBDB;
+      border-style: solid;
+      border-width: 0px 1px 1px 1px;
+      border-radius: 0px;
+      color: #151A22;
+      font-family: sans-serif;
+      font-size: 14px;
+      display: block;
+      cursor: pointer;
+
+      &:first-child {
+        background: #F7F7F7;
+      }
+
+      &:last-child {
+        border-radius: 0px 0px 3px 3px;
+      }
+
+    }
+
+  }
+
+}
+
+.module-multiple-select-tag-box {
+
+  ul {
+    padding: 0;
+
+    li {
+      margin: 1rem 0rem;
+      display: inline-block;
+      background-color: #DBDBDB;
+      border-radius: 20px;
+      padding: 7px;
+      font-size: 12px;
+      font-family: sans-serif;
+      cursor: pointer;
+
+      &:not(:first-child) {
+        margin-left: 5px;
+      }
+
+    }
+
+  }
+
+}

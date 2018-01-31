@@ -30,6 +30,10 @@ const {
 } = require("./../models/section");
 
 const {
+  Subject
+} = require("./../models/subject");
+
+const {
   Privilege
 } = require("./../models/privilege");
 
@@ -50,6 +54,15 @@ router.post("/getFaculties", authenticate, (req, res) => {
   Faculty.getFaculties()
     .then((faculties) => {
       res.status(200).send(faculties);
+    }).catch((e) => {
+      res.status(401).send(e);
+    });
+});
+
+router.post("/getSubjects", authenticate, (req, res) => {
+  Subject.getSubjects()
+    .then((subject) => {
+      res.status(200).send(subject);
     }).catch((e) => {
       res.status(401).send(e);
     });

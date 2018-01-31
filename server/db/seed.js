@@ -39,6 +39,10 @@ const {
   DocumentVisibility
 } = require("./../models/document_visibility");
 
+const {
+  User
+} = require("./../models/user");
+
 var facultyArray = [{
   _id: "comune",
   faculty: "Comune",
@@ -249,6 +253,27 @@ var classArray = [{
   _id: 5,
   class: 5
 }];
+
+var userArray = [{
+  "privileges": "admin",
+  "state": "active",
+  "firstname": "Alan",
+  "lastname": "Turing",
+  "email": "alan.turing@test.com",
+  "password": "test"
+}];
+
+userArray.forEach((user) => {
+  var userToInsert = new User(user);
+
+  userToInsert.save()
+    .then((user) => {
+      return user;;
+    }).catch((e) => {
+      return e;
+    });
+
+});
 
 classArray.forEach((classObj) => {
   var classToInsert = new Class(classObj);

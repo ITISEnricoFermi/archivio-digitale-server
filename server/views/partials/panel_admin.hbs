@@ -23,29 +23,50 @@
   <div class="module">
     <div class="row">
       <div class="col-1-of-2">
-        <input type="text" id="admin__create-user--firstname" class="module-input-text" placeholder="Nome" autocomplete="off">
+        <input type="text" class="module-input-text" placeholder="Nome" autocomplete="off" ref="adminCreateUserFirstname">
       </div>
       <div class="col-1-of-2">
-        <input type="text" id="admin__create-user--lastname" class="module-input-text" placeholder="Cognome" autocomplete="off">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-1-of-2">
-        <input type="email" id="admin__create-user--email" class="module-input-text" placeholder="Email" autocomplete="off">
-      </div>
-      <div class="col-1-of-2">
-        <input type="password" id="admin__create-user--password" class="module-input-text" placeholder="Password" autocomplete="off">
+        <input type="text" class="module-input-text" placeholder="Cognome" autocomplete="off" ref="adminCreateUserLastname">
       </div>
     </div>
     <div class="row">
       <div class="col-1-of-2">
-        <select class="module-input-select" id="admin__create-user--privileges">
+        <input type="email" class="module-input-text" placeholder="Email" autocomplete="off" ref="adminCreateUserEmail">
+      </div>
+      <div class="col-1-of-2">
+        <input type="password" class="module-input-text" placeholder="Password" autocomplete="off" ref="adminCreateUserPassword">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-2">
+        <select class="module-input-select" ref="adminCreateUserPrivileges">
           <option class="module-input-option" disabled>Privilegi</option>
           <option class="module-input-option" v-for="privilege in privileges" v-bind:value="privilege._id">\{{privilege.privilege}}</option>
         </select>
       </div>
       <div class="col-1-of-2">
-        <button class="module-button module-button--green" id="admin__create-user--submit">Crea account</button>
+        <div class="module-multiple-select">
+          <input type="text" class="module-input-text" placeholder="Visibilità" v-model="multipleSelectField" v-on:keyup="typing">
+          <div class="module-multiple-select__results">
+            <ul>
+              <li v-bind:value="result._id" v-for="result in multipleSelectResults" v-on:click="click">\{{ result.subject }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-1" v-if="multipleSelectOutput.length != 0">
+        <div class="module-multiple-select-tag-box">
+          <ul>
+            <li v-bind:value="output._id" v-for="output in multipleSelectOutput" v-on:click="remove">\{{ output.subject }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-1">
+        <button class="module-button module-button--green" @click="createUser">Crea account</button>
       </div>
     </div>
   </div>
@@ -76,6 +97,13 @@
     <div class="row" v-if="users.length === 0">
       <div class="col-1-of-1">
         <p class="module-document-search-noresults">Nessun risultato</p>
+      </div>
+    </div>
+  </div>
+  <div class="module" v-if="response">
+    <div class="row">
+      <div class="col-1-of-1">
+        <p>\{{responseMessage}}</p>
       </div>
     </div>
   </div>

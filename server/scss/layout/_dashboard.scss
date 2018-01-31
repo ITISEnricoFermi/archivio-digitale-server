@@ -18,7 +18,7 @@
   &--recent-posts {
     grid-area: recentPosts;
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
+    //grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 1fr;
     grid-gap: 3vh;
 
@@ -48,7 +48,9 @@
 
           &-title {
             height: 100%;
-            font-weight: bold!important;
+            font-weight: 400;
+            text-decoration: none;
+            color: $color-tertiary;
           }
         }
       }

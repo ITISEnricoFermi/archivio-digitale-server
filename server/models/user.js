@@ -46,7 +46,7 @@ var UserSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 1,
-    default: "profile.jpg"
+    default: "../images/elements/profile.jpg"
   },
   accesses: [{
     _id: {

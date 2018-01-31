@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const _ = require("lodash");
+const validator = require('validator');
 
 // Middleware
 const {
@@ -13,16 +14,33 @@ const {
   User
 } = require("./../models/user");
 
-router.post("/createUser", (req, res) => {
-  console.log(req.body);
-  var body = _.pick(req.body, ["firstname", "lastname", "email", "password", "privileges"]);
+router.post("/createUser", authenticate, (req, res) => {
+
+  var body = _.pick(req.body, ["firstname", "lastname", "email", "password", "privileges", "accesses"]);
   var user = new User(body);
 
-  user.save().then((user) => {
-    res.status(200).send(user);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
+  if (validator.isEmpty(body.firstname) || !validator.isAlpha(body.firstname)) {
+    return res.status(400).send("Nome non valido.");
+  } else if (validator.isEmpty(body.lastname) || !validator.isAlpha(body.lastname)) {
+    return res.status(400).send("Cognome non valido");
+  } else if (validator.isEmpty(body.email) || !validator.isEmail(body.email)) {
+    return res.status(400).send("Email non valida.");
+  } else if (validator.isEmpty(body.password) || body.password.length < 6) {
+    return res.status(400).send("Password non valida o troppo breve. (min. 6).");
+  } else if (validator.isEmpty(body.privileges) || !validator.isAlpha(body.privileges)) {
+    return res.status(400).send("Privilegi non validi.");
+  } else if (body.accesses.length === 0) {
+    return res.status(400).send("Specificare i permessi dell'utente. (min. 1).");
+  }
+
+  user.state = "active";
+
+  user.save()
+    .then((user) => {
+      res.status(200).send(user);
+    }).catch((e) => {
+      res.status(401).send(e);
+    });
 
 });
 

@@ -1,0 +1,8 @@
+{
+  "privileges": "admin",
+  "state": "active",
+  "firstname": "Alan",
+  "lastname": "Turing",
+  "email": "alan.turing@test.com",
+  "password": "test"
+}

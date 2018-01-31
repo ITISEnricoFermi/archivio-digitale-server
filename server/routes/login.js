@@ -37,7 +37,6 @@ router.post("/", (req, res) => {
         .send(token);
     })
     .catch((e) => {
-      console.log(e);
       res.status(400).send(e);
     });
 

@@ -56,7 +56,7 @@ router.post("/updateInformations", authenticate, (req, res) => {
 
   User.findByCredentials(req.user.email, body.oldPassword)
     .then((user) => {
-      console.log(user);
+
       if (validator.isEmpty(body.newPassword) || body.newPassword.length < 6) {
         return res.status(400).send("Password non valida o troppo breve. (min. 6).");
       }

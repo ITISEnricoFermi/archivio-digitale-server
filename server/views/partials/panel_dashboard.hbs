@@ -13,7 +13,7 @@
           <div class="document-box__content--info">
             <div class="row">
               <div class="col-1-of-1">
-                <p class="docuent-box__content--info-title heading-tertiary">\{{document.name}}</p>
+                <a v-bind:href="'documents/' + document.directory" class="document-box__content--info-title heading-tertiary" download>\{{document.name}}</a>
               </div>
             </div>
             <div class="row">

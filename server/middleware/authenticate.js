@@ -24,7 +24,6 @@ var authenticate = (req, res, next) => {
     next();
 
   }).catch((e) => {
-    console.log("Url:", req.url);
     if (req.url === "/") {
       return res.render("home");
     }
