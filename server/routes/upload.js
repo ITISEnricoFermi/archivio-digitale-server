@@ -74,10 +74,10 @@ router.post("/documentUpload", authenticate, upload.single("fileToUpload"), (req
     return res.status(400).send("Specializzazione non valida.");
   } else if (validator.isEmpty(body.subject) || !validator.isAlpha(body.subject)) {
     return res.status(400).send("Materia non valida.");
-  } else if (!validator.isInt(body.class)) {
-    return res.status(400).send("Classe non valida.");
-  } else if (!validator.isAlpha(body.section)) {
-    return res.status(400).send("Sezione non valida");
+    // } else if (!validator.isInt(body.class)) {
+    //   return res.status(400).send("Classe non valida.");
+    // } else if (!validator.isAlpha(body.section)) {
+    //   return res.status(400).send("Sezione non valida");
   } else if (validator.isEmpty(body.visibility) || !validator.isAlpha(body.visibility)) {
     return res.status(400).send("Visibilità non valida.");
   } else if (validator.isEmpty(body.description)) {

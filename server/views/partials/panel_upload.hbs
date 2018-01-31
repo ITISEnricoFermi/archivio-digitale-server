@@ -40,7 +40,7 @@
     <div class="row">
       <div class="col-1-of-3">
         <select class="module-input-select" id="upload-class" ref="uploadClass">
-          <option class="module-input-option" value="" selected>Classe</option>
+          <option class="module-input-option" value="0" selected>Classe</option>
           <option class="module-input-option" v-bind:value="schoolClass._id" v-for="schoolClass in schoolClasses">
             \{{ schoolClass.class }}
           </option>
@@ -56,7 +56,7 @@
       </div>
       <div class="col-1-of-3">
         <select class="module-input-select" id="upload-visibility" ref="uploadVisibility">
-          <option class="module-input-option" value="" disabled selected>Visibilità</option>
+          <option class="module-input-option" value="pubblico" disabled selected>Visibilità</option>
           <option class="module-input-option" v-for="visibility in visibilities" v-bind:value="visibility._id">\{{visibility.visibility}}</option>
         </select>
       </div>

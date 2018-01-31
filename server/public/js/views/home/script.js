@@ -1,8 +1,8 @@
 let loginApp = new Vue({
   el: "#loginApp",
   data: {
-    error: false,
-    errorMessage: ""
+    response: false,
+    responseMessage: ""
   },
   methods: {
     login: function() {
@@ -21,8 +21,8 @@ let loginApp = new Vue({
         })
         .catch((e) => {
           console.log("Errore: ", e);
-          this.error = true;
-          this.errorMessage = e.response.data;
+          this.response = true;
+          this.responseMessage = e.response.data;
         });
     }
   }

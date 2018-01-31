@@ -52,9 +52,9 @@
             <button class="module-button module-button--green" @click="login">Entra</button>
           </div>
         </div>
-        <div class="row" v-if="error">
+        <div class="row" v-if="response">
           <div class="col-1-of-1">
-            <p class="error">\{{errorMessage}}</p>
+            <p class="error">\{{responseMessage}}</p>
           </div>
         </div>
       </div>

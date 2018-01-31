@@ -19,7 +19,6 @@ socket.on("newDocument", function() {
   panelDashboard.getProfileInfo();
 });
 
-
 // PANEL DASHBOARD
 
 var panelDashboard = new Vue({
@@ -159,9 +158,9 @@ var panelUpload = new Vue({
           this.$refs.uploadType.value = "";
           this.$refs.uploadFaculty.value = "";
           this.$refs.uploadSubject.value = "";
-          this.$refs.uploadClass.value = "";
+          this.$refs.uploadClass.value = "0";
           this.$refs.uploadSection.value = "";
-          this.$refs.uploadVisibility.value = "";
+          this.$refs.uploadVisibility.value = "pubblico";
           this.$refs.uploadDescription.value = "";
 
           socket.emit("createDocument");
@@ -230,20 +229,40 @@ var panelSearch = new Vue({
   },
   methods: {
     search: function() {
-      axios.post("/search/searchDocuments/", {
-          name: document.getElementById("search-name").value,
-          type: document.getElementById("search-type").value,
-          faculty: document.getElementById("search-faculty").value,
-          subject: document.getElementById("search-subject").value,
-          class: document.getElementById("search-class").value,
-          section: document.getElementById("search-section").value,
-          visibility: document.getElementById("search-visibility").value
-        })
+      let query = {
+        name: this.$refs.searchName.value,
+        type: this.$refs.searchType.value,
+        faculty: this.$refs.searchFaculty.value,
+        subject: this.$refs.searchSubject.value,
+        class: this.$refs.searchClass.value,
+        section: this.$refs.searchSection.value,
+        visibility: this.$refs.searchVisibility.value
+      };
+
+      axios.post("/search/searchDocuments/", query)
         .then((response) => {
-          console.log(response.data);
-          this.documents = response.data
+          let documents = response.data;
+
+          for (let i = 0; i < documents.length; i++) {
+            if (documents[i].class == null) {
+              documents[i].class = {
+                _id: "comune",
+                  class: "Comune"
+              }
+            }
+
+            if (documents[i].section == null) {
+              documents[i].section = {
+                _id: "comune",
+                section: "Comune"
+              }
+            }
+          }
+
+          this.documents = documents;
         })
         .catch((e) => {
+          return console.log(e.response.data);
           this.errors.push(e);
         });
     },

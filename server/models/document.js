@@ -50,8 +50,6 @@ var DocumentSchema = new mongoose.Schema({
   class: {
     type: Number,
       required: false,
-      minlength: 1,
-      maxlength: 1,
       unique: false,
       trim: true,
       ref: "Class"
@@ -59,13 +57,12 @@ var DocumentSchema = new mongoose.Schema({
   section: {
     type: String,
     required: false,
-    minlength: 1,
     unique: false,
     trim: true,
-    validate: {
-      validator: validator.isAlpha,
-      message: "{VALUE} non è una sezione valida."
-    },
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: "{VALUE} non è una sezione valida."
+    // },
     ref: "Section"
   },
   visibility: {

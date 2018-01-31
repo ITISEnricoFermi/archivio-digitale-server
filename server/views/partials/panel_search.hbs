@@ -3,12 +3,12 @@
   <div class="module">
     <div class="row">
       <div class="col-1-of-1">
-        <input type="text" class="module-input-text" id="search-name" placeholder="Titolo" autocomplete="off">
+        <input type="text" class="module-input-text" placeholder="Titolo" autocomplete="off" ref="searchName">
       </div>
     </div>
     <div class="row">
       <div class="col-1-of-3">
-        <select class="module-input-select" id="search-type">
+        <select class="module-input-select" ref="searchType">
           <option class="module-input-option" value="" selected>Tipo</option>
           <option class="module-input-option" v-bind:value="type._id" v-for="type in types">
             \{{ type.type }}
@@ -16,7 +16,7 @@
         </select>
       </div>
       <div class="col-1-of-3">
-        <select class="module-input-select" id="search-faculty" v-model="selectedFaculty" v-on:change="changeFaculty">
+        <select class="module-input-select" v-model="selectedFaculty" v-on:change="changeFaculty" ref="searchFaculty">
           <option class="module-input-option" value="" selected>Specializzazione</option>
           <option class="module-input-option" v-bind:value="faculty._id" v-for="faculty in faculties">
             \{{ faculty.faculty }}
@@ -24,7 +24,7 @@
         </select>
       </div>
       <div class="col-1-of-3">
-        <select class="module-input-select" id="search-subject">
+        <select class="module-input-select" ref="searchSubject">
           <option class="module-input-option" value="" selected>Materia</option>
             <option class="module-input-option" v-bind:value="subject._id" v-for="subject in subjects">
               \{{ subject.subject }}
@@ -34,7 +34,7 @@
     </div>
     <div class="row">
       <div class="col-1-of-3">
-        <select class="module-input-select" id="search-class">
+        <select class="module-input-select" ref="searchClass">
           <option class="module-input-option" value="" selected>Classe</option>
           <option class="module-input-option" v-bind:value="schoolClass._id" v-for="schoolClass in schoolClasses">
             \{{ schoolClass.class }}
@@ -42,7 +42,7 @@
         </select>
       </div>
       <div class="col-1-of-3">
-        <select class="module-input-select" id="search-section">
+        <select class="module-input-select" ref="searchSection">
           <option class="module-input-option" value="" selected>Sezione</option>
           <option class="module-input-option" v-bind:value="section._id" v-for="section in sections">
             \{{ section.section }}
@@ -50,7 +50,7 @@
         </select>
       </div>
       <div class="col-1-of-3">
-        <select class="module-input-select" id="search-visibility">
+        <select class="module-input-select" ref="searchVisibility">
           <option class="module-input-option" value="" selected>Visibilità</option>
           <option class="module-input-option" v-for="visibility in visibilities" v-bind:value="visibility._id">
             \{{ visibility.visibility }}
@@ -60,7 +60,7 @@
     </div>
     <div class="row">
       <div clas="col-1-of-1">
-        <button class="module-button module-button--green" v-on:click="search">Invia</button>
+        <button class="module-button module-button--green" @click="search">Invia</button>
       </div>
     </div>
   </div>

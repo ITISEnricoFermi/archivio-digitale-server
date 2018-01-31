@@ -177,6 +177,12 @@ main {
     padding: 8rem;
     display: table-cell;
     vertical-align: middle; }
+    .section-login .login-box__error {
+      display: inline-block;
+      color: #FFFFFF;
+      font-size: 1.2rem;
+      font-weight: lighter;
+      margin: 0.5rem; }
     .section-login .login-box__email-field, .section-login .login-box__password-field {
       border-color: #FFFFFF;
       color: inherit; }
@@ -203,6 +209,6 @@ main {
       display: inline-block;
       text-decoration: none;
       font-weight: lighter;
-      font-size: 12px;
-      margin: 5px;
+      font-size: 1.2rem;
+      margin: 0.5rem;
       color: #FFFFFF; }
