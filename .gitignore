@@ -1,5 +1,10 @@
 node_modules/
-server/public/documents/*
-server/public/pics/*
 config.json
 .DS_Store
+
+
+server/public/documents/*
+server/public/pics/*
+
+!server/public/documents/.gitkeep
+!server/public/pics/.gitkeep 
