@@ -81,7 +81,7 @@
         }
 
         &__info {
-          text-align: left;
+          text-align: justify;
 
           &--description {
             color: $color-grey-1;
@@ -95,6 +95,7 @@
             line-height: $line-height-default;
             -webkit-line-clamp: $lines-to-show;
             -webkit-box-orient: vertical;
+            max-width: 85%;
           }
         }
 
@@ -110,6 +111,26 @@
               border-radius: 10rem;
               display: inline-block;
               background-color: $color-white-5;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              max-width: 30%;
+              white-space: nowrap;
+              color: $color-white;
+
+              &:nth-child(1) {
+                background-color: $color-button-blue;
+                border: 1px solid darken($color-button-blue, 3%);
+              }
+
+              &:nth-child(2) {
+                background-color: $color-button-green;
+                border: 1px solid darken($color-button-green, 3%);
+              }
+
+              &:nth-child(3) {
+                background-color: $color-button-yellow;
+                border: 1px solid darken($color-button-yellow, 3%);
+              }
 
               &:not(:first-child) {
                 margin-left: 0.5rem;
@@ -144,11 +165,7 @@
       .profile-info {
         margin: 1rem;
 
-        &--name {
-          margin: 0.5rem;
-        }
-
-        &--documents {
+        &--name, &--documents {
           margin: 0.5rem;
         }
       }

@@ -463,7 +463,7 @@ body {
           .panel__dashboard--recent-posts .document-box-content__header--download:hover {
             box-shadow: 0 0 0.7rem rgba(0, 0, 0, 0.3); }
       .panel__dashboard--recent-posts .document-box-content__info {
-        text-align: left; }
+        text-align: justify; }
         .panel__dashboard--recent-posts .document-box-content__info--description {
           color: #53585E;
           padding-left: 6.5rem;
@@ -475,7 +475,8 @@ body {
           font-size: 1.3rem;
           line-height: 1.4;
           -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical; }
+          -webkit-box-orient: vertical;
+          max-width: 85%; }
       .panel__dashboard--recent-posts .document-box-content__footer {
         width: 100%; }
         .panel__dashboard--recent-posts .document-box-content__footer--info {
@@ -485,7 +486,21 @@ body {
             padding: 0.5rem 1rem;
             border-radius: 10rem;
             display: inline-block;
-            background-color: #DBDBDB; }
+            background-color: #DBDBDB;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 30%;
+            white-space: nowrap;
+            color: #FFFFFF; }
+            .panel__dashboard--recent-posts .document-box-content__footer--info li:nth-child(1) {
+              background-color: #3897f0;
+              border: 1px solid #2a90ef; }
+            .panel__dashboard--recent-posts .document-box-content__footer--info li:nth-child(2) {
+              background-color: #0FC47A;
+              border: 1px solid #0eb671; }
+            .panel__dashboard--recent-posts .document-box-content__footer--info li:nth-child(3) {
+              background-color: #F3A32A;
+              border: 1px solid #f29d1c; }
             .panel__dashboard--recent-posts .document-box-content__footer--info li:not(:first-child) {
               margin-left: 0.5rem; }
   .panel__dashboard--profile {
@@ -506,9 +521,7 @@ body {
         clip-path: circle(50% at 50% 50%); }
       .panel__dashboard--profile .profile-box .profile-info {
         margin: 1rem; }
-        .panel__dashboard--profile .profile-box .profile-info--name {
-          margin: 0.5rem; }
-        .panel__dashboard--profile .profile-box .profile-info--documents {
+        .panel__dashboard--profile .profile-box .profile-info--name, .panel__dashboard--profile .profile-box .profile-info--documents {
           margin: 0.5rem; }
   .panel__dashboard--top-profiles {
     grid-area: topProfiles; }

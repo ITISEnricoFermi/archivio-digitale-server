@@ -34,25 +34,12 @@ var authenticate = (req, res, next) => {
 
 var authenticateAdmin = (req, res, next) => {
 
-  var id = req.user._id;
-
-  if (!req.user) {
-    return Promise.reject();
+  if (req.user.privileges !== "admin") {
+    return res.redirect("/login");
   }
 
-  return User.findById(id)
-    .then((user) => {
-      var privileges = user.privileges;
+  next();
 
-      if (privileges != "admin") {
-        return Promise.reject("L'utente non è un admin.");
-      }
-
-      next();
-
-    }).catch((e) => {
-      return Promise.reject(e);
-    });
 };
 
 var authenticateUser = (req, res, next) => {
