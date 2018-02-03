@@ -55,11 +55,28 @@ var authenticateUser = (req, res, next) => {
 
 };
 
-var authenticateAcesses = (req, res, next) => {
+var authenticateAccesses = (req, res, next) => {
+
+  let query;
+
+  if (req.user.privileges === "admin") {
+    query = {};
+  } else {
+    query = {
+      subject: { // <=====
+        $in: req.user.accesses
+      }
+    };
+  }
+
+  req.query = query;
+
+  next();
 
 };
 
 module.exports = {
   authenticate,
-  authenticateAdmin
+  authenticateAdmin,
+  authenticateAccesses
 };

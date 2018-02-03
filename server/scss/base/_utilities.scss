@@ -47,3 +47,23 @@
 .u-color-yellow {
   color: $color-button-yellow;
 }
+
+.u-bg-color-blue {
+  background-color: $color-button-blue;
+  border: 1px solid darken($color-button-blue, 3%);
+}
+
+.u-bg-color-green {
+  background-color: $color-button-green;
+  border: 1px solid darken($color-button-green, 3%);
+}
+
+.u-bg-color-red {
+  background-color: $color-button-red;
+  border: 1px solid darken($color-button-red, 3%);
+}
+
+.u-bg-color-yellow {
+  background-color: $color-button-yellow;
+  border: 1px solid darken($color-button-yellow, 3%);
+}

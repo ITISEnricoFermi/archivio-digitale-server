@@ -104,10 +104,31 @@ DocumentSchema.statics.getDocuments = function() {
 
 };
 
-DocumentSchema.statics.searchDocuments = function(search) {
+DocumentSchema.statics.searchDocuments = function(search, user) {
   var Document = this;
 
   var andQuery = [];
+
+  if (user.privileges === "user") {
+    var orQuery = {
+      $or: [{
+        visibility: "pubblico"
+      }, {
+        visibility: "areariservata"
+      }, {
+        $and: [{
+          visibility: "materia"
+        }, {
+          subject: {
+            $in: user.accesses
+          }
+        }]
+      }]
+    };
+
+    andQuery.push(orQuery);
+
+  }
 
   if (search.name) {
 
@@ -156,7 +177,7 @@ DocumentSchema.statics.searchDocuments = function(search) {
   }
 
   return Document.find({
-      $and: andQuery,
+      $and: andQuery
     }, {
       score: {
         $meta: "textScore"

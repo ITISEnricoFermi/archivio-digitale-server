@@ -5,7 +5,8 @@ const _ = require("lodash");
 
 // Middleware
 const {
-  authenticate
+  authenticate,
+  authenticateAccesses
 } = require("./../middleware/authenticate");
 
 // Models
@@ -19,9 +20,25 @@ const {
 
 router.post("/recentPosts", authenticate, (req, res) => {
 
-  Document.find({
+  if (req.user.privileges === "user") {
+    var query = {
+      $or: [{
+        visibility: "pubblico"
+      }, {
+        visibility: "areariservata"
+      }, {
+        $and: [{
+          visibility: "materia"
+        }, {
+          subject: {
+            $in: req.user.accesses
+          }
+        }]
+      }]
+    };
+  }
 
-    })
+  Document.find(query || {})
     .limit(3)
     .sort({
       _id: -1

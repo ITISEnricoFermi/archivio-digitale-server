@@ -13,45 +13,53 @@ const {
   Document
 } = require("./../models/document");
 
-router.post("/searchDocuments", (req, res) => {
+router.post("/searchDocuments", authenticate, (req, res) => {
 
   var body = _.pick(req.body, ["name", "type", "faculty", "subject", "class", "section", "visibility"]);
 
-  Document.searchDocuments(body)
+  Document.searchDocuments(body, req.user)
     .then((documents) => {
-      res.status(200).send(documents);
+
+      res.status(200)
+        .header("x-userid", req.user._id)
+        .header("x-userprivileges", req.user.privileges)
+        .send(documents);
     }).catch((e) => {
-      res.status(401).send(e);
+      res.status(500).send("Errore: " + e);
+      console.log(e);
     });
 
 });
 
 router.post("/getDocumentById/", (req, res) => {
 
-  Document.findDocumentById(req.body._id).then((document) => {
-    res.status(200).send(document);
-  }).catch((e) => {
-    res.status(401).send(e);
-  });
+  Document.findDocumentById(req.body._id)
+    .then((document) => {
+      res.status(200).send(document);
+    }).catch((e) => {
+      res.status(401).send(e);
+    });
 
 });
 
 router.post("/removeDocumentById", authenticate, (req, res) => {
-  Document.findDocumentById(req.body._id).then((document) => {
-    if (document.author != req.user._id && req.user.privileges != "admin") {
-      return res.status(401).send("Non si detengono le autorizzazioni per eliminare il documento.");
-    }
+  Document.findDocumentById(req.body._id)
+    .then((document) => {
 
-    Document.remove({
-        _id: req.body._id
-      })
-      .then(() => {
-        res.status(200).send("Documento eliminato correttamente.");
-      })
-      .catch((e) => {
-        res.status(400).send(e);
-      })
-  })
+      if (document.author._id !== req.user._id && req.user.privileges !== "admin") {
+        return res.status(401).send("Non si detengono le autorizzazioni per eliminare il documento.");
+      }
+
+      Document.remove({
+          _id: req.body._id
+        })
+        .then(() => {
+          res.status(200).send("Documento eliminato correttamente.");
+        })
+        .catch((e) => {
+          res.status(400).send(e);
+        })
+    })
 });
 
 

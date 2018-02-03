@@ -276,13 +276,40 @@ var panelSearch = new Vue({
                 section: "Comune"
               }
             }
+
+            if (documents[i].author._id === response.headers["x-userid"] || response.headers["x-userprivileges"] === "admin") {
+              documents[i].own = true;
+            }
           }
 
           this.documents = documents;
         })
         .catch((e) => {
-          return console.log(e.response.data);
-          this.errors.push(e);
+          console.log(e.response.data);
+        });
+    },
+
+    removeDocument: function(id) {
+      if (!confirm("Eliminare il documento?")) {
+        return false;
+      }
+      axios.post("/search/removeDocumentById", {
+          _id: id
+        })
+        .then((result) => {
+
+          let element = (this.documents.filter(function(object) {
+            return object._id == id;
+          }))[0];
+
+          let index = this.documents.indexOf(element);
+          this.documents.splice(index, 1);
+
+          console.log(result.data);
+
+        })
+        .catch((e) => {
+          console.log(e.response.data);
         });
     },
 
@@ -294,7 +321,7 @@ var panelSearch = new Vue({
           this.subjects = response.data
         })
         .catch((e) => {
-          this.errors.push(e)
+          console.log(e.response.data);
         });
     }
   },

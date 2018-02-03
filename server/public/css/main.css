@@ -109,6 +109,22 @@ body {
 .u-color-yellow {
   color: #F3A32A; }
 
+.u-bg-color-blue {
+  background-color: #3897f0;
+  border: 1px solid #2a90ef; }
+
+.u-bg-color-green {
+  background-color: #0FC47A;
+  border: 1px solid #0eb671; }
+
+.u-bg-color-red {
+  background-color: #FF4447;
+  border: 1px solid #ff3538; }
+
+.u-bg-color-yellow {
+  background-color: #F3A32A;
+  border: 1px solid #f29d1c; }
+
 .module {
   padding: 3vh;
   border: 1px solid #E6E6E6;
@@ -173,7 +189,8 @@ body {
     .module-document-search-article--delete {
       color: #FF4447;
       display: inline-block;
-      text-decoration: underline; }
+      text-decoration: underline;
+      cursor: pointer; }
     .module-document-search-article--description {
       font-size: 1.3rem;
       color: #53585E;
@@ -359,12 +376,19 @@ body {
       background-color: #166c43; }
     .menu-left__main .menu-left__li span:first-child {
       margin: 1rem; }
+    .menu-left__main .menu-left__li-tag {
+      padding: 0.2rem 0.5rem;
+      border-radius: 10rem;
+      font-size: 1rem;
+      color: #FFFFFF;
+      margin-left: 1rem;
+      text-transform: uppercase; }
   .menu-left__footer {
     font-size: 1.3rem;
     color: #FFFFFF;
     text-align: center;
     position: absolute;
-    bottom: 0rem;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     padding: 2rem;

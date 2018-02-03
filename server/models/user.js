@@ -48,18 +48,29 @@ var UserSchema = new mongoose.Schema({
     minlength: 1,
     default: "../images/elements/profile.jpg"
   },
+  // accesses: [{
+  //   _id: {
+  //     type: String,
+  //     required: false,
+  //     trim: true,
+  //     minlength: 1,
+  //     validate: {
+  //       validator: validator.isAlpha,
+  //       message: "{VALUE} non è un accesso valido."
+  //     },
+  //     ref: "Subject"
+  //   }
+  // }],
   accesses: [{
-    _id: {
-      type: String,
-      required: false,
-      trim: true,
-      minlength: 1,
-      validate: {
-        validator: validator.isAlpha,
-        message: "{VALUE} non è un accesso valido."
-      },
-      ref: "Subject"
-    }
+    type: String,
+    required: false,
+    trim: true,
+    minlength: 1,
+    validate: {
+      validator: validator.isAlpha,
+      message: "{VALUE} non è un accesso valido."
+    },
+    ref: "Subject"
   }],
   privileges: {
     type: String,
