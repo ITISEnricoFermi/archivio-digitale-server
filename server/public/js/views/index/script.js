@@ -381,7 +381,7 @@ var panelAdmin = new Vue({
     typing: function(event) {
 
       if (event.key == "Enter") {
-        if (this.multipleSelectOutput.length != this.subjects.length) {
+        if (this.multipleSelectResults.length !== 0) {
           this.multipleSelectOutput.push(this.multipleSelectResults[0]);
           this.multipleSelectField = "";
           return this.multipleSelectResults = [];
@@ -394,7 +394,7 @@ var panelAdmin = new Vue({
           if (this.multipleSelectOutput.indexOf(subject) != -1) {
             return true;
           }
-          if ((new RegExp(this.multipleSelectField)).test(subject.subject.toLowerCase())) {
+          if ((new RegExp(this.multipleSelectField.toLowerCase())).test(subject.subject.toLowerCase())) {
             this.multipleSelectResults.push(subject);
           }
         });

@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
 var UserSchema = new mongoose.Schema({
-  firstname: {
+  firstname: { // OK
     type: String,
     required: true,
     minlength: 1,
@@ -15,7 +15,7 @@ var UserSchema = new mongoose.Schema({
       message: "{VALUE} non è un nome valido."
     }
   },
-  lastname: {
+  lastname: { // OK
     type: String,
     required: true,
     minlength: 1,
@@ -25,10 +25,10 @@ var UserSchema = new mongoose.Schema({
       message: "{VALUE} non è un cognome valido."
     }
   },
-  email: {
+  email: { // CONTROLLARE
     type: String,
     required: true,
-    trim: true, // elimina gli spazi
+    trim: true,
     minlength: 1,
     unique: true,
     validate: {
@@ -36,12 +36,12 @@ var UserSchema = new mongoose.Schema({
       message: "{VALUE} non è un indirizzo email valido."
     }
   },
-  password: {
+  password: { // CONTROLLARE
     type: String,
     required: true,
     minlength: 6
   },
-  img: {
+  img: { // OK
     type: String,
     required: true,
     trim: true,
@@ -61,7 +61,7 @@ var UserSchema = new mongoose.Schema({
   //     ref: "Subject"
   //   }
   // }],
-  accesses: [{
+  accesses: [{ // OK
     type: String,
     required: false,
     trim: true,
@@ -72,7 +72,7 @@ var UserSchema = new mongoose.Schema({
     },
     ref: "Subject"
   }],
-  privileges: {
+  privileges: { // CONTROLLARE
     type: String,
     required: false,
     trim: true,
@@ -85,7 +85,7 @@ var UserSchema = new mongoose.Schema({
     // },
     ref: "Privilege"
   },
-  state: {
+  state: { // OK
     type: String,
     reuired: true,
     trim: true,
@@ -97,7 +97,7 @@ var UserSchema = new mongoose.Schema({
       message: "{VALUE} non è un stato valido."
     }
   },
-  tokens: [{
+  tokens: [{ // OK
     access: {
       type: String,
       required: true

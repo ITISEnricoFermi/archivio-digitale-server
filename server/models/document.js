@@ -126,9 +126,9 @@ DocumentSchema.statics.searchDocuments = function(search, user) {
       }]
     };
 
-    andQuery.push(orQuery);
-
   }
+
+  andQuery.push(orQuery || {});
 
   if (search.name) {
 

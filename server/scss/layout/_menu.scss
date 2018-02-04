@@ -2,6 +2,10 @@
   background-color: $color-primary;
   position: relative;
 
+  @include respond(tab-lan) {
+    display: none;
+  }
+
   &__header {
     display: table;
     padding: 5rem;

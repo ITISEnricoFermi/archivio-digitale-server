@@ -13,3 +13,45 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+
+// MEDIA QUERY MANAGER
+/*
+ *  $breakpoint: {
+ *    phone: [0px - 600px],
+ *    tab-port: [600px - 900px],
+ *    tab-land: [900px - 1200px],
+ *    big-desktop: [1200px - #]
+ *  }
+ *
+ *   1em = 16px
+ *
+ */
+
+@mixin respond($breakpoint) {
+
+  @if $breakpoint == phone {
+    @media(max-width: 37.5em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == tab-por {
+    @media(max-width: 56.25em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == tab-lan {
+    @media(max-width: 75em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == big-desktop {
+    @media(min-width: 112.5em) {
+      @content;
+    }
+  }
+
+}

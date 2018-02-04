@@ -1,3 +1,14 @@
+/*
+ *  $breakpoint: {
+ *    phone: [0px - 600px],
+ *    tab-port: [600px - 900px],
+ *    tab-land: [900px - 1200px],
+ *    big-desktop: [1200px - #]
+ *  }
+ *
+ *   1em = 16px
+ *
+ */
 @keyframes moveInLeft {
   0% {
     opacity: 0;
@@ -34,7 +45,9 @@
     opacity: 1;
     transform: translateY(0rem); } }
 
-*, *::after, *::before {
+*,
+*::after,
+*::before {
   margin: 0;
   padding: 0;
   box-sizing: inherit; }
@@ -42,6 +55,9 @@
 html {
   font-size: 62.5%;
   height: 100%; }
+  @media (min-width: 112.5em) {
+    html {
+      font-size: 75%; } }
 
 body {
   box-sizing: border-box;
@@ -224,7 +240,8 @@ body {
   display: block;
   outline: none;
   resize: none;
-  height: 10rem; }
+  height: 10rem;
+  font-family: inherit; }
   .module-input-textarea:focus {
     box-shadow: 0 0 0.75rem rgba(21, 26, 34, 0.7); }
 
@@ -357,6 +374,9 @@ body {
 .menu-left {
   background-color: #1A8D4C;
   position: relative; }
+  @media (max-width: 75em) {
+    .menu-left {
+      display: none; } }
   .menu-left__header {
     display: table;
     padding: 5rem; }
@@ -436,8 +456,14 @@ body {
     grid-gap: 3vh;
     width: 100%;
     height: 100%; }
+    @media (max-width: 56.25em) {
+      .panel__dashboard-box {
+        display: block; } }
     .panel__dashboard-box .module {
       margin: 0; }
+    @media (max-width: 56.25em) {
+      .panel__dashboard-box > div:not(:last-child) {
+        margin-bottom: 3vh; } }
   .panel__dashboard--recent-posts {
     grid-area: recentPosts;
     display: grid;
@@ -531,6 +557,9 @@ body {
     grid-area: profile;
     display: table;
     height: 100%; }
+    @media (max-width: 56.25em) {
+      .panel__dashboard--profile {
+        height: auto; } }
     .panel__dashboard--profile .profile-box {
       display: table-cell;
       vertical-align: middle; }
@@ -545,7 +574,7 @@ body {
         clip-path: circle(50% at 50% 50%); }
       .panel__dashboard--profile .profile-box .profile-info {
         margin: 1rem; }
-        .panel__dashboard--profile .profile-box .profile-info--name, .panel__dashboard--profile .profile-box .profile-info--documents {
+        .panel__dashboard--profile .profile-box .profile-info--documents, .panel__dashboard--profile .profile-box .profile-info--name {
           margin: 0.5rem; }
   .panel__dashboard--top-profiles {
     grid-area: topProfiles; }
@@ -607,6 +636,11 @@ body {
   grid-template-columns: 250px auto;
   grid-template-areas: "menu main";
   background-color: #F7F7F7; }
+  @media (max-width: 75em) {
+    body {
+      grid-template-rows: 1fr;
+      grid-template-columns: 1fr;
+      grid-template-areas: "main"; } }
 
 main {
   grid-area: main;

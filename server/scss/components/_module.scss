@@ -155,6 +155,7 @@
   outline: none;
   resize: none;
   height: 10rem;
+  font-family: inherit;
 
   &:focus {
     box-shadow: 0 0 0.75rem rgba($color-tertiary, 0.7);

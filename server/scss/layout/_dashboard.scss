@@ -9,9 +9,23 @@
     grid-gap: 3vh;
     width: 100%;
     height: 100%;
+    @include respond(tab-por) {
+      // grid-template-rows: 1fr 1fr 1fr;
+      // grid-template-columns: 1fr;
+      // grid-template-areas: "recentPosts profile" "recentPosts topProfiles";
+      display: block;
+    }
 
     .module {
       margin: 0;
+    }
+
+    & > div {
+      &:not(:last-child) {
+        @include respond(tab-por) {
+          margin-bottom: 3vh;
+        }
+      }
     }
   }
 
@@ -146,6 +160,9 @@
     grid-area: profile;
     display: table;
     height: 100%;
+    @include respond(tab-por) {
+      height: auto;
+    }
 
     .profile-box {
       display: table-cell;
@@ -165,7 +182,8 @@
       .profile-info {
         margin: 1rem;
 
-        &--name, &--documents {
+        &--documents,
+        &--name {
           margin: 0.5rem;
         }
       }
