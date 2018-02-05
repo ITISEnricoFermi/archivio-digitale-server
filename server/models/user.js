@@ -178,6 +178,10 @@ UserSchema.statics.findByCredentials = function(email, password) {
         return Promise.reject("Nessun utente registrato con l'email inserita.");
       }
 
+      if (user.state !== "active") {
+        return Promise.reject("Il tuo account è stato disabilitato o è in attesa di approvazione.");
+      }
+
       return bcrypt.compare(password, user.password)
         .then((result) => {
           if (result) {

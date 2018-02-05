@@ -8,6 +8,7 @@
 
   &__header {
     display: table;
+    width: 100%;
     padding: 5rem;
 
     .menu-left__logo {
@@ -44,6 +45,97 @@
         margin-left: 1rem;
         text-transform: uppercase;
       }
+    }
+  }
+
+  &__footer {
+    font-size: $font-default-2;
+    color: $color-white;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 2rem;
+    width: 100%;
+
+    &--a {
+      color: $color-white;
+    }
+  }
+}
+
+
+.menu-header {
+  background-color: $color-primary;
+  position: fixed;
+  height: 6rem;
+  width: 100%;
+  top: 0;
+  display: none;
+
+  @include respond(tab-lan) {
+    display: block;
+  }
+
+  &__logo {
+    height: 4.5rem;
+    margin: 0.75rem;
+  }
+
+  &__bar {
+    display: inline-block;
+    float: right;
+    font-size: 3.5rem;
+    color: $color-white;
+    margin: 1.2rem 1.5rem;
+    cursor: pointer;
+  }
+
+}
+
+.menu-header-container {
+  background-color: $color-primary;
+  height: calc(100vh - 6rem);
+  width: 100%;
+  position: fixed;
+  top: 6rem;
+  display: none;
+
+
+  &__main {
+    top: 0;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    @include absCenter;
+  }
+
+
+  &__li {
+    color: $color-white;
+    padding: 2rem;
+    width: 100%;
+    display: block;
+    font-weight: bold;
+    cursor: pointer;
+
+    &--active,
+    &:hover {
+      background-color: $color-secondary;
+    }
+
+    span:first-child {
+      margin: 1rem;
+    }
+
+    &-tag {
+      padding: 0.2rem 0.5rem;
+      border-radius: 10rem;
+      font-size: 1rem;
+      color: $color-white;
+      margin-left: 1rem;
+      text-transform: uppercase;
     }
   }
 

@@ -32,14 +32,24 @@ router.post("/", (req, res) => {
     return res.status(400).send("Password non valida o troppo breve. (min. 6).");
   }
 
+  return User.findOne({
+      email: body.email
+    })
+    .then((dbUser) => {
+      if (dbUser) {
+        return res.status(400).send("Utente già registrato.");
+      }
 
-  user.save()
-    .then((user) => {
-      return user.generateAuthToken();
-    }).then((token) => {
-      res.header("x-auth", token).send(user);
-    }).catch((e) => {
-      res.status(400).send(e);
+      return user.save()
+        .then((user) => {
+          return user.generateAuthToken();
+        }).then((token) => {
+          res.header("x-auth", token).send(user);
+        });
+
+    })
+    .catch((e) => {
+      return res.status(500).send(e);
     });
 
 });
