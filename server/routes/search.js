@@ -15,7 +15,7 @@ const {
 
 router.post("/searchDocuments", authenticate, (req, res) => {
 
-  var body = _.pick(req.body, ["name", "type", "faculty", "subject", "class", "section", "visibility"]);
+  var body = _.pick(req.body, ["fulltext", "type", "faculty", "subject", "class", "section", "visibility"]);
 
   Document.searchDocuments(body, req.user)
     .then((documents) => {

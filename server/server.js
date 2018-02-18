@@ -98,7 +98,6 @@ app.set("view engine", "hbs");
 
 
 io.on("connection", (socket) => {
-  console.log("User connected.");
 
   socket.on("createDocument", () => {
     console.log("Document created.");

@@ -1,4 +1,4 @@
-{
+[{
   "privileges": "admin",
   "state": "active",
   "firstname": "Alan",
@@ -6,4 +6,4 @@
   "email": "alan.turing@test.com",
   "password": "alanturing",
   "img": "../images/elements/alan.jpg"
-}
+}]

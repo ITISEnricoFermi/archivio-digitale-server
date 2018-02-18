@@ -1,0 +1,7 @@
+[{
+  "_id": "user",
+  "privilege": "Utente"
+}, {
+  "_id": "admin",
+  "privilege": "Admin"
+}]

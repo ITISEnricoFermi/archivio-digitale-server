@@ -4,13 +4,13 @@ for (var i = 0; i < menuLeftLi.length; i++) {
   menuLeftLi[i].addEventListener("click", openTab);
 }
 
-var popUpClose = document.getElementsByClassName("popup-close")[0];
-var popUp = document.getElementsByClassName("popup")[0];
-
-popUpClose.addEventListener("click", function() {
-  popUp.style.opacity == 0;
-  popUp.style.visibility == "hidden";
-});
+// var popUpClose = document.getElementsByClassName("popup-close")[0];
+// var popUp = document.getElementsByClassName("popup")[0];
+//
+// popUpClose.addEventListener("click", function() {
+//   popUp.style.opacity == 0;
+//   popUp.style.visibility == "hidden";
+// });
 
 var socket = io();
 
@@ -139,9 +139,9 @@ var panelUpload = new Vue({
           let actualProgress = progressEvent.loaded;
           let totalProgress = progressEvent.total;
           let progress = Math.floor((actualProgress * 100) / totalProgress);
+          this.response = true;
           this.uploading = true;
           this.progress = progress;
-          this.response = true;
 
           if (progress === 100) {
             this.uploading = false;
@@ -249,7 +249,7 @@ var panelSearch = new Vue({
   methods: {
     search: function() {
       let query = {
-        name: this.$refs.searchName.value,
+        fulltext: this.$refs.searchFullText.value,
         type: this.$refs.searchType.value,
         faculty: this.$refs.searchFaculty.value,
         subject: this.$refs.searchSubject.value,

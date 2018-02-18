@@ -67,7 +67,7 @@
         <label class="module-button module-button--blue" for="upload-file">Carica file</label>
       </div>
       <div class="col-1-of-2">
-        <button class="module-button module-button--green" @click="upload">Invia</button>
+        <button class="module-button module-button--green" @click="upload">Carica documento</button>
       </div>
     </div>
   </div>
@@ -80,6 +80,23 @@
     <div class="row" v-else>
       <div class="col-1-of-1">
         <p>\{{responseMessage}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="module">
+    <div class="row">
+      <div class="col-1-of-2">
+        <input type="text" class="module-input-text" placeholder="Collezione" ref="collectionName">
+      </div>
+      <div class="col-1-of-2">
+        <select class="module-input-select" ref="collectionEditable">
+          <option class="module-input-option" value="" disabled selected>Modificabile</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-1">
+        <button class="module-button module-button--green">Crea collezione</button>
       </div>
     </div>
   </div>

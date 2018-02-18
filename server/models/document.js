@@ -134,7 +134,7 @@ DocumentSchema.statics.searchDocuments = function(search, user) {
 
     andQuery.push({
       $text: {
-        $search: search.name
+        $search: search.fulltext
       }
     });
 
@@ -249,7 +249,8 @@ DocumentSchema.statics.findDocumentById = function(id) {
 };
 
 DocumentSchema.index({
-  name: "text"
+  name: "text",
+  description: "text"
 });
 
 var Document = mongoose.model("Document", DocumentSchema);

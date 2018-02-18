@@ -1,0 +1,82 @@
+[{
+  "_id": "italiano",
+  "subject": "Lingua e letteratura italiana"
+}, {
+  "_id": "storia",
+  "subject": "Storia"
+}, {
+  "_id": "inglese",
+  "subject": "Inglese"
+}, {
+  "_id": "matematica",
+  "subject": "Matematica"
+}, {
+  "_id": "ed",
+  "subject": "Scienze motorie e sportive"
+}, {
+  "_id": "irc",
+  "subject": "Religione cattolica o Attività alternative"
+}, {
+  "_id": "phy",
+  "subject": "Fisica"
+}, {
+  "_id": "chm",
+  "subject": "Chimica"
+}, {
+  "_id": "ttrg",
+  "subject": "Tecnologie e tecniche di rappresentazione grafica"
+}, {
+  "_id": "it",
+  "subject": "Tecnologie informatiche"
+}, {
+  "_id": "sta",
+  "subject": "Scienze e tecnologie applicate"
+}, {
+  "_id": "sci",
+  "subject": "Scienze della terra"
+}, {
+  "_id": "bio",
+  "subject": "Biologia"
+}, {
+  "_id": "diritto",
+  "subject": "Diritto ed economia"
+}, {
+  "_id": "geo",
+  "subject": "Geografia"
+}, {
+  "_id": "sysnet",
+  "subject": "Sistemi e reti"
+}, {
+  "_id": "tpsit",
+  "subject": "Tecnologie e progettazione di sistemi informatici e di telecomunicazioni"
+}, {
+  "_id": "gpo",
+  "subject": "Gestione progetto, organizzazione d’impresa"
+}, {
+  "_id": "informatica",
+  "subject": "Informatica"
+}, {
+  "_id": "tlc",
+  "subject": "Telecomunicazioni"
+}, {
+  "_id": "tpsee",
+  "subject": "Tecnologie e progettazione di sistemi elettrici ed elettronici"
+}, {
+  "_id": "elettronica",
+  "subject": "Elettrotecnica ed Elettronica"
+}, {
+  "_id": "sysaut",
+  "subject": "Sistemi automatici"
+}, {
+  "_id": "meccanica",
+  "subject": "Meccanica, macchine ed energia"
+}, {
+  "_id": "sysandaut",
+  "subject": "Sistemi ed automazione"
+}, {
+  "_id": "tmpp",
+  "subject": "Tecnologie meccaniche di processo e prodotto"
+}, {
+  "_id": "iedp",
+  "subject": "Impianti energetici disegno e progettazione"
+}]

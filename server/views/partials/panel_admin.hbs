@@ -55,8 +55,8 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-1-of-1" v-if="multipleSelectOutput.length != 0">
+    <div class="row" v-if="multipleSelectOutput.length != 0">
+      <div class="col-1-of-1">
         <div class="module-multiple-select-tag-box">
           <ul>
             <li v-bind:value="output._id" v-for="output in multipleSelectOutput" v-on:click="remove">\{{ output.subject }}</li>

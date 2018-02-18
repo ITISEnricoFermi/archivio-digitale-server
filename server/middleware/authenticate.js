@@ -28,7 +28,10 @@ var authenticate = (req, res, next) => {
       return res.render("home");
     }
 
-    res.redirect("/login");
+    // res.redirect("/login");
+
+    res.status(401).send();
+
   });
 };
 

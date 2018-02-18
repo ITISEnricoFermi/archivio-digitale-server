@@ -3,7 +3,7 @@
   <div class="module">
     <div class="row">
       <div class="col-1-of-1">
-        <input type="text" class="module-input-text" placeholder="Titolo" autocomplete="off" ref="searchName">
+        <input type="text" class="module-input-text" placeholder="Cerca un documento" autocomplete="off" ref="searchFullText" @keyup.enter="search">
       </div>
     </div>
     <div class="row">
@@ -60,7 +60,7 @@
     </div>
     <div class="row">
       <div clas="col-1-of-1">
-        <button class="module-button module-button--green" @click="search">Invia</button>
+        <button class="module-button module-button--green" @click="search">Cerca</button>
       </div>
     </div>
   </div>
@@ -78,6 +78,23 @@
     <div class="row" v-if="documents.length === 0">
       <div class="col-1-of-1">
         <p class="module-document-search-noresults">Nessun risultato</p>
+      </div>
+    </div>
+  </div>
+  <div class="module">
+    <div class="row">
+      <div class="col-1-of-2">
+        <input type="text" class="module-input-text" placeholder="Cerca una collezione">
+      </div>
+      <div class="col-1-of-2">
+        <select class="module-input-select" ref="collectionSearchPrivileges">
+          <option class="module-input-option" value="" selected>Privilegi</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1-of-1">
+        <button class="module-button module-button--green">Cerca</button>
       </div>
     </div>
   </div>

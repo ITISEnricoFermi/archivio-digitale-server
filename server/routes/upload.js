@@ -93,9 +93,9 @@ router.post("/documentUpload", authenticate, upload.single("fileToUpload"), (req
 
   document.save()
     .then((document) => {
-      res.status(200).send("Documento caricato con successo.");
+      res.status(201).send("Documento caricato con successo.");
     }).catch((e) => {
-      res.status(400).send(e);
+      res.status(500).send(e);
     });
 
 });

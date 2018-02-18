@@ -1,0 +1,10 @@
+[{
+  "_id": "tutti",
+  "permission": "Tutti"
+}, {
+  "_id": "materia",
+  "permission": "Per materia"
+}, {
+  "_id": "utenti",
+  "permission": "Utenti selezionati"
+}]

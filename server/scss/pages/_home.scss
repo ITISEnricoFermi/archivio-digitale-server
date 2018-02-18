@@ -4,6 +4,12 @@ main {
   grid-template-rows: 1fr;
   grid-template-columns: 3fr 2fr;
   grid-template-areas: "search login";
+
+  @include respond(tab-lan) {
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+    grid-template-areas: "search" "login";
+  }
 }
 
 .section-search {

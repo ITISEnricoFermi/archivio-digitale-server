@@ -307,29 +307,32 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  opacity: 0;
-  visibility: hidden; }
-  .popup-box {
+  visibility: hidden;
+  opacity: 0; }
+  .popup__box {
     height: auto;
     background-color: #FFFFFF;
     border: 1px solid #EAEAEA;
-    border-radius: 1rem;
-    padding: 7vh;
+    border-radius: 0.3rem;
+    padding: 4rem 3rem 3rem 3rem;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); }
-  .popup-close {
+  .popup__header {
+    height: 3rem;
     position: absolute;
-    top: 2vh;
-    right: 2vh;
-    cursor: pointer;
-    font-size: 2rem; }
-    .popup-close i {
-      display: block; }
-  .popup-title {
-    font-size: 2rem;
-    font-weight: lighter; }
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    text-align: right; }
+    .popup__header--close {
+      display: block;
+      cursor: pointer;
+      font-size: 2rem; }
+      .popup__header--close i {
+        display: block; }
 
 .module-multiple-select {
   width: 100%;

@@ -1,3 +1,14 @@
+/*
+ *  $breakpoint: {
+ *    phone: [0px - 600px],
+ *    tab-port: [600px - 900px],
+ *    tab-land: [900px - 1200px],
+ *    big-desktop: [1200px - #]
+ *  }
+ *
+ *   1em = 16px
+ *
+ */
 @keyframes moveInLeft {
   0% {
     opacity: 0;
@@ -34,7 +45,9 @@
     opacity: 1;
     transform: translateY(0rem); } }
 
-*, *::after, *::before {
+*,
+*::after,
+*::before {
   margin: 0;
   padding: 0;
   box-sizing: inherit; }
@@ -42,11 +55,18 @@
 html {
   font-size: 62.5%;
   height: 100%; }
+  @media (min-width: 112.5em) {
+    html {
+      font-size: 75%; } }
 
 body {
   box-sizing: border-box;
-  height: 100%;
-  position: relative; }
+  height: 100vh;
+  position: relative;
+  overflow-y: hidden; }
+  @media (max-width: 37.5em) {
+    body {
+      height: 100vh; } }
 
 body {
   font-family: "Roboto", sans-serif;
@@ -109,6 +129,22 @@ body {
 .u-color-yellow {
   color: #F3A32A; }
 
+.u-bg-color-blue {
+  background-color: #3897f0;
+  border: 1px solid #2a90ef; }
+
+.u-bg-color-green {
+  background-color: #0FC47A;
+  border: 1px solid #0eb671; }
+
+.u-bg-color-red {
+  background-color: #FF4447;
+  border: 1px solid #ff3538; }
+
+.u-bg-color-yellow {
+  background-color: #F3A32A;
+  border: 1px solid #f29d1c; }
+
 .home-text-field {
   display: block;
   padding: 0.8rem 0.9rem 0.8rem 0rem;
@@ -147,6 +183,11 @@ main {
   grid-template-rows: 1fr;
   grid-template-columns: 3fr 2fr;
   grid-template-areas: "search login"; }
+  @media (max-width: 75em) {
+    main {
+      grid-template-rows: 1fr 1fr;
+      grid-template-columns: 1fr;
+      grid-template-areas: "search" "login"; } }
 
 .section-search {
   background-color: #F7F7F7;

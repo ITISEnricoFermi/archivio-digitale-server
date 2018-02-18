@@ -28,7 +28,7 @@ router.post("/me/", authenticate, (req, res) => {
       res.status(200).send(body);
     })
     .catch((e) => {
-      res.status(400).send(e);
+      res.status(500).send(e);
     });
 
 });
@@ -47,9 +47,13 @@ router.post("/me/documents", authenticate, (req, res) => {
       res.status(200).send(documents);
     })
     .catch((e) => {
-      res.status(400).send(e);
+      res.status(500).send(e);
     });
 
+});
+
+router.post("/me/logged", authenticate, (req, res) => {
+  res.status(200).send();
 });
 
 module.exports = router;
