@@ -21,7 +21,7 @@ var SubjectSchema = new mongoose.Schema({
 SubjectSchema.statics.getSubjects = function() {
   var Subject = this;
 
-  return Subject.find()
+  return Subject.find({})
     .then((results) => {
       return Promise.resolve(results);
     }, (e) => {

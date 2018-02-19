@@ -13,26 +13,27 @@ var authenticate = (req, res, next) => {
     var token = req.cookies.token;
   }
 
-  User.findByToken(token).then((user) => {
+  User.findByToken(token)
+    .then((user) => {
 
-    if (!user) {
-      return Promise.reject();
-    }
+      if (!user) {
+        return Promise.reject();
+      }
 
-    req.user = _.pick(user, ["_id", "firstname", "lastname", "email", "privileges", "accesses", "img"]);
-    req.token = token;
-    next();
+      req.user = _.pick(user, ["_id", "firstname", "lastname", "email", "privileges", "accesses", "img"]);
+      req.token = token;
+      next();
 
-  }).catch((e) => {
-    if (req.url === "/") {
-      return res.render("home");
-    }
+    }).catch((e) => {
+      if (req.url === "/") {
+        return res.render("home");
+      }
 
-    // res.redirect("/login");
+      // res.redirect("/login");
 
-    res.status(401).send();
+      res.status(401).send();
 
-  });
+    });
 };
 
 var authenticateAdmin = (req, res, next) => {

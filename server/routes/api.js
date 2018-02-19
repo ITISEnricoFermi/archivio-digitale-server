@@ -61,8 +61,8 @@ router.post("/getFaculties", authenticate, (req, res) => {
 
 router.post("/getSubjects", authenticate, (req, res) => {
   Subject.getSubjects()
-    .then((subject) => {
-      res.status(200).send(subject);
+    .then((subjects) => {
+      res.status(200).send(subjects);
     }).catch((e) => {
       res.status(401).send(e);
     });

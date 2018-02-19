@@ -52,16 +52,16 @@ const {
 
 router.post("/updateInformations", authenticate, (req, res) => {
 
-  var body = _.pick(req.body, ["oldPassword", "newPassword"]);
+  var body = _.pick(req.body, ["old", "new"]);
 
-  User.findByCredentials(req.user.email, body.oldPassword)
+  User.findByCredentials(req.user.email, body.old)
     .then((user) => {
 
-      if (validator.isEmpty(body.newPassword) || body.newPassword.length < 6) {
+      if (validator.isEmpty(body.new) || body.new.length < 6) {
         return res.status(400).send("Password non valida o troppo breve. (min. 6).");
       }
 
-      user.password = body.newPassword;
+      user.password = body.new;
       user.tokens = [];
       return user.save();
     })
