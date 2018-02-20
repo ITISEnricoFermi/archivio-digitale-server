@@ -71,7 +71,7 @@ router.get("/getFaculties", authenticate, (req, res) => {
     });
 });
 
-router.get("/getSubjects", authenticate, (req, res) => {
+router.get("/getSubjects", (req, res) => {
   Subject.getSubjects()
     .then((subjects) => {
       res.status(200).send(subjects);

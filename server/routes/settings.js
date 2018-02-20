@@ -59,6 +59,8 @@ router.post("/updateInformations", authenticate, (req, res) => {
 
       if (validator.isEmpty(body.new) || body.new.length < 6) {
         return res.status(400).send("Password non valida o troppo breve. (min. 6).");
+      } else if (body.old === body.new) {
+        return res.status(400).send("La password attuale è uguale a quella nuova.");
       }
 
       user.password = body.new;
@@ -99,10 +101,9 @@ router.post("/updateProfilePic", authenticate, upload.single("picToUpload"), (re
 router.post("/disableAccount", authenticate, (req, res) => {
   User.findById(req.user._id)
     .then((user) => {
-
       user.state = "disabled";
+      user.tokens = [];
       return user.save()
-
     })
     .then(() => {
       res.status(200).send();

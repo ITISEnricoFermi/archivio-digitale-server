@@ -9,17 +9,14 @@ const {
   User
 } = require("./../models/user");
 
-//GET
-router.get("/", (req, res) => {
-  res.render("signup", {
-    pageTitle: "Archivio Digitale - ITIS Enrico Fermi"
-  });
-});
+const {
+  Subject
+} = require("./../models/subject");
 
-// POST
-router.post("/", (req, res) => {
 
-  var body = _.pick(req.body, ["firstname", "lastname", "email", "password"]);
+router.put("/", (req, res) => {
+
+  var body = _.pick(req.body, ["firstname", "lastname", "email", "password", "accesses"]);
   var user = new User(body);
 
   if (validator.isEmpty(body.firstname) || !validator.isAlpha(body.firstname)) {
@@ -30,26 +27,50 @@ router.post("/", (req, res) => {
     return res.status(400).send("Email non valida.");
   } else if (validator.isEmpty(body.password) || body.password.length < 6) {
     return res.status(400).send("Password non valida o troppo breve. (min. 6).");
+  } else if (body.accesses.length === 0) {
+    return res.status(400).send("Inserire delle autorizzazioni.");
   }
 
-  return User.findOne({
-      email: body.email
-    })
-    .then((dbUser) => {
-      if (dbUser) {
-        return res.status(400).send("Utente già registrato.");
+  let orQuery = {
+    $or: []
+  };
+
+  for (let i = 0; i < body.accesses.length; i++) {
+    orQuery.$or.push({
+      _id: body.accesses[i]._id
+    });
+  }
+
+  return Subject.find(orQuery)
+    .count()
+    .then((subjects) => {
+      if (subjects !== body.accesses.length) {
+        return res.status(400).send("Una delle autorizzazioni non è valida.");
       }
 
-      return user.save()
-        .then((user) => {
-          return user.generateAuthToken();
-        }).then((token) => {
-          res.header("x-auth", token).send(user);
+      return User.findOne({
+          email: body.email
+        })
+        .then((dbUser) => {
+          if (dbUser) {
+            return res.status(400).send("Utente già registrato.");
+          }
+
+          return user.save()
+            .then((user) => {
+              return user.generateAuthToken();
+            }).then((token) => {
+              res.header("x-auth", token).send(user);
+            });
+
+        })
+        .catch((e) => {
+          return res.status(500).send(e);
         });
 
     })
     .catch((e) => {
-      return res.status(500).send(e);
+      return res.status(500).send("Errore nel reperire le autorizzazioni.");
     });
 
 });

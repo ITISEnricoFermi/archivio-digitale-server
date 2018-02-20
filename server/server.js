@@ -2,7 +2,6 @@ require("./db/config/config.js");
 
 const express = require('express');
 const http = require('http');
-const hbs = require('hbs');
 const bodyParser = require('body-parser');
 const _ = require("lodash");
 const bcrypt = require("bcryptjs");
@@ -90,12 +89,7 @@ app.use("/settings", settings);
 app.use("/user", user);
 app.use("/dashboard", dashboard);
 
-hbs.registerPartials(__dirname + "/views/partials/");
-
 app.use(express.static(__dirname + "/public"));
-
-app.set("view engine", "hbs");
-
 
 io.on("connection", (socket) => {
 
@@ -105,20 +99,6 @@ io.on("connection", (socket) => {
   });
 
 });
-
-app.get("/", authenticate, (req, res) => {
-  res.render("index", {
-    pageTitle: "Archivio Digitale - ITIS Enrico Fermi",
-    admin: () => {
-      if (req.user.privileges === "admin") {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  });
-});
-
 
 app.get("/logout", authenticate, (req, res) => {
 
@@ -134,7 +114,6 @@ app.get("/logout", authenticate, (req, res) => {
     });
 
 });
-
 
 server.listen(port, () => {
   console.log(`Server started on port ${port}.`);

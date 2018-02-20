@@ -23,7 +23,7 @@ var DocumentCollectionSchema = new mongoose.Schema({
   },
   documents: [{ // Lista dei documenti nella collezione
     type: mongoose.Schema.ObjectId,
-    required: true,
+    required: false,
     minlength: 1,
     unique: false,
     trim: true,
@@ -31,16 +31,15 @@ var DocumentCollectionSchema = new mongoose.Schema({
   }],
   permissions: { // Possibilià di modifica e di aggiunta di documenti
     type: String,
-    required: true,
-    minlength: 1,
+    default: "tutti",
+    required: false,
     unique: false,
     trim: true,
-    default: "tutti",
     ref: "collection_permission"
   },
   authorizations: [{ // Proprietari della collezione
     type: mongoose.Schema.ObjectId,
-    required: true,
+    required: false,
     minlength: 1,
     unique: false,
     trim: true,

@@ -10,14 +10,6 @@ const {
 } = require("./../models/user");
 
 
-//GET
-router.get("/", (req, res) => {
-  res.render("login", {
-    pageTitle: "Archivio Digitale - ITIS Enrico Fermi"
-  });
-});
-
-// POST
 router.post("/", (req, res) => {
   var body = _.pick(req.body, ["email", "password"]);
 
