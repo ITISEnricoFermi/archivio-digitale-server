@@ -41,7 +41,19 @@ const {
   Class
 } = require("./../models/class");
 
-router.post("/getDocuments", (req, res) => {
+const {
+  DocumentCollection
+} = require("./../models/document_collection");
+
+const {
+  CollectionPermission
+} = require("./../models/collection_permission");
+
+const {
+  User
+} = require("./../models/user");
+
+router.get("/getDocuments", (req, res) => {
   Document.getDocuments()
     .then((documents) => {
       res.status(200).send(documents);
@@ -50,7 +62,7 @@ router.post("/getDocuments", (req, res) => {
     });
 });
 
-router.post("/getFaculties", authenticate, (req, res) => {
+router.get("/getFaculties", authenticate, (req, res) => {
   Faculty.getFaculties()
     .then((faculties) => {
       res.status(200).send(faculties);
@@ -59,7 +71,7 @@ router.post("/getFaculties", authenticate, (req, res) => {
     });
 });
 
-router.post("/getSubjects", authenticate, (req, res) => {
+router.get("/getSubjects", authenticate, (req, res) => {
   Subject.getSubjects()
     .then((subjects) => {
       res.status(200).send(subjects);
@@ -68,7 +80,7 @@ router.post("/getSubjects", authenticate, (req, res) => {
     });
 });
 
-router.post("/getDocumentTypes", (req, res) => {
+router.get("/getDocumentTypes", (req, res) => {
   DocumentType.getDocumentTypes()
     .then((documentTypes) => {
       res.status(200).send(documentTypes);
@@ -77,7 +89,7 @@ router.post("/getDocumentTypes", (req, res) => {
     });
 });
 
-router.post("/getSubjectsByFaculty", (req, res) => {
+router.get("/getSubjectsByFaculty", (req, res) => {
   Faculty.getSubjectsByFaculty(req.body._id)
     .then((subjects) => {
       res.status(200).send(subjects);
@@ -86,7 +98,7 @@ router.post("/getSubjectsByFaculty", (req, res) => {
     });
 });
 
-router.post("/getDocumentVisibilityList", (req, res) => {
+router.get("/getDocumentVisibilityList", (req, res) => {
   DocumentVisibility.getDocumentVisibility()
     .then((visibilities) => {
       res.status(200).send(visibilities);
@@ -95,7 +107,7 @@ router.post("/getDocumentVisibilityList", (req, res) => {
     });
 });
 
-router.post("/getSections", (req, res) => {
+router.get("/getSections", (req, res) => {
   Section.getSections()
     .then((sections) => {
       res.status(200).send(sections);
@@ -104,7 +116,7 @@ router.post("/getSections", (req, res) => {
     });
 });
 
-router.post("/getPrivileges", (req, res) => {
+router.get("/getPrivileges", (req, res) => {
   Privilege.getPrivileges()
     .then((privileges) => {
       res.status(200).send(privileges);
@@ -113,7 +125,7 @@ router.post("/getPrivileges", (req, res) => {
     });
 });
 
-router.post("/getClasses", (req, res) => {
+router.get("/getClasses", (req, res) => {
   Class.getClasses()
     .then((classes) => {
       res.status(200).send(classes);
@@ -121,5 +133,35 @@ router.post("/getClasses", (req, res) => {
       res.status(400).send(e);
     });
 });
+
+router.get("/getCollections", (req, res) => {
+  DocumentCollection.getCollections()
+    .then((collections) => {
+      res.status(200).send(collections);
+    })
+    .catch((e) => {
+      res.status(400).send(e);
+    });
+})
+
+router.get("/getCollectionsPermissions", (req, res) => {
+  CollectionPermission.getPermissions()
+    .then((permissions) => {
+      res.status(200).send(permissions);
+    })
+    .catch((e) => {
+      res.status(400).send(e);
+    });
+})
+
+router.get("/getUsers", authenticate, (req, res) => {
+  User.getUsers()
+    .then((users) => {
+      res.status(200).send(users);
+    })
+    .catch((e) => {
+      res.status(400).send(e);
+    });
+})
 
 module.exports = router;

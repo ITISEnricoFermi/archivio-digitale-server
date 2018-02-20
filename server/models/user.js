@@ -46,7 +46,7 @@ var UserSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 1,
-    default: "../images/elements/profile.jpg"
+    default: "../static/elements/profile.jpg"
   },
   // accesses: [{
   //   _id: {
@@ -218,6 +218,20 @@ UserSchema.statics.findUser = function(key) {
     });
 
 };
+
+UserSchema.statics.getUsers = function() {
+  var User = this;
+
+  return User.find()
+    .select(["firstname", "lastname"])
+    .then((results) => {
+      return Promise.resolve(results);
+    })
+    .catch((e) => {
+      return Promise.reject(e);
+    });
+
+}
 
 UserSchema.pre("save", function(next) {
   var user = this;

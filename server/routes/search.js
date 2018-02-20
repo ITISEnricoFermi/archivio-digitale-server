@@ -13,6 +13,10 @@ const {
   Document
 } = require("./../models/document");
 
+const {
+  DocumentCollection
+} = require("./../models/document_collection");
+
 router.post("/searchDocuments", authenticate, (req, res) => {
 
   var body = _.pick(req.body, ["fulltext", "type", "faculty", "subject", "class", "section", "visibility"]);
@@ -24,6 +28,26 @@ router.post("/searchDocuments", authenticate, (req, res) => {
         .header("x-userid", req.user._id)
         .header("x-userprivileges", req.user.privileges)
         .send(documents);
+    }).catch((e) => {
+      res.status(500).send("Errore: " + e);
+      console.log(e);
+    });
+
+});
+
+router.post("/searchCollections", authenticate, (req, res) => {
+
+  var body = _.pick(req.body, ["fulltext", "permissions"]);
+
+  console.log(body);
+
+  DocumentCollection.searchCollections(body)
+    .then((collections) => {
+
+      res.status(200)
+        .header("x-userid", req.user._id)
+        .header("x-userprivileges", req.user.privileges)
+        .send(collections);
     }).catch((e) => {
       res.status(500).send("Errore: " + e);
       console.log(e);

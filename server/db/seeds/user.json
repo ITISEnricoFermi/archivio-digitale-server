@@ -5,5 +5,5 @@
   "lastname": "Turing",
   "email": "alan.turing@test.com",
   "password": "alanturing",
-  "img": "../images/elements/alan.jpg"
+  "img": "../static/elements/alan.jpg"
 }]

@@ -59,7 +59,11 @@ const {
   Document
 } = require("./../models/document");
 
-router.post("/documentUpload", authenticate, upload.single("fileToUpload"), (req, res) => {
+const {
+  DocumentCollection
+} = require("./../models/document_collection");
+
+router.put("/documentUpload", authenticate, upload.single("fileToUpload"), (req, res) => {
 
   let file = req.file;
 
@@ -97,6 +101,30 @@ router.post("/documentUpload", authenticate, upload.single("fileToUpload"), (req
     }).catch((e) => {
       res.status(500).send(e);
     });
+
+});
+
+router.put("/createCollection", authenticate, (req, res) => {
+
+  let body = _.pick(req.body.collection, ["name", "permissions", "authorizations"]);
+  let user = req.user;
+
+  if (validator.isEmpty(body.name)) {
+    return res.status(400).send("Nome della collezione non valida.");
+  }
+
+  body.author = user._id;
+
+  let collection = new DocumentCollection(body);
+
+  collection.save()
+    .then((collection) => {
+      res.status(201).send("Collezione creata con successo.");
+    })
+    .catch((e) => {
+      res.status(500).send(e);
+    });
+
 
 });
 

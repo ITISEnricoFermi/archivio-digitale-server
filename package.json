@@ -4,11 +4,7 @@
   "description": "Archivio Digitale - ITIS Enrico Fermi",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js",
-    "compile:scss": "node-sass server/scss/main.scss server/public/css/main.css -w",
-    "compile:scss-home": "node-sass server/scss/mainHome.scss server/public/css/mainHome.css -w",
-    "compile:scss-signup": "node-sass server/scss/mainSignUp.scss server/public/css/mainSignUp.css -w",
-    "compile:scss-login": "node-sass server/scss/mainLogin.scss server/public/css/mainLogin.css -w"
+    "start": "node server/server.js"
   },
   "author": "Riccardo Sangiorgio",
   "license": "ISC",

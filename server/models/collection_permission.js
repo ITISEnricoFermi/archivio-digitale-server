@@ -29,6 +29,18 @@ var CollectionPermissionSchema = new mongoose.Schema({
   }
 });
 
+CollectionPermissionSchema.statics.getPermissions = function() {
+  var CollectionPermission = this;
+
+  return CollectionPermission.find({})
+    .then((results) => {
+      return Promise.resolve(results);
+    }, (e) => {
+      return Promise.reject(e);
+    });
+
+};
+
 var CollectionPermission = mongoose.model("collection_permission", CollectionPermissionSchema);
 
 module.exports = {
