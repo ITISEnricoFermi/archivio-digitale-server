@@ -50,7 +50,10 @@ router.post("/recentPosts", authenticate, (req, res) => {
     .populate("class")
     .populate("section")
     .then((documents) => {
-      res.status(200).send(documents);
+      res.status(200)
+        .header("x-userid", req.user._id)
+        .header("x-userprivileges", req.user.privileges)
+        .send(documents);
     })
     .catch((e) => {
       res.status(400).send(e);

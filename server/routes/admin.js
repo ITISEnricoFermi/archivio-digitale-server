@@ -6,7 +6,8 @@ const validator = require('validator');
 
 // Middleware
 const {
-  authenticate
+  authenticate,
+  authenticateAdmin
 } = require("./../middleware/authenticate");
 
 // Models
@@ -14,7 +15,7 @@ const {
   User
 } = require("./../models/user");
 
-router.post("/createUser", authenticate, (req, res) => {
+router.post("/createUser", authenticate, authenticateAdmin, (req, res) => {
 
   var body = _.pick(req.body, ["firstname", "lastname", "email", "password", "privileges", "accesses"]);
   var user = new User(body);
@@ -44,7 +45,7 @@ router.post("/createUser", authenticate, (req, res) => {
 
 });
 
-router.post("/getUsers", (req, res) => {
+router.post("/getUsers", authenticate, authenticateAdmin, (req, res) => {
 
   User.findUser(req.body.key)
     .then((users) => {
@@ -55,7 +56,7 @@ router.post("/getUsers", (req, res) => {
 
 });
 
-router.post("/getRequests", (req, res) => {
+router.post("/getRequests", authenticate, authenticateAdmin, (req, res) => {
 
   User.find({
       state: "pending"
@@ -69,7 +70,7 @@ router.post("/getRequests", (req, res) => {
 
 });
 
-router.post("/acceptRequestById", (req, res) => {
+router.post("/acceptRequestById", authenticate, authenticateAdmin, (req, res) => {
 
   let id = req.body._id;
 
@@ -87,7 +88,7 @@ router.post("/acceptRequestById", (req, res) => {
 
 });
 
-router.post("/refuseRequestById", (req, res) => {
+router.post("/refuseRequestById", authenticate, authenticateAdmin, (req, res) => {
 
   let id = req.body._id;
 
@@ -101,7 +102,7 @@ router.post("/refuseRequestById", (req, res) => {
 
 });
 
-router.post("/resetPassword", (req, res) => {
+router.post("/resetPassword", authenticate, authenticateAdmin, (req, res) => {
   let id = req.body._id;
 });
 
@@ -125,7 +126,8 @@ router.post("/togglePrivileges", (req, res) => {
     });
 });
 
-router.post("/toggleState", (req, res) => {
+router.post("/toggleState", authenticate, authenticateAdmin, (req, res) => {
+
   let id = req.body._id;
   User.findById(id)
     .then((user) => {

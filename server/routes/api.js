@@ -162,6 +162,39 @@ router.get("/getUsers", authenticate, (req, res) => {
     .catch((e) => {
       res.status(400).send(e);
     });
-})
+});
+
+router.get("/trends", authenticate, (req, res) => {
+  Document.aggregate([{
+      $group: {
+        _id: "$subject",
+        count: {
+          $sum: 1
+        }
+      }
+    }])
+    .then((documents) => {
+
+      let dataset = {
+        labels: [],
+        datasets: [{
+          label: "Subjects",
+          backgroundColor: '#f87979',
+          data: []
+        }]
+      };
+
+      for (let i = 0; i < documents.length; i++) {
+        dataset.labels.push(documents[i]._id);
+        dataset.datasets[0].data.push(documents[i].count);
+      }
+
+      res.status(200).send(dataset);
+    })
+    .catch((e) => {
+      res.status(500).send("Impossibile recuperare i trend.");
+    });
+
+});
 
 module.exports = router;

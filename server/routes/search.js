@@ -66,25 +66,6 @@ router.post("/getDocumentById/", (req, res) => {
 
 });
 
-router.post("/removeDocumentById", authenticate, (req, res) => {
-  Document.findDocumentById(req.body._id)
-    .then((document) => {
-
-      if (document.author._id !== req.user._id && req.user.privileges !== "admin") {
-        return res.status(401).send("Non si detengono le autorizzazioni per eliminare il documento.");
-      }
-
-      Document.remove({
-          _id: req.body._id
-        })
-        .then(() => {
-          res.status(200).send("Documento eliminato correttamente.");
-        })
-        .catch((e) => {
-          res.status(400).send(e);
-        })
-    })
-});
 
 
 module.exports = router;

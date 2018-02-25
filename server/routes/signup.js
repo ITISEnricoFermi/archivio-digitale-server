@@ -44,6 +44,10 @@ router.put("/", (req, res) => {
   return Subject.find(orQuery)
     .count()
     .then((subjects) => {
+
+
+
+      return console.log(subject);
       if (subjects !== body.accesses.length) {
         return res.status(400).send("Una delle autorizzazioni non è valida.");
       }

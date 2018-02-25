@@ -39,7 +39,7 @@ var authenticate = (req, res, next) => {
 var authenticateAdmin = (req, res, next) => {
 
   if (req.user.privileges !== "admin") {
-    return res.redirect("/login");
+    return res.status(401).send("Non si detengono i privilegi necessari.");
   }
 
   next();

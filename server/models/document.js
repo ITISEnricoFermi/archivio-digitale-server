@@ -35,7 +35,7 @@ var DocumentSchema = new mongoose.Schema({
   faculty: {
     type: String,
     unique: false,
-    required: true,
+    required: false,
     trim: true,
     ref: "Faculty"
   },
