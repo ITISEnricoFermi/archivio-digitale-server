@@ -13,8 +13,6 @@ const {
 router.post("/", (req, res) => {
   var body = _.pick(req.body, ["email", "password"]);
 
-  console.log(body);
-
   if (validator.isEmpty(body.email) || !validator.isEmail(body.email)) {
     return res.status(400).send("Email non valida.");
   } else if (validator.isEmpty(body.password) || body.password.length < 6) {

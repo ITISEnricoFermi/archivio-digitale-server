@@ -45,9 +45,6 @@ router.put("/", (req, res) => {
     .count()
     .then((subjects) => {
 
-
-
-      return console.log(subject);
       if (subjects !== body.accesses.length) {
         return res.status(400).send("Una delle autorizzazioni non è valida.");
       }
@@ -64,6 +61,7 @@ router.put("/", (req, res) => {
             .then((user) => {
               return user.generateAuthToken();
             }).then((token) => {
+              console.log(user);
               res.header("x-auth", token).send(user);
             });
 
@@ -74,6 +72,7 @@ router.put("/", (req, res) => {
 
     })
     .catch((e) => {
+      console.log(e);
       return res.status(500).send("Errore nel reperire le autorizzazioni.");
     });
 

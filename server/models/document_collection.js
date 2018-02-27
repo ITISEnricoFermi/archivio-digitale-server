@@ -21,7 +21,7 @@ var DocumentCollectionSchema = new mongoose.Schema({
     trim: true,
     ref: "User"
   },
-  documents: [{ // Lista dei documenti nella collezione
+  documents: [{
     type: mongoose.Schema.ObjectId,
     required: false,
     minlength: 1,
@@ -50,7 +50,7 @@ var DocumentCollectionSchema = new mongoose.Schema({
 DocumentCollectionSchema.statics.getCollections = function() {
   var DocumentCollection = this;
 
-  return DocumentCollection.find({})
+  return DocumentCollection.find()
     .then((results) => {
       return Promise.resolve(results);
     }, (e) => {
@@ -62,31 +62,10 @@ DocumentCollectionSchema.statics.getCollections = function() {
 
 
 DocumentCollectionSchema.statics.searchCollections = function(search) {
-  // DocumentCollectionSchema.statics.searchCollections = function(search, user) {
-  var DocumentCollection = this;
 
-  var andQuery = [];
+  let DocumentCollection = this;
 
-  // if (user.privileges === "user") {
-  //   var orQuery = {
-  //     $or: [{
-  //       visibility: "pubblico"
-  //     }, {
-  //       visibility: "areariservata"
-  //     }, {
-  //       $and: [{
-  //         visibility: "materia"
-  //       }, {
-  //         subject: {
-  //           $in: user.accesses
-  //         }
-  //       }]
-  //     }]
-  //   };
-  //
-  // }
-
-  // andQuery.push(orQuery || {});
+  let andQuery = [];
 
   if (search.fulltext) {
 
@@ -104,7 +83,6 @@ DocumentCollectionSchema.statics.searchCollections = function(search) {
     });
   }
 
-
   return DocumentCollection.find({
       $and: andQuery
     }, {
@@ -116,10 +94,6 @@ DocumentCollectionSchema.statics.searchCollections = function(search) {
         $meta: "textScore"
       }
     })
-    .populate("author")
-    .populate("documents")
-    .populate("permission")
-    .populate("authorizations")
     .limit(10)
     .then((results) => {
       return Promise.resolve(results);
@@ -128,6 +102,31 @@ DocumentCollectionSchema.statics.searchCollections = function(search) {
     });
 
 };
+
+
+
+DocumentCollectionSchema.pre("find", function(next) {
+
+  this.populate("author")
+    .populate("documents")
+    .populate("permission")
+    .populate("authorizations");
+
+  next();
+
+});
+
+DocumentCollectionSchema.pre("findOne", function(next) {
+
+  this.populate("author")
+    .populate("documents")
+    .populate("permission")
+    .populate("authorizations");
+
+  next();
+
+});
+
 
 DocumentCollectionSchema.index({
   documentCollection: "text"

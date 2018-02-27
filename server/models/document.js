@@ -6,6 +6,10 @@ const {
   ObjectId
 } = require("mongodb");
 
+const {
+  DocumentCollection
+} = require("./document_collection");
+
 var DocumentSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -95,10 +99,11 @@ var DocumentSchema = new mongoose.Schema({
 DocumentSchema.statics.getDocuments = function() {
   var Document = this;
 
-  return Document.find({})
+  return Document.find()
     .then((results) => {
       return Promise.resolve(results);
-    }, (e) => {
+    })
+    .catch((e) => {
       return Promise.reject(e);
     });
 
@@ -187,7 +192,19 @@ DocumentSchema.statics.searchDocuments = function(search, user) {
         $meta: "textScore"
       }
     })
-    .populate("author")
+    .limit(10)
+    .then((results) => {
+      return Promise.resolve(results);
+    })
+    .catch((e) => {
+      return Promise.reject(e);
+    });
+
+};
+
+DocumentSchema.pre("find", function(next) {
+
+  this.populate("author")
     .populate("type", "type")
     .populate({
       path: "faculty",
@@ -205,21 +222,16 @@ DocumentSchema.statics.searchDocuments = function(search, user) {
       path: "section",
       select: "section"
     })
-    .populate("visibility", "visibility")
-    .limit(10)
-    .then((results) => {
-      return Promise.resolve(results);
-    }, (e) => {
-      return Promise.reject(e);
-    });
+    .populate("visibility", "visibility");
 
-};
+  next();
 
-DocumentSchema.statics.findDocumentById = function(id) {
-  var Document = this;
+});
 
-  return Document.findById(id)
-    .populate("author")
+
+DocumentSchema.pre("findOne", function(next) {
+
+  this.populate("author")
     .populate("type", "type")
     .populate({
       path: "faculty",
@@ -230,23 +242,34 @@ DocumentSchema.statics.findDocumentById = function(id) {
       select: "subject"
     })
     .populate({
-      path: "document_visibility",
-      select: "visibility"
-    })
-    .populate({
-      path: "Class",
+      path: "class",
       select: "class"
     })
     .populate({
-      path: "Section",
+      path: "section",
       select: "section"
-    }).then((document) => {
-      return Promise.resolve(document);
-    }, (e) => {
-      return Promise.reject(e);
-    });
+    })
+    .populate("visibility", "visibility");
 
-};
+  next();
+
+});
+
+// DocumentSchema.pre('init', function(data) {
+//
+//   // data.collection = {
+//   //   mamma: "ciao"
+//   // };
+//
+//   return DocumentCollection.findById("5a930c3d582986318f151db0")
+//     .then((collection) => {
+//       data.collection = collection;
+//     })
+//     .catch((e) => {
+//       console.log(e);
+//     });
+//
+// });
 
 DocumentSchema.index({
   name: "text",

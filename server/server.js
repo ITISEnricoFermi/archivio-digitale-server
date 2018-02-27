@@ -60,7 +60,6 @@ const {
 const admin = require("./routes/admin");
 const documents = require("./routes/documents");
 const collections = require("./routes/collections");
-const search = require("./routes/search");
 const api = require("./routes/api");
 const signup = require("./routes/signup");
 const login = require("./routes/login");
@@ -81,7 +80,6 @@ app.use(cookieParser());
 app.use("/admin", admin);
 app.use("/documents", documents);
 app.use("/collections", collections);
-app.use("/search", search);
 app.use("/api", api);
 app.use("/signup", signup);
 app.use("/login", login);
@@ -93,9 +91,20 @@ app.use(express.static(__dirname + "/public"));
 
 io.on("connection", (socket) => {
 
-  socket.on("createDocument", () => {
-    console.log("Document created.");
+  socket.on("newDocument", () => {
     io.emit("newDocument");
+  });
+
+  socket.on("documentDeleted", () => {
+    io.emit("documentDeleted");
+  });
+
+  socket.on("documentUpdated", () => {
+    io.emit("documentUpdated");
+  });
+
+  socket.on("newUser", () => {
+    io.emit("newUser");
   });
 
 });

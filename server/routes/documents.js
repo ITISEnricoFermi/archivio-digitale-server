@@ -29,7 +29,7 @@ const fileFilter = (req, file, cb) => {
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/zip", "application/x-7z-compressed", "text/plain"
   ];
 
-  if (mimeypes.indexOf(file.mimetype) === -1) {
+  if (mimeypes.indexOf(file.mimetype) === -1 && !(new RegExp('^' + "video/", 'i')).test(file.mimetype)) {
     cb(null, false); // Il file usa un formato non ammesso
   } else {
     cb(null, true); // Il file usa un formato permesso
@@ -47,6 +47,11 @@ const upload = multer({
   fileFilter
 });
 
+
+const {
+  ObjectId
+} = mongoose.Types;
+
 // Middleware
 const {
   authenticate,
@@ -58,6 +63,10 @@ const {
   Document
 } = require("./../models/document");
 
+const {
+  DocumentCollection
+} = require("./../models/document_collection");
+
 
 router.get("/*", authenticate, (req, res, next) => {
   next();
@@ -67,15 +76,23 @@ router.get("/info/:id", authenticate, (req, res) => {
 
   let body = _.pick(req.params, ["id"]);
 
-  Document.findDocumentById({
-      _id: body.id
-    })
+  Document.findById(body.id)
     .then((document) => {
-      res.status(200).send(document);
+
+
+      return DocumentCollection.findOne({
+          _id: ObjectId("5a930c3d582986318f151db0")
+        })
+        .then((collection) => {
+          document.collection = collection;
+          res.status(200).send(document);
+        });
+
     })
     .catch((e) => {
       res.status(500).send("Errore nel reperire il documento.");
     });
+
 });
 
 router.put("/", authenticate, upload.single("fileToUpload"), (req, res) => {
@@ -154,7 +171,6 @@ router.patch("/:id", authenticate, (req, res) => {
 });
 
 
-
 router.delete("/:id", authenticate, (req, res) => {
 
   Document.findById(req.params.id)
@@ -174,6 +190,25 @@ router.delete("/:id", authenticate, (req, res) => {
     .catch((e) => {
       res.status(500).send(e);
     })
+});
+
+router.post("/search/", authenticate, (req, res) => {
+
+  var body = _.pick(req.body, ["fulltext", "type", "faculty", "subject", "class", "section", "visibility"]);
+
+  Document.searchDocuments(body, req.user)
+    .then((documents) => {
+
+      res.status(200)
+        .header("x-userid", req.user._id)
+        .header("x-userprivileges", req.user.privileges)
+        .send(documents);
+
+    }).catch((e) => {
+      res.status(500).send("Errore: " + e);
+      console.log(e);
+    });
+
 });
 
 
