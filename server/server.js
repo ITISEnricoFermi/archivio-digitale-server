@@ -4,14 +4,8 @@ const express = require('express');
 const http = require('http');
 const bodyParser = require('body-parser');
 const _ = require("lodash");
-const bcrypt = require("bcryptjs");
 const cookieParser = require('cookie-parser');
 const socketIO = require('socket.io');
-
-
-const {
-  ObjectId
-} = require("mongodb");
 
 const {
   mongoose
@@ -22,38 +16,9 @@ const {
   User
 } = require("./models/user");
 
-const {
-  Document
-} = require("./models/document");
-
-const {
-  Faculty
-} = require("./models/faculty");
-
-const {
-  Subject
-} = require("./models/subject");
-
-const {
-  Class
-} = require("./models/class");
-
-const {
-  Section
-} = require("./models/section");
-
-const {
-  DocumentType
-} = require("./models/document_type");
-
-const {
-  DocumentVisibility
-} = require("./models/document_visibility");
-
 // Middleware
 const {
-  authenticate,
-  authenticateAdmin
+  authenticate
 } = require("./middleware/authenticate");
 
 // Routes
@@ -63,9 +28,7 @@ const collections = require("./routes/collections");
 const api = require("./routes/api");
 const signup = require("./routes/signup");
 const login = require("./routes/login");
-const settings = require("./routes/settings");
-const user = require("./routes/user");
-const dashboard = require("./routes/dashboard");
+const users = require("./routes/users");
 
 var app = express();
 var server = http.createServer(app);
@@ -83,9 +46,7 @@ app.use("/collections", collections);
 app.use("/api", api);
 app.use("/signup", signup);
 app.use("/login", login);
-app.use("/settings", settings);
-app.use("/user", user);
-app.use("/dashboard", dashboard);
+app.use("/users", users);
 
 app.use(express.static(__dirname + "/public"));
 

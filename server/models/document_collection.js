@@ -109,7 +109,7 @@ DocumentCollectionSchema.pre("find", function(next) {
 
   this.populate("author")
     .populate("documents")
-    .populate("permission")
+    .populate("permissions")
     .populate("authorizations");
 
   next();
@@ -120,7 +120,7 @@ DocumentCollectionSchema.pre("findOne", function(next) {
 
   this.populate("author")
     .populate("documents")
-    .populate("permission")
+    .populate("permissions")
     .populate("authorizations");
 
   next();

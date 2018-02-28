@@ -61,7 +61,6 @@ router.put("/", (req, res) => {
             .then((user) => {
               return user.generateAuthToken();
             }).then((token) => {
-              console.log(user);
               res.header("x-auth", token).send(user);
             });
 
@@ -72,7 +71,6 @@ router.put("/", (req, res) => {
 
     })
     .catch((e) => {
-      console.log(e);
       return res.status(500).send("Errore nel reperire le autorizzazioni.");
     });
 

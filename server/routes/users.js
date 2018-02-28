@@ -39,9 +39,7 @@ const upload = multer({
 
 // Middleware
 const {
-  authenticate,
-  authenticateAdmin,
-  authenticateUser
+  authenticate
 } = require("./../middleware/authenticate");
 
 // Models
@@ -49,8 +47,69 @@ const {
   User
 } = require("./../models/user");
 
+const {
+  Document
+} = require("./../models/document");
 
-router.post("/updateInformations", authenticate, (req, res) => {
+router.get("/me/", authenticate, (req, res) => {
+
+  var body = _.pick(req.user, ["_id", "firstname", "lastname", "email", "accesses", "privileges", "img"]);
+
+  Document.count({
+      author: body._id
+    })
+    .then((documents) => {
+      body.documents = documents;
+      res.status(200).send(body);
+    })
+    .catch((e) => {
+      res.status(500).send(e);
+    });
+
+});
+
+router.get("/me/documents/:visibility", authenticate, (req, res) => {
+
+  Document.find({
+      author: req.user._id,
+      visibility: req.params.visibility
+    })
+    .populate("author", "firstname lastname img")
+    .populate("type")
+    .populate("faculty")
+    .populate("subject")
+    .populate("class")
+    .populate("section")
+    .sort({
+      _id: 1
+    })
+    .then((documents) => {
+      res.status(200)
+        .header("x-userid", req.user._id)
+        .header("x-userprivileges", req.user.privileges)
+        .send(documents);
+    })
+    .catch((e) => {
+      res.status(500).send(e);
+    });
+
+});
+
+router.get("/me/documents/count/:visibility", authenticate, (req, res) => {
+  Document.count({
+      author: req.user._id,
+      visibility: req.params.visibility
+    })
+    .then((documents) => {
+      res.status(200).send(documents.toString());
+    })
+    .catch((e) => {
+      res.status(500).send(e);
+    });
+});
+
+
+router.patch("/me/", authenticate, (req, res) => {
 
   var body = _.pick(req.body, ["old", "new"]);
 
@@ -76,8 +135,7 @@ router.post("/updateInformations", authenticate, (req, res) => {
 
 });
 
-
-router.post("/updateProfilePic", authenticate, upload.single("picToUpload"), (req, res) => {
+router.patch("/me/pic/", authenticate, upload.single("picToUpload"), (req, res) => {
   let file = req.file;
 
   if (!file) {
@@ -98,7 +156,8 @@ router.post("/updateProfilePic", authenticate, upload.single("picToUpload"), (re
 
 });
 
-router.post("/disableAccount", authenticate, (req, res) => {
+router.delete("/me/", authenticate, (req, res) => {
+
   User.findById(req.user._id)
     .then((user) => {
       user.state = "disabled";
@@ -114,5 +173,10 @@ router.post("/disableAccount", authenticate, (req, res) => {
 
 });
 
+
+
+router.post("/me/logged", authenticate, (req, res) => {
+  res.status(200).send();
+});
 
 module.exports = router;

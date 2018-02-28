@@ -79,17 +79,19 @@ router.get("/info/:id", authenticate, (req, res) => {
   Document.findById(body.id)
     .then((document) => {
 
+      // return DocumentCollection.findOne({
+      //     _id: ObjectId("5a930c3d582986318f151db0")
+      //   })
+      //   .then((collection) => {
+      //     document.collection = collection;
+      //     console.log(document);
+      //     res.status(200).send(document);
+      //   });
 
-      return DocumentCollection.findOne({
-          _id: ObjectId("5a930c3d582986318f151db0")
-        })
-        .then((collection) => {
-          document.collection = collection;
-          res.status(200).send(document);
-        });
-
+      res.status(200).send(document);
     })
     .catch((e) => {
+      console.log(e);
       res.status(500).send("Errore nel reperire il documento.");
     });
 
@@ -148,10 +150,6 @@ router.patch("/:id", authenticate, (req, res) => {
     return res.status(400).send("Specializzazione non valida.");
   } else if (validator.isEmpty(body.subject) || !validator.isAlpha(body.subject)) {
     return res.status(400).send("Materia non valida.");
-    // } else if (!validator.isInt(body.class)) {
-    //   return res.status(400).send("Classe non valida.");
-    // } else if (!validator.isAlpha(body.section)) {
-    //   return res.status(400).send("Sezione non valida");
   } else if (validator.isEmpty(body.visibility) || !validator.isAlpha(body.visibility)) {
     return res.status(400).send("Visibilità non valida.");
   } else if (validator.isEmpty(body.description)) {
@@ -207,6 +205,43 @@ router.post("/search/", authenticate, (req, res) => {
     }).catch((e) => {
       res.status(500).send("Errore: " + e);
       console.log(e);
+    });
+
+});
+
+router.get("/recent/", authenticate, (req, res) => {
+
+  if (req.user.privileges === "user") {
+    var query = {
+      $or: [{
+        visibility: "pubblico"
+      }, {
+        visibility: "areariservata"
+      }, {
+        $and: [{
+          visibility: "materia"
+        }, {
+          subject: {
+            $in: req.user.accesses
+          }
+        }]
+      }]
+    };
+  }
+
+  Document.find(query || {})
+    .limit(3)
+    .sort({
+      _id: -1
+    })
+    .then((documents) => {
+      res.status(200)
+        .header("x-userid", req.user._id)
+        .header("x-userprivileges", req.user.privileges)
+        .send(documents);
+    })
+    .catch((e) => {
+      res.status(400).send(e);
     });
 
 });

@@ -50,6 +50,16 @@ router.put("/", authenticate, (req, res) => {
       res.status(500).send(e);
     });
 
+});
+
+router.patch("/:id", authenticate, (req, res) => {
+
+  let body = _.pick(req.body, ["documentCollection", "permissions", "authorizations", "documents"]);
+  let user = req.user;
+
+  if (validator.isEmpty(body.documentCollection)) {
+    return res.status(400).send("Nome della collezione non valida.");
+  }
 
 });
 
