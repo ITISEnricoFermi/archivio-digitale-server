@@ -89,6 +89,14 @@ router.post("/search/", authenticate, (req, res) => {
 
   var body = _.pick(req.body, ["fulltext", "permissions"]);
 
+  var empty = _.every(body, (el) => {
+    return !el;
+  });
+
+  if (empty) {
+    return res.status(500).send("Nessuna query di ricerca.");
+  }
+
   DocumentCollection.searchCollections(body)
     .then((collections) => {
       res.status(200)

@@ -5,6 +5,7 @@ const _ = require("lodash");
 const multer = require('multer');
 const validator = require('validator');
 const path = require('path');
+const fs = require('fs');
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -182,7 +183,14 @@ router.delete("/:id", authenticate, (req, res) => {
           _id: req.params.id
         })
         .then(() => {
-          res.status(200).send("Documento eliminato correttamente.");
+
+          fs.unlink(path.join(__dirname, "..", "public", "documents", document.directory), function(err) {
+            if (err) {
+              res.status(500).send("Impossibile eliminare il documento.");
+            }
+            res.status(200).send("Documento eliminato correttamente.");
+          });
+
         });
     })
     .catch((e) => {
@@ -193,6 +201,13 @@ router.delete("/:id", authenticate, (req, res) => {
 router.post("/search/", authenticate, (req, res) => {
 
   var body = _.pick(req.body, ["fulltext", "type", "faculty", "subject", "class", "section", "visibility"]);
+  var empty = _.every(body, (el) => {
+    return !el;
+  });
+
+  if (empty) {
+    return res.status(500).send("Nessuna query di ricerca.");
+  }
 
   Document.searchDocuments(body, req.user)
     .then((documents) => {
