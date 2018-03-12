@@ -184,18 +184,27 @@ router.delete("/:id", authenticate, (req, res) => {
         })
         .then(() => {
 
-          fs.unlink(path.join(__dirname, "..", "public", "documents", document.directory), function(err) {
-            if (err) {
-              res.status(500).send("Impossibile eliminare il documento.");
+          return DocumentCollection.update({
+            documents: ObjectId(req.params.id)
+          }, {
+            $pull: {
+              documents: ObjectId(req.params.id)
             }
-            res.status(200).send("Documento eliminato correttamente.");
+          }).then(() => {
+            fs.unlink(path.join(__dirname, "..", "public", "documents", document.directory), function(err) {
+              if (err) {
+                res.status(500).send("Impossibile eliminare il documento.");
+              }
+              res.status(200).send("Documento eliminato correttamente.");
+            });
           });
 
         });
     })
     .catch((e) => {
+      console.log(e);
       res.status(500).send(e);
-    })
+    });
 });
 
 router.post("/search/", authenticate, (req, res) => {
@@ -218,8 +227,7 @@ router.post("/search/", authenticate, (req, res) => {
         .send(documents);
 
     }).catch((e) => {
-      res.status(500).send("Errore: " + e);
-      console.log(e);
+      res.status(500).send("Errore nel cercare i documenti.");
     });
 
 });

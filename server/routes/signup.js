@@ -60,7 +60,8 @@ router.put("/", (req, res) => {
           return user.save()
             .then((user) => {
               return user.generateAuthToken();
-            }).then((token) => {
+            })
+            .then((token) => {
               res.header("x-auth", token).send(user);
             });
 

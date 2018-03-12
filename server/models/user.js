@@ -194,31 +194,6 @@ UserSchema.statics.findByCredentials = function(email, password) {
     });
 }
 
-UserSchema.statics.findUser = function(key) {
-  var User = this;
-
-  return User.find({
-      $text: {
-        $search: key
-      }
-    }, {
-      score: {
-        $meta: "textScore"
-      }
-    }).sort({
-      score: {
-        $meta: "textScore"
-      }
-    })
-    .then((results) => {
-      return Promise.resolve(results);
-    })
-    .catch((e) => {
-      return Promise.reject(e);
-    });
-
-};
-
 UserSchema.statics.getUsers = function() {
   var User = this;
 

@@ -47,11 +47,30 @@ router.post("/createUser", authenticate, authenticateAdmin, (req, res) => {
 
 router.post("/getUsers", authenticate, authenticateAdmin, (req, res) => {
 
-  User.findUser(req.body.key)
+  User.find({
+      $text: {
+        $search: req.body.key
+      },
+      _id: {
+        $ne: req.user._id
+      },
+      state: {
+        $ne: "pending"
+      }
+    }, {
+      score: {
+        $meta: "textScore"
+      }
+    }).sort({
+      score: {
+        $meta: "textScore"
+      }
+    })
     .then((users) => {
       res.status(200).send(users);
-    }).catch((e) => {
-      res.status(401).send(e);
+    })
+    .catch((e) => {
+      res.status(500).send("Errore nel reperire gli utenti.");
     });
 
 });
@@ -104,6 +123,25 @@ router.post("/refuseRequestById", authenticate, authenticateAdmin, (req, res) =>
 
 router.post("/resetPassword", authenticate, authenticateAdmin, (req, res) => {
   let id = req.body._id;
+
+  User.findById(id)
+    .then((user) => {
+
+      let hash = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
+      user.tokens = [];
+      user.password = hash;
+
+      return user.save()
+        .then((user) => {
+          return res.status(200).send({
+            password: hash
+          });
+        });
+    })
+    .catch((e) => {
+      res.status(500).send("Impossibile eseguire il reset della password.");
+    });
+
 });
 
 router.post("/togglePrivileges", (req, res) => {
