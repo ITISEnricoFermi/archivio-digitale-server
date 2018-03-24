@@ -8,13 +8,19 @@ const {
 
 const facultyArray = require('../seeds/faculty.json')
 
-let loadFaculties = () => {
-  facultyArray.forEach((faculty) => {
-    let facultyToInsert = new Faculty(faculty)
-    facultyToInsert.save()
-  })
-}
+let loadFaculties = async () => {
+  try {
+    let docs = await Faculty.insertMany(facultyArray, {
+      ordered: false
+    })
 
+    if (docs) {
+      return true
+    }
+  } catch (e) {
+    return false
+  }
+}
 module.exports = {
   loadFaculties
 }

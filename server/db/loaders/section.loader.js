@@ -8,11 +8,18 @@ const {
 
 const sectionArray = require('../seeds/section.json')
 
-let loadSections = () => {
-  sectionArray.forEach((section) => {
-    let sectionToInsert = new Section(section)
-    sectionToInsert.save()
-  })
+let loadSections = async () => {
+  try {
+    let docs = await Section.insertMany(sectionArray, {
+      ordered: false
+    })
+
+    if (docs) {
+      return true
+    }
+  } catch (e) {
+    return false
+  }
 }
 
 module.exports = {

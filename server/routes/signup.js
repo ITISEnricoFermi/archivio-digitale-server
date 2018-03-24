@@ -23,7 +23,7 @@ const {
  */
 router.put('/', asyncMiddleware(async (req, res) => {
   const body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'accesses'])
-  const user = new User(body)
+  let user = new User(body)
 
   if (validator.isEmpty(body.firstname) || !validator.isAlpha(body.firstname)) {
     return res.status(400).send('Nome non valido.')
@@ -67,11 +67,9 @@ router.put('/', asyncMiddleware(async (req, res) => {
     })
   }
 
-  return user.save()
-    .then(user => user.generateAuthToken())
-    .then((token) => {
-      res.header('x-auth', token).send(user)
-    })
+  user = await user.save()
+  let token = await user.generateAuthToken()
+  return res.header('x-auth', token).send(user)
 }))
 
 module.exports = router

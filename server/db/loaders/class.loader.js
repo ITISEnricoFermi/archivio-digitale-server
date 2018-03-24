@@ -8,11 +8,18 @@ const {
 
 const classArray = require('../seeds/class.json')
 
-let loadClasses = () => {
-  classArray.forEach((classObj) => {
-    let classToInsert = new Class(classObj)
-    classToInsert.save()
-  })
+let loadClasses = async () => {
+  try {
+    let docs = await Class.insertMany(classArray, {
+      ordered: false
+    })
+
+    if (docs) {
+      return true
+    }
+  } catch (e) {
+    return false
+  }
 }
 
 module.exports = {

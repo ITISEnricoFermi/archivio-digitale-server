@@ -8,12 +8,18 @@ const {
 
 const documentTypeArray = require('../seeds/documentType.json')
 
-let loadDocumentTypes = () => {
-  documentTypeArray.forEach((documentType) => {
-    let documentTypeToInsert = new DocumentType(documentType)
+let loadDocumentTypes = async () => {
+  try {
+    let docs = await DocumentType.insertMany(documentTypeArray, {
+      ordered: false
+    })
 
-    documentTypeToInsert.save()
-  })
+    if (docs) {
+      return true
+    }
+  } catch (e) {
+    return false
+  }
 }
 
 module.exports = {

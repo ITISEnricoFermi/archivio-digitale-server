@@ -8,11 +8,18 @@ const {
 
 const privilegeArray = require('../seeds/privilege.json')
 
-let loadPrivileges = () => {
-  privilegeArray.forEach(async (privilege) => {
-    let privilegeToInsert = new Privilege(privilege)
-    privilegeToInsert.save()
-  })
+let loadPrivileges = async () => {
+  try {
+    let docs = await Privilege.insertMany(privilegeArray, {
+      ordered: false
+    })
+
+    if (docs) {
+      return true
+    }
+  } catch (e) {
+    return false
+  }
 }
 
 module.exports = {

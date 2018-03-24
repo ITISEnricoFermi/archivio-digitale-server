@@ -8,11 +8,16 @@ const {
 
 const userArray = require('../seeds/user.json')
 
-let loadUsers = () => {
-  userArray.forEach((user) => {
-    let userToInsert = new User(user)
-    userToInsert.save()
-  })
+let loadUsers = async () => {
+  try {
+    let docs = await User.create(userArray)
+
+    if (docs) {
+      return true
+    }
+  } catch (e) {
+    return false
+  }
 }
 
 module.exports = {

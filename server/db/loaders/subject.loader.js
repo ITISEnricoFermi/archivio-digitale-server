@@ -8,12 +8,18 @@ const {
 
 const subjectArray = require('../seeds/subject.json')
 
-let loadSubjects = () => {
-  subjectArray.forEach((subject) => {
-    let subjectToInsert = new Subject(subject)
+let loadSubjects = async () => {
+  try {
+    let docs = await Subject.insertMany(subjectArray, {
+      ordered: false
+    })
 
-    subjectToInsert.save()
-  })
+    if (docs) {
+      return true
+    }
+  } catch (e) {
+    return false
+  }
 }
 
 module.exports = {

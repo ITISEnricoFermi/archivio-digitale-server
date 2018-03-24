@@ -8,11 +8,18 @@ const {
 
 const collectionPermissionArray = require('../seeds/collectionPermission.json')
 
-let loadCollectionPermissions = () => {
-  collectionPermissionArray.forEach((permission) => {
-    let collectionPermissionToInsert = new CollectionPermission(permission)
-    collectionPermissionToInsert.save()
-  })
+let loadCollectionPermissions = async () => {
+  try {
+    let docs = await CollectionPermission.insertMany(collectionPermissionArray, {
+      ordered: false
+    })
+
+    if (docs) {
+      return true
+    }
+  } catch (e) {
+    return false
+  }
 }
 
 module.exports = {
