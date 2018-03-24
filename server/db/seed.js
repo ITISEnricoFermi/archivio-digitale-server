@@ -1,12 +1,38 @@
-import loadClasses from './loaders/class.loader'
-import loadCollectionPermissions from './loaders/collectionPermission.loader'
-import loadDocumentTypes from './loaders/documentType.loader'
-import loadDocumentVisibilities from './loaders/documentVisibility.loader'
-import loadFaculties from './loaders/faculty.loader'
-import loadPrivileges from './loaders/privilege.loader'
-import loadSections from './loaders/section.loader'
-import loadSubjects from './loaders/subject.loader'
-import loadUsers from './loaders/user.loader'
+const {
+  loadClasses
+} = require('./loaders/class.loader')
+
+const {
+  loadCollectionPermissions
+} = require('./loaders/collectionPermission.loader')
+
+const {
+  loadDocumentTypes
+} = require('./loaders/documentType.loader')
+
+const {
+  loadDocumentVisibilities
+} = require('./loaders/documentVisibility.loader')
+
+const {
+  loadFaculties
+} = require('./loaders/faculty.loader')
+
+const {
+  loadPrivileges
+} = require('./loaders/privilege.loader')
+
+const {
+  loadSections
+} = require('./loaders/section.loader')
+
+const {
+  loadSubjects
+} = require('./loaders/subject.loader')
+
+const {
+  loadUsers
+} = require('./loaders/user.loader')
 
 let loader = async () => {
   await loadClasses
