@@ -1,3 +1,5 @@
+const colors = require('colors')
+
 const {
   loadClasses
 } = require('./loaders/class.loader')
@@ -36,25 +38,24 @@ const {
 
 let loader = async () => {
   await loadClasses
-  console.log('Classi create con successo.')
+  console.log('Classi create con successo.'.yellow)
   await loadCollectionPermissions
-  console.log('Permessi (collezioni) creati con successo.')
+  console.log('Permessi (collezioni) creati con successo.'.yellow)
   await loadDocumentTypes
-  console.log('Tipi (documenti) creati con successo.')
+  console.log('Tipi (documenti) creati con successo.'.yellow)
   await loadDocumentVisibilities
-  console.log('Visibilità (documenti) create con successo.')
+  console.log('Visibilità (documenti) create con successo.'.yellow)
   await loadFaculties
-  console.log('Specializzazioni create con successo.')
+  console.log('Specializzazioni create con successo.'.yellow)
   await loadPrivileges
-  console.log('Privilegi (utente) creati con successo.')
+  console.log('Privilegi (utente) creati con successo.'.yellow)
   await loadSections
-  console.log('Sezioni create con successo.')
+  console.log('Sezioni create con successo.'.yellow)
   await loadSubjects
-  console.log('Materie create con successo.')
+  console.log('Materie create con successo.'.yellow)
   await loadUsers
-  console.log('Utenti creati con successo.')
+  console.log('Utenti creati con successo.'.yellow)
+  console.log('Il database è stato popolato.'.green)
 }
 
 loader()
-
-console.log('Il database è stato popolato.')

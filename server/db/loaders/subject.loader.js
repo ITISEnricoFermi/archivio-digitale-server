@@ -4,7 +4,7 @@ const {
 
 const {
   Subject
-} = require('./../models/subject')
+} = require('../../models/subject')
 
 const subjectArray = require('../seeds/subject.json')
 
