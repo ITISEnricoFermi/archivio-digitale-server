@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const _ = require('lodash');
+const mongoose = require('mongoose')
+const validator = require('validator')
+const _ = require('lodash')
 
 var FacultySchema = new mongoose.Schema({
   _id: {
@@ -21,38 +21,24 @@ var FacultySchema = new mongoose.Schema({
     required: true,
     minlength: 1,
     trim: true,
-    ref: "Subject"
+    ref: 'Subject'
   }]
-});
+})
 
-FacultySchema.statics.getFaculties = function() {
-  var Faculty = this;
+FacultySchema.statics.getFaculties = function () {
+  var Faculty = this
 
   return Faculty.find({})
-    .populate("subjects")
+    .populate('subjects')
     .then((results) => {
-      return Promise.resolve(results);
+      return Promise.resolve(results)
     }, (e) => {
-      return Promise.reject(e);
-    });
+      return Promise.reject(e)
+    })
+}
 
-};
-
-FacultySchema.statics.getSubjectsByFaculty = function(facultyId) {
-  var Faculty = this;
-
-  return Faculty.findById(facultyId)
-    .populate("subjects")
-    .then((results) => {
-      return Promise.resolve(results.subjects);
-    }, (e) => {
-      return Promise.reject(e);
-    });
-
-};
-
-var Faculty = mongoose.model("Faculty", FacultySchema);
+var Faculty = mongoose.model('Faculty', FacultySchema)
 
 module.exports = {
   Faculty
-};
+}

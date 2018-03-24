@@ -1,42 +1,146 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
-const _ = require("lodash");
-const multer = require('multer');
-const validator = require('validator');
-const path = require('path');
-const fs = require('fs');
+const express = require('express')
+const router = express.Router()
+const mongoose = require('mongoose')
+const _ = require('lodash')
+const multer = require('multer')
+const validator = require('validator')
+const path = require('path')
+const fs = require('fs')
+
+const {
+  ObjectId
+} = mongoose.Types
+
+// Middleware
+const {
+  authenticate,
+  authenticateAdmin
+} = require('./../middleware/authenticate')
+
+const {
+  asyncMiddleware
+} = require('../middleware/async')
+
+const {
+  editDocument
+} = require('../middleware/edit')
+
+const {
+  checkDocument,
+  checkErrors
+} = require('../middleware/check')
+
+// Models
+const {
+  Document
+} = require('./../models/document')
+
+const {
+  DocumentCollection
+} = require('./../models/document_collection')
+
+const {
+  DocumentType
+} = require('../models/document_type')
+
+const {
+  Faculty
+} = require('../models/faculty')
+
+const {
+  Subject
+} = require('../models/subject')
+
+const {
+  DocumentVisibility
+} = require('../models/document_visibility')
 
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, "./public/documents");
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '..', 'public', 'documents'))
   },
-  filename: function(req, file, cb) {
-    cb(null, new Date().toISOString() + path.extname(file.originalname));
+  filename: function (req, file, cb) {
+    cb(null, new Date().toISOString() + path.extname(file.originalname))
   }
-});
+})
 
-const fileFilter = (req, file, cb) => {
+const fileFilter = asyncMiddleware(async (req, file, cb) => {
+  let document = _.pick(JSON.parse(req.body.document), ['name', 'type', 'faculty', 'subject', 'visibility', 'description'])
+  let pass = null
 
-  const mimeypes = ["audio/aac", "video/x-msvideo", "text/csv", "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/epub+zip", "image/gif", "image/x-icon", "image/jpeg", "audio/midi",
-    "video/mpeg", "application/vnd.oasis.opendocument.presentation",
-    "application/vnd.oasis.opendocument.spreadsheet", "application/vnd.oasis.opendocument.text",
-    "audio/ogg", "video/ogg", "application/ogg", "image/png", "application/pdf",
-    "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    "application/x-rar-compressed", "application/rtf", "application/x-tar", "image/tiff", "application/vnd.visio",
-    "audio/x-wav", "audio/webm", "video/webm", "image/webp", "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/zip", "application/x-7z-compressed", "text/plain"
-  ];
-
-  if (mimeypes.indexOf(file.mimetype) === -1 && !(new RegExp('^' + "video/", 'i')).test(file.mimetype)) {
-    cb(null, false); // Il file usa un formato non ammesso
+  if (document.name == null || document.name.length < 1) {
+    return cb(new Error('Il campo del nome è vuoto.'), false)
   } else {
-    cb(null, true); // Il file usa un formato permesso
+    document.name = validator.escape(document.name)
   }
 
-};
+  if (document.description == null || document.description < 1) {
+    cb(new Error('Il campo della descrizione è vuoto.'), false)
+  } else {
+    document.description = validator.escape(document.description)
+  }
+
+  if (document.type == null || document.type.length < 1) {
+    return cb(new Error('Il campo del tipo è vuoto.'), false)
+  } else {
+    pass = await DocumentType.findById(document.type)
+    if (!pass) {
+      cb(new Error('Il tipo non è valido.'), false)
+    }
+  }
+
+  if (document.faculty == null || document.faculty.length < 1) {
+    cb(new Error('Il campo della specializzazione è vuoto.'), false)
+  } else {
+    pass = await Faculty.findById(document.faculty)
+    if (!pass) {
+      cb(new Error('La specializzazione non è valida.'), false)
+    }
+  }
+
+  if (document.subject == null || document.subject.length < 1) {
+    cb(new Error('Il campo della materia è vuoto.'), false)
+  } else {
+    pass = await Subject.findById(document.subject)
+    if (!pass) {
+      cb(new Error('La materia non è valida.'), false)
+    }
+  }
+
+  if (document.visibility == null || document.visibility.length < 1) {
+    cb(new Error('Il campo della visibilità è vuoto.'), false)
+  } else {
+    pass = await DocumentVisibility.findById(document.visibility)
+    if (!pass) {
+      cb(new Error('La visibilità non è valida.'), false)
+    }
+  }
+
+  // Validazione
+  if (!req.file) {
+    cb(new Error('Nessun file caricato.'), false)
+  }
+
+  req.document = document
+
+  const mimeypes = ['audio/aac', 'video/x-msvideo', 'text/csv', 'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/epub+zip', 'image/gif', 'image/x-icon', 'image/jpeg', 'audio/midi',
+    'video/mpeg', 'application/vnd.oasis.opendocument.presentation',
+    'application/vnd.oasis.opendocument.spreadsheet', 'application/vnd.oasis.opendocument.text',
+    'audio/ogg', 'video/ogg', 'application/ogg', 'image/png', 'application/pdf',
+    'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/x-rar-compressed', 'application/rtf', 'application/x-tar', 'image/tiff', 'application/vnd.visio',
+    'audio/x-wav', 'audio/webm', 'video/webm', 'image/webp', 'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/zip', 'application/x-7z-compressed', 'text/plain'
+  ]
+
+  if (mimeypes.indexOf(file.mimetype) === -1 && !(new RegExp('^' + 'video/', 'i')).test(file.mimetype)) {
+    cb(new Error('Il formato del file non è valido.'), false) // Il file usa un formato non ammesso
+  } else {
+    cb(null, true) // Il file usa un formato permesso
+  }
+})
 
 const limits = {
   fileSize: 1024 * 1024 * 100 // 100 MB
@@ -46,228 +150,150 @@ const upload = multer({
   storage,
   limits,
   fileFilter
-});
+}).single('file')
 
+router.get('/*', authenticate, (req, res, next) => {
+  next()
+})
 
-const {
-  ObjectId
-} = mongoose.Types;
+router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
+  let document = await Document.findById(req.params.id).lean()
+  let collection = await DocumentCollection.findOne({
+    documents: req.params.id
+  })
+  document.collection = collection
+  res.status(200).send(document)
+}))
 
-// Middleware
-const {
-  authenticate,
-  authenticateAdmin
-} = require("./../middleware/authenticate");
+/*
+ * Utente loggato
+ */
+router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
+  let body = _.pick(JSON.parse(req.body.document), ['name', 'type', 'faculty', 'subject', 'class', 'section', 'visibility', 'description'])
 
-// Models
-const {
-  Document
-} = require("./../models/document");
+  // Formattazione
+  body.name = _.upperFirst(body.name)
+  body.description = _.upperFirst(body.description)
+  body.author = req.user._id
+  body.directory = req.file.filename
 
-const {
-  DocumentCollection
-} = require("./../models/document_collection");
+  let document = new Document(body)
 
-
-router.get("/*", authenticate, (req, res, next) => {
-  next();
-});
-
-router.get("/info/:id", authenticate, (req, res) => {
-
-  let body = _.pick(req.params, ["id"]);
-
-  Document.findById(body.id)
-    .then((document) => {
-
-      // return DocumentCollection.findOne({
-      //     _id: ObjectId("5a930c3d582986318f151db0")
-      //   })
-      //   .then((collection) => {
-      //     document.collection = collection;
-      //     console.log(document);
-      //     res.status(200).send(document);
-      //   });
-
-      res.status(200).send(document);
-    })
-    .catch((e) => {
-      console.log(e);
-      res.status(500).send("Errore nel reperire il documento.");
-    });
-
-});
-
-router.put("/", authenticate, upload.single("fileToUpload"), (req, res) => {
-
-  let file = req.file;
-
-  let body = _.pick(JSON.parse(req.body.document), ["name", "type", "faculty", "subject", "class", "section", "visibility", "description"]);
-  let user = req.user;
-
-  if (validator.isEmpty(body.name)) {
-    return res.status(400).send("Nome non valido.");
-  } else if (validator.isEmpty(body.type)) {
-    return res.status(400).send("Tipo non valido.");
-  } else if (validator.isEmpty(body.faculty) || !validator.isAlpha(body.faculty)) {
-    return res.status(400).send("Specializzazione non valida.");
-  } else if (validator.isEmpty(body.subject) || !validator.isAlpha(body.subject)) {
-    return res.status(400).send("Materia non valida.");
-    // } else if (!validator.isInt(body.class)) {
-    //   return res.status(400).send("Classe non valida.");
-    // } else if (!validator.isAlpha(body.section)) {
-    //   return res.status(400).send("Sezione non valida");
-  } else if (validator.isEmpty(body.visibility) || !validator.isAlpha(body.visibility)) {
-    return res.status(400).send("Visibilità non valida.");
-  } else if (validator.isEmpty(body.description)) {
-    return res.status(400).send("Descrione non valida");
-  } else if (!file) {
-    return res.status(400).send("Nessun file caricato.");
+  document = await document.save()
+  if (document) {
+    res.status(201).send(document)
   }
+}))
 
-  body.author = user._id;
-  body.directory = req.file.filename;
+/*
+ * Utente loggato
+ * Utente proprietario o admin
+ */
+router.patch('/:id', authenticate, editDocument, checkDocument, checkErrors, asyncMiddleware(async (req, res) => {
+  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'class', 'section', 'visibility', 'description'])
 
-  let document = new Document(body);
+  // Formattazione
+  body.name = _.upperFirst(body.name)
+  body.description = _.upperFirst(body.description)
 
-  document.save()
-    .then((document) => {
-      res.status(201).send(document);
-    }).catch((e) => {
-      res.status(500).send(e);
-    });
+  let document = await Document.findByIdAndUpdate(req.params.id, {
+    $set: body
+  })
 
-});
-
-router.patch("/:id", authenticate, (req, res) => {
-
-  let body = _.pick(req.body, ["name", "type", "faculty", "subject", "class", "section", "visibility", "description"])
-
-  if (validator.isEmpty(body.name)) {
-    return res.status(400).send("Nome non valido.");
-  } else if (validator.isEmpty(body.type)) {
-    return res.status(400).send("Tipo non valido.");
-  } else if (validator.isEmpty(body.faculty) || !validator.isAlpha(body.faculty)) {
-    return res.status(400).send("Specializzazione non valida.");
-  } else if (validator.isEmpty(body.subject) || !validator.isAlpha(body.subject)) {
-    return res.status(400).send("Materia non valida.");
-  } else if (validator.isEmpty(body.visibility) || !validator.isAlpha(body.visibility)) {
-    return res.status(400).send("Visibilità non valida.");
-  } else if (validator.isEmpty(body.description)) {
-    return res.status(400).send("Descrione non valida");
+  if (document) {
+    return res.status(200).send({
+      messages: ['Documento modificato con successo.']
+    })
   }
+}))
 
-  Document.findByIdAndUpdate(req.params.id, {
-      $set: body
+/*
+ * Utente loggato
+ * Utente proprietario o admin
+ */
+router.delete('/:id', authenticate, editDocument, asyncMiddleware(async (req, res) => {
+  let document = await Document.findById(req.params.id)
+  await document.remove()
+  document = await DocumentCollection.update({
+    documents: ObjectId(req.params.id)
+  }, {
+    $pull: {
+      documents: ObjectId(req.params.id)
+    }
+  })
+
+  fs.unlink(path.join(__dirname, '..', 'public', 'documents', document.directory), function (err) {
+    if (err) {
+      return res.status(500).send({
+        messages: ['Impossibile eliminare il documento.']
+      })
+    }
+    res.status(200).send({
+      messages: ['Documento eliminato correttamente.']
     })
-    .then((document) => {
-      res.status(200).send("Documento modificato con successo.");
-    })
-    .catch((e) => {
-      res.status(500).send("Nessun documento corrispondente all'ID.");
-    });
+  })
+}))
 
-});
-
-
-router.delete("/:id", authenticate, (req, res) => {
-
-  Document.findById(req.params.id)
-    .then((document) => {
-
-      if (document.author._id !== req.user._id && req.user.privileges !== "admin") {
-        return res.status(401).send("Non si detengono le autorizzazioni per eliminare il documento.");
-      }
-
-      return Document.remove({
-          _id: req.params.id
-        })
-        .then(() => {
-
-          return DocumentCollection.update({
-            documents: ObjectId(req.params.id)
-          }, {
-            $pull: {
-              documents: ObjectId(req.params.id)
-            }
-          }).then(() => {
-            fs.unlink(path.join(__dirname, "..", "public", "documents", document.directory), function(err) {
-              if (err) {
-                res.status(500).send("Impossibile eliminare il documento.");
-              }
-              res.status(200).send("Documento eliminato correttamente.");
-            });
-          });
-
-        });
-    })
-    .catch((e) => {
-      console.log(e);
-      res.status(500).send(e);
-    });
-});
-
-router.post("/search/", authenticate, (req, res) => {
-
-  var body = _.pick(req.body, ["fulltext", "type", "faculty", "subject", "class", "section", "visibility"]);
+router.post('/search/', authenticate, asyncMiddleware(async (req, res) => {
+  var body = _.pick(req.body, ['fulltext', 'type', 'faculty', 'subject', 'class', 'section', 'visibility'])
   var empty = _.every(body, (el) => {
-    return !el;
-  });
+    return !el
+  })
 
   if (empty) {
-    return res.status(500).send("Nessuna query di ricerca.");
+    return res.status(500).send({
+      messages: ['Nessuna query di ricerca.']
+    })
   }
 
-  Document.searchDocuments(body, req.user)
-    .then((documents) => {
+  let documents = await Document.searchDocuments(body, req.user)
+  if (documents) {
+    res.status(200)
+      .header('x-userid', req.user._id)
+      .header('x-userprivileges', req.user.privileges)
+      .send(documents)
+  } else {
+    res.status(200).send({
+      messages: ['Nessun documento presente.']
+    })
+  }
+}))
 
-      res.status(200)
-        .header("x-userid", req.user._id)
-        .header("x-userprivileges", req.user.privileges)
-        .send(documents);
-
-    }).catch((e) => {
-      res.status(500).send("Errore nel cercare i documenti.");
-    });
-
-});
-
-router.get("/recent/", authenticate, (req, res) => {
-
-  if (req.user.privileges === "user") {
+router.get('/recent/', authenticate, asyncMiddleware(async (req, res) => {
+  if (req.user.privileges === 'user') {
     var query = {
       $or: [{
-        visibility: "pubblico"
+        visibility: 'pubblico'
       }, {
-        visibility: "areariservata"
+        visibility: 'areariservata'
       }, {
         $and: [{
-          visibility: "materia"
+          visibility: 'materia'
         }, {
           subject: {
             $in: req.user.accesses
           }
         }]
       }]
-    };
+    }
   }
 
-  Document.find(query || {})
+  let documents = await Document.find(query || {})
     .limit(3)
     .sort({
       _id: -1
     })
-    .then((documents) => {
-      res.status(200)
-        .header("x-userid", req.user._id)
-        .header("x-userprivileges", req.user.privileges)
-        .send(documents);
+
+  if (documents) {
+    res.status(200)
+      .header('x-userid', req.user._id)
+      .header('x-userprivileges', req.user.privileges)
+      .send(documents)
+  } else {
+    res.status(200).send({
+      messages: ['Nessun documento presente.']
     })
-    .catch((e) => {
-      res.status(400).send(e);
-    });
+  }
+}))
 
-});
-
-
-module.exports = router;
+module.exports = router

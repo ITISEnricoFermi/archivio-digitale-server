@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 var ClassSchema = new mongoose.Schema({
   _id: {
@@ -9,29 +9,29 @@ var ClassSchema = new mongoose.Schema({
   },
   class: {
     type: Number,
-      required: true,
-      unique: false,
-      minlength: 1,
-      trim: true
+    required: true,
+    unique: false,
+    minlength: 1,
+    trim: true
   }
-});
+})
 
-ClassSchema.statics.getClasses = function() {
-  var Class = this;
+ClassSchema.statics.getClasses = function () {
+  var Class = this
 
   return Class.find()
     .sort({
       class: 1
     })
     .then((classes) => {
-      return Promise.resolve(classes);
+      return Promise.resolve(classes)
     }, (e) => {
-      return Promise.reject(e);
-    });
-};
+      return Promise.reject(e)
+    })
+}
 
-var Class = mongoose.model("Class", ClassSchema);
+var Class = mongoose.model('Class', ClassSchema)
 
 module.exports = {
   Class
-};
+}

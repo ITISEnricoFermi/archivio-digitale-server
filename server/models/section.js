@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const _ = require('lodash');
+const mongoose = require('mongoose')
+const validator = require('validator')
+const _ = require('lodash')
 
 var SectionSchema = new mongoose.Schema({
   _id: {
@@ -10,7 +10,7 @@ var SectionSchema = new mongoose.Schema({
     minlength: 1,
     validate: {
       validator: validator.isAlpha,
-      message: "{VALUE} non è un ID valido."
+      message: '{VALUE} non è un ID valido.'
     }
   },
   section: {
@@ -21,29 +21,27 @@ var SectionSchema = new mongoose.Schema({
     trim: true,
     validate: {
       validator: validator.isAlpha,
-      message: "{VALUE} non è una sezione valida."
+      message: '{VALUE} non è una sezione valida.'
     }
   }
-});
+})
 
-
-SectionSchema.statics.getSections = function() {
-  var Section = this;
+SectionSchema.statics.getSections = function () {
+  var Section = this
 
   return Section.find()
     .sort({
       section: 1
     })
     .then((sections) => {
-      return Promise.resolve(sections);
+      return Promise.resolve(sections)
     }, (e) => {
-      return Promise.reject(e);
-    });
+      return Promise.reject(e)
+    })
+}
 
-};
-
-var Section = mongoose.model("Section", SectionSchema);
+var Section = mongoose.model('Section', SectionSchema)
 
 module.exports = {
   Section
-};
+}

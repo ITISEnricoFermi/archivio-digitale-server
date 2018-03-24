@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const _ = require('lodash');
+const mongoose = require('mongoose')
+const validator = require('validator')
+const _ = require('lodash')
 
 var DocumentVisibilitySchema = new mongoose.Schema({
   _id: {
@@ -10,7 +10,7 @@ var DocumentVisibilitySchema = new mongoose.Schema({
     trim: true,
     validate: {
       validator: validator.isAlpha,
-      message: "{VALUE} non è un ID valido."
+      message: '{VALUE} non è un ID valido.'
     }
   },
   visibility: {
@@ -20,21 +20,21 @@ var DocumentVisibilitySchema = new mongoose.Schema({
     minlength: 1,
     trim: false
   }
-});
+})
 
-DocumentVisibilitySchema.statics.getDocumentVisibility = function() {
-  var DocumentVisibility = this;
+DocumentVisibilitySchema.statics.getDocumentVisibility = function () {
+  var DocumentVisibility = this
 
   return DocumentVisibility.find()
     .then((visibilities) => {
-      return Promise.resolve(visibilities);
+      return Promise.resolve(visibilities)
     }, (e) => {
-      return Promise.reject(e);
-    });
-};
+      return Promise.reject(e)
+    })
+}
 
-var DocumentVisibility = mongoose.model("document_visibility", DocumentVisibilitySchema);
+var DocumentVisibility = mongoose.model('document_visibility', DocumentVisibilitySchema)
 
 module.exports = {
   DocumentVisibility
-};
+}

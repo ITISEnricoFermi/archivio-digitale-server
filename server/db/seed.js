@@ -1,120 +1,34 @@
-const {
-  ObjectID
-} = require("mongodb");
+import loadClasses from './loaders/class.loader'
+import loadCollectionPermissions from './loaders/collectionPermission.loader'
+import loadDocumentTypes from './loaders/documentType.loader'
+import loadDocumentVisibilities from './loaders/documentVisibility.loader'
+import loadFaculties from './loaders/faculty.loader'
+import loadPrivileges from './loaders/privilege.loader'
+import loadSections from './loaders/section.loader'
+import loadSubjects from './loaders/subject.loader'
+import loadUsers from './loaders/user.loader'
 
-const {
-  mongoose
-} = require("./mongoose");
+let loader = async () => {
+  await loadClasses
+  console.log('Classi create con successo.')
+  await loadCollectionPermissions
+  console.log('Permessi (collezioni) creati con successo.')
+  await loadDocumentTypes
+  console.log('Tipi (documenti) creati con successo.')
+  await loadDocumentVisibilities
+  console.log('Visibilità (documenti) create con successo.')
+  await loadFaculties
+  console.log('Specializzazioni create con successo.')
+  await loadPrivileges
+  console.log('Privilegi (utente) creati con successo.')
+  await loadSections
+  console.log('Sezioni create con successo.')
+  await loadSubjects
+  console.log('Materie create con successo.')
+  await loadUsers
+  console.log('Utenti creati con successo.')
+}
 
-// Models
-const {
-  Document
-} = require("./../models/document");
+loader()
 
-const {
-  Faculty
-} = require("./../models/faculty");
-
-const {
-  Subject
-} = require("./../models/subject");
-
-const {
-  DocumentType
-} = require("./../models/document_type");
-
-const {
-  Class
-} = require("./../models/class");
-
-const {
-  Section
-} = require("./../models/section");
-
-const {
-  Privilege
-} = require("./../models/privilege");
-
-const {
-  DocumentVisibility
-} = require("./../models/document_visibility");
-
-const {
-  User
-} = require("./../models/user");
-
-const {
-  DocumentCollection
-} = require("./../models/document_collection");
-
-const {
-  CollectionPermission
-} = require("./../models/collection_permission");
-
-
-const facultyArray = require("./seeds/faculty");
-const privilegeArray = require("./seeds/privilege");
-const subjectArray = require("./seeds/subject");
-const documentTypeArray = require("./seeds/documentType");
-const sectionArray = require("./seeds/section");
-const documentVisibilityArray = require("./seeds/documentVisibility");
-const classArray = require("./seeds/class");
-const userArray = require("./seeds/user");
-const collectionPermissionArray = require("./seeds/collectionPermission")
-
-userArray.forEach((user) => {
-  var userToInsert = new User(user);
-
-  userToInsert.save();
-});
-
-classArray.forEach((classObj) => {
-  var classToInsert = new Class(classObj);
-
-  classToInsert.save();
-});
-
-documentVisibilityArray.forEach((visibility) => {
-  var documentVisibilityToInsert = new DocumentVisibility(visibility);
-
-  documentVisibilityToInsert.save();
-});
-
-privilegeArray.forEach((privilege) => {
-  var privilegeToInsert = new Privilege(privilege);
-
-  privilegeToInsert.save();
-});
-
-sectionArray.forEach((section) => {
-  var sectionToInsert = new Section(section);
-
-  sectionToInsert.save();
-});
-
-facultyArray.forEach((faculty) => {
-  var facultyToInsert = new Faculty(faculty);
-
-  facultyToInsert.save();
-});
-
-subjectArray.forEach((subject) => {
-  var subjectToInsert = new Subject(subject);
-
-  subjectToInsert.save();
-});
-
-documentTypeArray.forEach((documentType) => {
-  var documentTypeToInsert = new DocumentType(documentType);
-
-  documentTypeToInsert.save();
-});
-
-collectionPermissionArray.forEach((permission) => {
-  var collectionPermissionToInsert = new CollectionPermission(permission);
-
-  collectionPermissionToInsert.save();
-});
-
-
-console.log("Il database è stato popolato.");
+console.log('Il database è stato popolato.')

@@ -1,90 +1,101 @@
-require("./db/config/config.js");
+require('./db/config/config.js')
 
-const express = require('express');
-const http = require('http');
-const bodyParser = require('body-parser');
-const _ = require("lodash");
-const cookieParser = require('cookie-parser');
-const socketIO = require('socket.io');
+const express = require('express')
+const http = require('http')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const socketIO = require('socket.io')
+const path = require('path')
+const helmet = require('helmet')
 
 const {
   mongoose
-} = require("./db/mongoose");
+} = require('./db/mongoose')
 
 // Models
 const {
   User
-} = require("./models/user");
+} = require('./models/user')
 
 // Middleware
 const {
   authenticate
-} = require("./middleware/authenticate");
+} = require('./middleware/authenticate')
+
+const {
+  asyncMiddleware
+} = require('./middleware/async')
 
 // Routes
-const admin = require("./routes/admin");
-const documents = require("./routes/documents");
-const collections = require("./routes/collections");
-const api = require("./routes/api");
-const signup = require("./routes/signup");
-const login = require("./routes/login");
-const users = require("./routes/users");
+const admin = require('./routes/admin')
+const documents = require('./routes/documents')
+const collections = require('./routes/collections')
+const api = require('./routes/api')
+const signup = require('./routes/signup')
+const login = require('./routes/login')
+const users = require('./routes/users')
 
-var app = express();
-var server = http.createServer(app);
-const io = socketIO(server);
+var app = express()
+var server = http.createServer(app)
+const io = socketIO(server)
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000
 
-app.use(bodyParser.json());
-app.use(cookieParser());
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(helmet())
+
+app.use((req, res, next) => {
+  req.messages = []
+  next()
+})
 
 // Routes
-app.use("/admin", admin);
-app.use("/documents", documents);
-app.use("/collections", collections);
-app.use("/api", api);
-app.use("/signup", signup);
-app.use("/login", login);
-app.use("/users", users);
+app.use('/admin', admin)
+app.use('/documents', documents)
+app.use('/collections', collections)
+app.use('/api', api)
+app.use('/signup', signup)
+app.use('/login', login)
+app.use('/users', users)
 
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.join(__dirname, '/public')))
 
-io.on("connection", (socket) => {
+io.on('connection', (socket) => {
+  socket.on('newDocument', () => {
+    io.emit('newDocument')
+  })
 
-  socket.on("newDocument", () => {
-    io.emit("newDocument");
-  });
+  socket.on('documentDeleted', () => {
+    io.emit('documentDeleted')
+  })
 
-  socket.on("documentDeleted", () => {
-    io.emit("documentDeleted");
-  });
+  socket.on('documentUpdated', () => {
+    io.emit('documentUpdated')
+  })
 
-  socket.on("documentUpdated", () => {
-    io.emit("documentUpdated");
-  });
+  socket.on('newUser', () => {
+    io.emit('newUser')
+  })
+})
 
-  socket.on("newUser", () => {
-    io.emit("newUser");
-  });
+/*
+ * Utente loggato
+ */
+app.get('/logout', authenticate, asyncMiddleware(async (req, res) => {
+  let user = await User.findById(req.user._id)
+  await user.removeToken(req.token)
+  res.clearCookie('token').redirect('/')
+}))
 
-});
-
-app.get("/logout", authenticate, (req, res) => {
-
-  User.findById((req.user._id))
-    .then((user) => {
-      return user.removeToken(req.token);
-    })
-    .then(() => {
-      res.redirect("/");
-    })
-    .catch((e) => {
-      res.status(400).send(e);
-    });
-
-});
+app.use((err, req, res, next) => {
+  res.status(500).send({
+    messages: [err.message]
+  })
+  next()
+})
 
 server.listen(port, () => {
-  console.log(`Server started on port ${port}.`);
-});
+  console.log(`Server started on port ${port}.`)
+})

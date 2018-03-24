@@ -1,189 +1,155 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
-const _ = require("lodash");
-const validator = require('validator');
+const express = require('express')
+const router = express.Router()
+const _ = require('lodash')
 
 // Middleware
 const {
   authenticate,
   authenticateAdmin
-} = require("./../middleware/authenticate");
+} = require('./../middleware/authenticate')
+
+const {
+  adminCheckUser,
+  checkErrors
+} = require('../middleware/check')
+
+const {
+  asyncMiddleware
+} = require('../middleware/async')
 
 // Models
 const {
   User
-} = require("./../models/user");
+} = require('./../models/user')
 
-router.post("/createUser", authenticate, authenticateAdmin, (req, res) => {
+/*
+ * Utente loggato
+ * Utente admin
+ */
+router.put('/users/', authenticate, authenticateAdmin, adminCheckUser, checkErrors, asyncMiddleware(async (req, res) => {
+  let body = _.pick(req.body.user, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
+  let user = new User(body)
 
-  var body = _.pick(req.body, ["firstname", "lastname", "email", "password", "privileges", "accesses"]);
-  var user = new User(body);
+  // Formattazione
+  body.firstname = _.startCase(_.lowerCase(body.firstname))
+  body.lastname = _.startCase(_.lowerCase(body.lastname))
+  user.state = 'active'
 
-  if (validator.isEmpty(body.firstname) || !validator.isAlpha(body.firstname)) {
-    return res.status(400).send("Nome non valido.");
-  } else if (validator.isEmpty(body.lastname) || !validator.isAlpha(body.lastname)) {
-    return res.status(400).send("Cognome non valido");
-  } else if (validator.isEmpty(body.email) || !validator.isEmail(body.email)) {
-    return res.status(400).send("Email non valida.");
-  } else if (validator.isEmpty(body.password) || body.password.length < 6) {
-    return res.status(400).send("Password non valida o troppo breve. (min. 6).");
-  } else if (validator.isEmpty(body.privileges) || !validator.isAlpha(body.privileges)) {
-    return res.status(400).send("Privilegi non validi.");
-  } else if (body.accesses.length === 0) {
-    return res.status(400).send("Specificare i permessi dell'utente. (min. 1).");
+  user = await user.save()
+  res.status(200).send(user)
+}))
+
+/*
+ * Utente loggato
+ * Utente admin
+ */
+router.get('/users/:key', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  let users = await User.find({
+    $text: {
+      $search: req.params.key
+    },
+    _id: {
+      $ne: req.user._id
+    },
+    state: {
+      $ne: 'pending'
+    }
+  }, {
+    score: {
+      $meta: 'textScore'
+    }
+  }).sort({
+    score: {
+      $meta: 'textScore'
+    }
+  })
+
+  res.status(200).send(users)
+}))
+
+/*
+ * Utente loggato
+ * Utente admin
+ */
+router.get('/requests/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  let users = await User.find({state: 'pending'})
+  res.status(200).send(users)
+}))
+
+/*
+ * Utente loggato
+ * Utente admin
+ */
+router.post('/acceptRequestById', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  let user = await User.findById(req.body._id)
+  user.state = 'active'
+  await user.save()
+  res.status(200).send({
+    messages: ['Richiesta d\'iscrizione accettata.']
+  })
+}))
+
+/*
+ * Utente loggato
+ * Utente admin
+ */
+router.post('/refuseRequestById', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  let user = await User.findByIdAndRemove(req.body._id)
+
+  if (!user) {
+    return res.status(400).send({
+      messages: ['L\'utente non esiste']
+    })
   }
 
-  user.state = "active";
+  return res.status(200).send({
+    messages: ['Richiesta d\'iscrizione rifiutata.']
+  })
+}))
 
-  user.save()
-    .then((user) => {
-      res.status(200).send(user);
-    }).catch((e) => {
-      res.status(401).send(e);
-    });
+/*
+ * Utente loggato
+ * Utente admin
+ */
+router.post('/resetPassword', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  let user = await User.findById(req.body._id)
+  let hash = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7)
+  user.tokens = []
+  user.password = hash
+  await user.save()
+  return res.status(200).send({
+    password: hash
+  })
+}))
 
-});
+/*
+ * Utente loggato
+ * Utente admin
+ */
+router.post('/togglePrivileges', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  let user = User.findById(req.body._id)
+  if (user.privileges === 'admin') {
+    user.privileges = 'user'
+  } else {
+    user.privileges = 'admin'
+  }
+  await user.save()
+  res.status(200).send()
+}))
 
-router.post("/getUsers", authenticate, authenticateAdmin, (req, res) => {
+/*
+ * Utente loggato
+ * Utente admin
+ */
+router.post('/toggleState', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  let user = User.findById(req.body._id)
+  if (user.state === 'active') {
+    user.state = 'disabled'
+  } else {
+    user.state = 'active'
+  }
+  await user.save()
+  res.status(200).send()
+}))
 
-  User.find({
-      $text: {
-        $search: req.body.key
-      },
-      _id: {
-        $ne: req.user._id
-      },
-      state: {
-        $ne: "pending"
-      }
-    }, {
-      score: {
-        $meta: "textScore"
-      }
-    }).sort({
-      score: {
-        $meta: "textScore"
-      }
-    })
-    .then((users) => {
-      res.status(200).send(users);
-    })
-    .catch((e) => {
-      res.status(500).send("Errore nel reperire gli utenti.");
-    });
-
-});
-
-router.post("/getRequests", authenticate, authenticateAdmin, (req, res) => {
-
-  User.find({
-      state: "pending"
-    })
-    .then((users) => {
-      res.status(200).send(users);
-    })
-    .catch((e) => {
-      res.status(400).send(e);
-    });
-
-});
-
-router.post("/acceptRequestById", authenticate, authenticateAdmin, (req, res) => {
-
-  let id = req.body._id;
-
-  User.findById(id)
-    .then((user) => {
-      user.state = "active";
-      return user.save();
-    })
-    .then(() => {
-      res.status(200).send("Richiesta d'iscrizione accettata.");
-    })
-    .catch((e) => {
-      res.status(400).send(e);
-    });
-
-});
-
-router.post("/refuseRequestById", authenticate, authenticateAdmin, (req, res) => {
-
-  let id = req.body._id;
-
-  User.findByIdAndRemove(id)
-    .then(() => {
-      res.status(200).send("Richiesta d'iscrizione rifiutata.");
-    })
-    .catch((e) => {
-      res.status(400).send(e);
-    });
-
-});
-
-router.post("/resetPassword", authenticate, authenticateAdmin, (req, res) => {
-  let id = req.body._id;
-
-  User.findById(id)
-    .then((user) => {
-
-      let hash = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
-      user.tokens = [];
-      user.password = hash;
-
-      return user.save()
-        .then((user) => {
-          return res.status(200).send({
-            password: hash
-          });
-        });
-    })
-    .catch((e) => {
-      res.status(500).send("Impossibile eseguire il reset della password.");
-    });
-
-});
-
-router.post("/togglePrivileges", (req, res) => {
-  let id = req.body._id;
-  User.findById(id)
-    .then((user) => {
-      if (user.privileges === "admin") {
-        user.privileges = "user";
-      } else {
-        user.privileges = "admin";
-      }
-
-      return user.save();
-    })
-    .then(() => {
-      res.status(200).send();
-    })
-    .catch((e) => {
-      res.status(400).send(e);
-    });
-});
-
-router.post("/toggleState", authenticate, authenticateAdmin, (req, res) => {
-
-  let id = req.body._id;
-  User.findById(id)
-    .then((user) => {
-      if (user.state === "active") {
-        user.state = "disabled";
-      } else {
-        user.state = "active";
-      }
-
-      return user.save();
-    })
-    .then(() => {
-      res.status(200).send();
-    })
-    .catch((e) => {
-      res.status(400).send();
-    });
-
-});
-
-module.exports = router;
+module.exports = router

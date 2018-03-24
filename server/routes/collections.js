@@ -1,113 +1,105 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
-const _ = require('lodash');
-const validator = require('validator');
+const express = require('express')
+const router = express.Router()
+const _ = require('lodash')
 
 // Middleware
 const {
   authenticate,
   authenticateAdmin
-} = require("./../middleware/authenticate");
+} = require('./../middleware/authenticate')
+
+const {
+  asyncMiddleware
+} = require('../middleware/async')
+
+const {
+  editCollection
+} = require('../middleware/edit')
+
+const {
+  checkCollection,
+  checkErrors
+} = require('../middleware/check')
 
 // Models
 const {
   DocumentCollection
-} = require("./../models/document_collection");
+} = require('./../models/document_collection')
 
-router.get("/info/:id", authenticate, (req, res) => {
+router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
+  let collection = await DocumentCollection.findById(req.params.id)
+  res.status(200).send(collection)
+}))
 
-  let body = _.pick(req.params, ["id"]);
+/*
+ * Utente loggato
+ */
+router.put('/', authenticate, checkCollection, checkErrors, asyncMiddleware(async (req, res) => {
+  let body = _.pick(req.body.collection, ['documentCollection', 'permissions', 'authorizations'])
 
-  DocumentCollection.findById(body.id)
-    .then((collection) => {
-      res.status(200).send(collection)
-    })
-    .catch((e) => {
-      res.status(500).send("Errore nel reperire la collezione.");
-    });
+  // Formattazione
+  body.author = req.user._id
 
-});
-
-router.put("/", authenticate, (req, res) => {
-
-  let body = _.pick(req.body, ["documentCollection", "permissions", "authorizations"]);
-  let user = req.user;
-
-  if (validator.isEmpty(body.documentCollection)) {
-    return res.status(400).send("Nome della collezione non valida.");
+  if (body.permissions !== 'utenti') {
+    body.authorizations = []
   }
 
-  body.author = user._id;
+  let collection = new DocumentCollection(body)
+  await collection.save()
+  res.status(201).send({
+    messages: ['Collezione creata con successo.']
+  })
+}))
 
-  let collection = new DocumentCollection(body);
+router.patch('/:id', authenticate, editCollection, checkCollection, checkErrors, asyncMiddleware(async (req, res) => {
+  let body = _.pick(req.body.collection, ['documentCollection', 'permissions', 'authorizations', 'documents'])
 
-  collection.save()
-    .then((collection) => {
-      res.status(201).send("Collezione creata con successo.");
-    })
-    .catch((e) => {
-      res.status(500).send(e);
-    });
-
-});
-
-router.patch("/:id", authenticate, (req, res) => {
-
-  let body = _.pick(req.body, ["documentCollection", "permissions", "authorizations", "documents"]);
-  let user = req.user;
-
-  if (validator.isEmpty(body.documentCollection)) {
-    return res.status(400).send("Nome della collezione non valida.");
+  if (body.permissions !== 'utenti') {
+    body.authorizations = []
   }
 
-});
+  let collection = await DocumentCollection.findByIdAndUpdate(req.params.id, {
+    $set: body
+  })
 
-
-router.delete("/:id", authenticate, (req, res) => {
-
-  DocumentCollection.findById(req.params.id)
-    .then((collection) => {
-
-      if (collection.author._id !== req.user._id && req.user.privileges !== "admin") {
-        return res.status(401).send("Non si detengono le autorizzazioni per eliminare la collezione.");
-      }
-
-      return DocumentCollection.remove({
-          _id: req.params.id
-        })
-        .then(() => {
-          res.status(200).send("Collezione eliminata correttamente.");
-        });
+  if (collection) {
+    return res.status(200).send({
+      messages: ['Collezione modificata con successo.']
     })
-    .catch((e) => {
-      res.status(500).send(e);
+  }
+}))
+
+/*
+ * Utente loggato
+ */
+router.delete('/:id', authenticate, editCollection, asyncMiddleware(async (req, res) => {
+  let collection = await DocumentCollection.findByIdAndRemove(req.params.id)
+
+  if (collection) {
+    return res.status(200).send({
+      messages: ['Collezione eliminata correttamente.']
     })
-});
+  }
+}))
 
-router.post("/search/", authenticate, (req, res) => {
-
-  var body = _.pick(req.body, ["fulltext", "permissions"]);
+router.post('/search/', authenticate, asyncMiddleware(async (req, res) => {
+  var body = _.pick(req.body, ['fulltext', 'permissions'])
 
   var empty = _.every(body, (el) => {
-    return !el;
-  });
+    return !el
+  })
 
   if (empty) {
-    return res.status(500).send("Nessuna query di ricerca.");
+    return res.status(500).send({
+      messages: ['Nessuna query di ricerca.']
+    })
   }
 
-  DocumentCollection.searchCollections(body)
-    .then((collections) => {
-      res.status(200)
-        .header("x-userid", req.user._id)
-        .header("x-userprivileges", req.user.privileges)
-        .send(collections);
-    })
-    .catch((e) => {
-      res.status(500).send("Errore nel cercare le collezioni.");
-    });
+  let collections = await DocumentCollection.searchCollections(body)
+  res.status(200)
+    .header('x-userid', req.user._id)
+    .header('x-userprivileges', req.user.privileges)
+    .send(collections)
+}))
 
-});
-
-module.exports = router;
+module.exports = router

@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const _ = require('lodash');
+const mongoose = require('mongoose')
+const validator = require('validator')
+const _ = require('lodash')
 
 var PrivilegeSchema = new mongoose.Schema({
   _id: {
@@ -10,7 +10,7 @@ var PrivilegeSchema = new mongoose.Schema({
     trim: true,
     validate: {
       validator: validator.isAlpha,
-      message: "{VALUE} non è un ID valido."
+      message: '{VALUE} non è un ID valido.'
     }
   },
   privilege: {
@@ -21,24 +21,24 @@ var PrivilegeSchema = new mongoose.Schema({
     trim: true,
     validate: {
       validator: validator.isAlpha,
-      message: "{VALUE} non è un privilegio valido."
+      message: '{VALUE} non è un privilegio valido.'
     }
   }
-});
+})
 
-PrivilegeSchema.statics.getPrivileges = function() {
-  var Privilege = this;
+PrivilegeSchema.statics.getPrivileges = function () {
+  var Privilege = this
 
   return Privilege.find()
     .then((privilege) => {
-      return Promise.resolve(privilege);
+      return Promise.resolve(privilege)
     }, (e) => {
-      return Promise.reject(e);
-    });
-};
+      return Promise.reject(e)
+    })
+}
 
-var Privilege = mongoose.model("Privilege", PrivilegeSchema);
+var Privilege = mongoose.model('Privilege', PrivilegeSchema)
 
 module.exports = {
   Privilege
-};
+}

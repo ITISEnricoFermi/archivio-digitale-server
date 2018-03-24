@@ -1,86 +1,62 @@
-const cookieParser = require("cookie-parser");
-const _ = require('lodash');
+const _ = require('lodash')
 
-var {
+const {
   User
-} = require("./../models/user");
+} = require('./../models/user')
 
-var authenticate = (req, res, next) => {
-
-  if (req.header("x-auth")) {
-    var token = req.header("x-auth");
-  } else {
-    var token = req.cookies.token;
+// Verifica che sia stato eseguito l'accesso con un account valido
+var authenticate = async (req, res, next) => {
+  try {
+    let user = await User.findByToken(req.header('x-auth') || req.cookies.token)
+    req.user = _.pick(user, ['_id', 'firstname', 'lastname', 'email', 'privileges', 'accesses', 'img'])
+    req.token = req.header('x-auth') || req.cookies.token
+    next()
+  } catch (e) {
+    return res.status(401).send('Non è stato eseguito l\'accesso con un account valido.')
   }
-
-  User.findByToken(token)
-    .then((user) => {
-
-      if (!user) {
-        return Promise.reject();
-      }
-
-      req.user = _.pick(user, ["_id", "firstname", "lastname", "email", "privileges", "accesses", "img"]);
-      req.token = token;
-      next();
-
-    }).catch((e) => {
-      if (req.url === "/") {
-        return res.render("home");
-      }
-
-      // res.redirect("/login");
-
-      res.status(401).send();
-
-    });
-};
+}
 
 var authenticateAdmin = (req, res, next) => {
-
-  if (req.user.privileges !== "admin") {
-    return res.status(401).send("Non si detengono i privilegi necessari.");
+  if (req.user.privileges !== 'admin') {
+    return res.status(401).send('Non si detengono i privilegi necessari.')
   }
 
-  next();
+  next()
+}
 
-};
-
+// Verifica che l'id sui cui si tenta di operare sia uguale all'id dell'utente loggato
 var authenticateUser = (req, res, next) => {
+  var _id = req.user._id
+  var id = req.body.id || req.params.id
 
-  var userId = req.user._id;
-  var id = req.body._id;
-
-  if (userId != id) {
-    return Promise.reject("L'utente non detiene i privilegi necessari.");
+  if (id !== _id) {
+    return res.statu(401).send('Non si detengono i privilegi necessari.')
   }
 
-  next();
-
-};
+  next()
+}
 
 var authenticateAccesses = (req, res, next) => {
+  let query
 
-  let query;
-
-  if (req.user.privileges === "admin") {
-    query = {};
+  if (req.user.privileges === 'admin') {
+    query = {}
   } else {
     query = {
       subject: { // <=====
         $in: req.user.accesses
       }
-    };
+    }
   }
 
-  req.query = query;
+  req.query = query
 
-  next();
-
-};
+  next()
+}
 
 module.exports = {
   authenticate,
+  authenticateUser,
   authenticateAdmin,
   authenticateAccesses
-};
+}

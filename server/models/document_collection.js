@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const _ = require('lodash');
+const mongoose = require('mongoose')
+const validator = require('validator')
+const _ = require('lodash')
 
 const {
   ObjectId
-} = require("mongodb");
+} = require('mongodb')
 
 var DocumentCollectionSchema = new mongoose.Schema({
   documentCollection: { // Nome della collezione
@@ -19,7 +19,7 @@ var DocumentCollectionSchema = new mongoose.Schema({
     minlength: 1,
     unique: false,
     trim: true,
-    ref: "User"
+    ref: 'User'
   },
   documents: [{
     type: mongoose.Schema.ObjectId,
@@ -27,15 +27,15 @@ var DocumentCollectionSchema = new mongoose.Schema({
     minlength: 1,
     unique: false,
     trim: true,
-    ref: "Document"
+    ref: 'Document'
   }],
   permissions: { // Possibilià di modifica e di aggiunta di documenti
     type: String,
-    default: "tutti",
+    default: 'tutti',
     required: false,
     unique: false,
     trim: true,
-    ref: "collection_permission"
+    ref: 'collection_permission'
   },
   authorizations: [{ // Proprietari della collezione
     type: mongoose.Schema.ObjectId,
@@ -43,97 +43,72 @@ var DocumentCollectionSchema = new mongoose.Schema({
     minlength: 1,
     unique: false,
     trim: true,
-    ref: "User"
+    ref: 'User'
   }]
-});
+})
 
-DocumentCollectionSchema.statics.getCollections = function() {
-  var DocumentCollection = this;
+DocumentCollectionSchema.statics.searchCollections = function (search) {
+  let DocumentCollection = this
 
-  return DocumentCollection.find()
-    .then((results) => {
-      return Promise.resolve(results);
-    }, (e) => {
-      return Promise.reject(e);
-    });
-
-};
-
-
-
-DocumentCollectionSchema.statics.searchCollections = function(search) {
-
-  let DocumentCollection = this;
-
-  let andQuery = [];
+  let andQuery = []
 
   if (search.fulltext) {
-
     andQuery.push({
       $text: {
         $search: search.fulltext
       }
-    });
-
+    })
   }
 
   if (search.permissions) {
     andQuery.push({
       type: search.permissions
-    });
+    })
   }
 
   return DocumentCollection.find({
-      $and: andQuery
-    }, {
-      score: {
-        $meta: "textScore"
-      }
-    }).sort({
-      score: {
-        $meta: "textScore"
-      }
-    })
+    $and: andQuery
+  }, {
+    score: {
+      $meta: 'textScore'
+    }
+  }).sort({
+    score: {
+      $meta: 'textScore'
+    }
+  })
     .limit(10)
     .then((results) => {
-      return Promise.resolve(results);
+      return Promise.resolve(results)
     }, (e) => {
-      return Promise.reject(e);
-    });
+      return Promise.reject(e)
+    })
+}
 
-};
+DocumentCollectionSchema.pre('find', function (next) {
+  this.populate('author')
+    .populate('documents')
+    .populate('permissions')
+    .populate('authorizations')
 
+  next()
+})
 
+DocumentCollectionSchema.pre('findOne', function (next) {
+  this.populate('author')
+    .populate('documents')
+    .populate('permissions')
+    .populate('authorizations')
 
-DocumentCollectionSchema.pre("find", function(next) {
-
-  this.populate("author")
-    .populate("documents")
-    .populate("permissions")
-    .populate("authorizations");
-
-  next();
-
-});
-
-DocumentCollectionSchema.pre("findOne", function(next) {
-
-  this.populate("author")
-    .populate("documents")
-    .populate("permissions")
-    .populate("authorizations");
-
-  next();
-
-});
-
+  next()
+})
 
 DocumentCollectionSchema.index({
-  documentCollection: "text"
-});
+  documentCollection: 'text'
+})
 
-var DocumentCollection = mongoose.model("document_collection", DocumentCollectionSchema);
+var DocumentCollection = mongoose.model('document_collection', DocumentCollectionSchema)
 
 module.exports = {
   DocumentCollection
-};
+}
