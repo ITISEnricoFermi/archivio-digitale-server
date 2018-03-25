@@ -116,12 +116,7 @@ const fileFilter = asyncMiddleware(async (req, file, cb) => {
     }
   }
 
-  // Validazione
-  if (!req.file) {
-    cb(new Error('Nessun file caricato.'), false)
-  }
-
-  req.document = document
+  req.body.document = document
 
   const mimeypes = ['audio/aac', 'video/x-msvideo', 'text/csv', 'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -169,7 +164,14 @@ router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
  * Utente loggato
  */
 router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
-  let body = _.pick(JSON.parse(req.body.document), ['name', 'type', 'faculty', 'subject', 'class', 'section', 'visibility', 'description'])
+  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'class', 'section', 'visibility', 'description'])
+
+  // Validazione
+  if (!req.file) {
+    return res.status(500).send({
+      messages: ['Nessun file caricato.']
+    })
+  }
 
   // Formattazione
   body.name = _.upperFirst(body.name)

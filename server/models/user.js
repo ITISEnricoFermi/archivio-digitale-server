@@ -46,7 +46,7 @@ var UserSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 1,
-    default: '../static/elements/profile.jpg'
+    default: '../static/elements/profile.svg'
   },
   // accesses: [{
   //   _id: {
@@ -113,7 +113,7 @@ UserSchema.methods.toJSON = function () {
   var user = this
   var userObject = user.toObject()
 
-  return _.pick(userObject, ['_id', 'firstname', 'lastname', 'email', 'state', 'privileges', 'img'])
+  return _.pick(userObject, ['_id', 'firstname', 'lastname', 'email', 'state', 'privileges', 'accesses', 'img'])
 }
 
 UserSchema.methods.generateAuthToken = function () {
@@ -238,6 +238,20 @@ UserSchema.pre('save', function (next) {
     .catch((e) => {
       return Promise.reject(e)
     })
+})
+
+UserSchema.pre('find', function (next) {
+  this.populate('privileges')
+    .populate('accesses')
+
+  next()
+})
+
+UserSchema.pre('findOne', function (next) {
+  this.populate('privileges')
+    .populate('accesses')
+
+  next()
 })
 
 UserSchema.index({

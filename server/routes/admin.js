@@ -9,7 +9,8 @@ const {
 } = require('./../middleware/authenticate')
 
 const {
-  adminCheckUser,
+  adminCheckOldUser,
+  adminCheckNewUser,
   checkErrors
 } = require('../middleware/check')
 
@@ -26,7 +27,7 @@ const {
  * Utente loggato
  * Utente admin
  */
-router.put('/users/', authenticate, authenticateAdmin, adminCheckUser, checkErrors, asyncMiddleware(async (req, res) => {
+router.put('/users/', authenticate, authenticateAdmin, adminCheckNewUser, checkErrors, asyncMiddleware(async (req, res) => {
   let body = _.pick(req.body.user, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
   let user = new User(body)
 
@@ -43,7 +44,29 @@ router.put('/users/', authenticate, authenticateAdmin, adminCheckUser, checkErro
  * Utente loggato
  * Utente admin
  */
-router.get('/users/:key', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+router.patch('/users/:id', authenticate, authenticateAdmin, adminCheckOldUser, checkErrors, asyncMiddleware(async (req, res) => {
+  let body = _.pick(req.body.user, ['firstname', 'lastname', 'email', 'privileges', 'accesses'])
+
+  let user = await User.findByIdAndUpdate(req.params.id, {
+    $set: body
+  })
+
+  res.status(200).send(user)
+}))
+
+/*
+ * Utente loggato
+ * Utente admin
+ */
+router.get('/users/:id', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  res.status(200).send(await User.findById(req.params.id))
+}))
+
+/*
+ * Utente loggato
+ * Utente admin
+ */
+router.get('/users/search/:key', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
   let users = await User.find({
     $text: {
       $search: req.params.key
@@ -127,14 +150,9 @@ router.post('/resetPassword', authenticate, authenticateAdmin, asyncMiddleware(a
  * Utente admin
  */
 router.post('/togglePrivileges', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let user = User.findById(req.body._id)
-  if (user.privileges === 'admin') {
-    user.privileges = 'user'
-  } else {
-    user.privileges = 'admin'
-  }
-  await user.save()
-  res.status(200).send()
+  let user = await User.findById(req.body._id)
+  user.privileges === 'admin' ? user.privileges = 'user' : user.privileges = 'admin'
+  res.status(200).send(await user.save())
 }))
 
 /*
@@ -142,14 +160,9 @@ router.post('/togglePrivileges', authenticate, authenticateAdmin, asyncMiddlewar
  * Utente admin
  */
 router.post('/toggleState', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let user = User.findById(req.body._id)
-  if (user.state === 'active') {
-    user.state = 'disabled'
-  } else {
-    user.state = 'active'
-  }
-  await user.save()
-  res.status(200).send()
+  let user = await User.findById(req.body._id)
+  user.state === 'active' ? user.state = 'disabled' : user.state = 'active'
+  res.status(200).send(await user.save())
 }))
 
 module.exports = router

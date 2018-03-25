@@ -42,13 +42,14 @@ let checkErrors = (req, res, next) => {
   next()
 }
 
-let adminCheckUser = asyncMiddleware(async (req, res, next) => {
+let adminCheckOldUser = asyncMiddleware(async (req, res, next) => {
   let user = req.body.user
 
   if (user.firstname == null || user.firstname.length < 1) {
     req.messages.push('Il campo del nome è vuoto.')
   } else {
     console.log(user.firstname)
+    user.firstname = _.startCase(_.lowerCase(user.firstname))
     user.firstname = validator.trim(validator.whitelist(user.firstname, re))
     console.log(user.firstname)
   }
@@ -57,6 +58,67 @@ let adminCheckUser = asyncMiddleware(async (req, res, next) => {
     req.messages.push('Il campo del cognome è vuoto.')
   } else {
     console.log(user.lastname)
+    user.lastname = _.startCase(_.lowerCase(user.lastname))
+    user.lastname = validator.trim(validator.whitelist(user.lastname, re))
+    console.log(user.lastname)
+  }
+
+  if (user.email == null || user.email.length < 1) {
+    req.messages.push('Il campo dell\'email è vuoto.')
+  } else if (!validator.isEmail(user.email)) {
+    req.messages.push('L\'email inserita non è valida.')
+  } else {
+    let currentUserEmail = await User.findById(user._id).email
+    let dbEmail = await User.findByEmail(user.email).email
+    if (dbEmail && dbEmail !== currentUserEmail) {
+      req.messages.push('Un utente è già registrato con l\'email inserita.')
+    }
+  }
+
+  if (user.privileges == null || user.privileges.length < 1) {
+    req.messages.push('Il campo dei privilegi è vuoto.')
+  } else {
+    let privilege = await Privilege.findById(user.privileges)
+    if (!privilege) {
+      req.messages.push('Il privilegio inserito non è valido.')
+    }
+  }
+
+  if (user.accesses == null || user.accesses.length < 1) {
+    req.messages.push('Il campo dei permessi è vuoto.')
+  } else {
+    let subjects = await Subject.count({
+      _id: {
+        $in: user.accesses.map(access => access._id)
+      }
+    })
+
+    if (subjects !== user.accesses.length) {
+      req.messages.push('Uno dei permessi non è valido.')
+    }
+  }
+
+  req.body.user = user
+  next()
+})
+
+let adminCheckNewUser = asyncMiddleware(async (req, res, next) => {
+  let user = req.body.user
+
+  if (user.firstname == null || user.firstname.length < 1) {
+    req.messages.push('Il campo del nome è vuoto.')
+  } else {
+    console.log(user.firstname)
+    user.firstname = _.startCase(_.lowerCase(user.firstname))
+    user.firstname = validator.trim(validator.whitelist(user.firstname, re))
+    console.log(user.firstname)
+  }
+
+  if (user.lastname == null || user.lastname.length < 1) {
+    req.messages.push('Il campo del cognome è vuoto.')
+  } else {
+    console.log(user.lastname)
+    user.lastname = _.startCase(_.lowerCase(user.lastname))
     user.lastname = validator.trim(validator.whitelist(user.lastname, re))
     console.log(user.lastname)
   }
@@ -90,11 +152,11 @@ let adminCheckUser = asyncMiddleware(async (req, res, next) => {
   if (user.accesses == null || user.accesses.length < 1) {
     req.messages.push('Il campo dei permessi è vuoto.')
   } else {
-    let subjects = Subject.find({
-      accesses: {
-        $in: user.accesses
+    let subjects = await Subject.count({
+      _id: {
+        $in: user.accesses.map(access => access._id)
       }
-    }).count()
+    })
 
     if (subjects !== user.accesses.length) {
       req.messages.push('Uno dei permessi non è valido.')
@@ -176,7 +238,8 @@ let checkDocument = asyncMiddleware(async (req, res, next) => {
 })
 
 module.exports = {
-  adminCheckUser,
+  adminCheckOldUser,
+  adminCheckNewUser,
   checkCollection,
   checkDocument,
   checkErrors

@@ -78,6 +78,11 @@ io.on('connection', (socket) => {
   socket.on('newUser', () => {
     io.emit('newUser')
   })
+
+  socket.on('userUpdated', (user) => {
+    // io.emit('userUpdated', user)
+    socket.broadcast.emit('userUpdated', user)
+  })
 })
 
 /*
