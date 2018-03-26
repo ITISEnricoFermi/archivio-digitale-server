@@ -245,11 +245,6 @@ DocumentSchema.statics.searchPublicDocuments = function (search, user) {
   })
     .limit(10)
     .then((documents) => {
-      for (let i = 0; i < documents.length; i++) {
-        if (documents[i].author._id === user._id || user.privileges._id === 'admin') {
-          documents[i].own = true
-        }
-      }
       return Promise.resolve(documents)
     })
     .catch((e) => {

@@ -87,7 +87,13 @@ router.get('/users/search/:key', authenticate, authenticateAdmin, asyncMiddlewar
     }
   })
 
-  res.status(200).send(users)
+  if (users.length && req.params.key.length !== 0) {
+    res.status(200).json(users)
+  } else {
+    res.status(404).json({
+      messages: ['La ricerca non ha prodotto risultati.']
+    })
+  }
 }))
 
 /*
@@ -103,10 +109,12 @@ router.get('/requests/', authenticate, authenticateAdmin, asyncMiddleware(async 
  * Utente loggato
  * Utente admin
  */
-router.post('/acceptRequestById', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let user = await User.findById(req.body._id)
-  user.state = 'active'
-  await user.save()
+router.post('/acceptRequestById/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  await User.findByIdAndUpdate(req.body._id, {
+    $set: {
+      state: 'active'
+    }
+  })
   res.status(200).send({
     messages: ['Richiesta d\'iscrizione accettata.']
   })
