@@ -5,9 +5,6 @@ const validator = require('validator')
 const multer = require('multer')
 const path = require('path')
 
-const history = require('connect-history-api-fallback')
-router.use(history())
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, '..', 'public', 'pics'))

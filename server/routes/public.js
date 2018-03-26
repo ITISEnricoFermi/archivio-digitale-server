@@ -3,9 +3,6 @@ const router = express.Router()
 const path = require('path')
 const _ = require('lodash')
 
-const history = require('connect-history-api-fallback')
-router.use(history())
-
 // Middleware
 
 const {
@@ -50,7 +47,7 @@ router.post('/search/documents/', asyncMiddleware(async (req, res) => {
     })
   }
 
-  let documents = await Document.searchPublicDocuments(body)
+  let documents = await Document.searchPublicDocuments(body, req.user)
   if (documents.length) {
     return res.status(200).json(documents)
   } else {

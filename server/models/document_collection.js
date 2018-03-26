@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const _ = require('lodash')
 
 var DocumentCollectionSchema = new mongoose.Schema({
   documentCollection: { // Nome della collezione
@@ -43,7 +42,7 @@ var DocumentCollectionSchema = new mongoose.Schema({
   }]
 })
 
-DocumentCollectionSchema.statics.searchCollections = function (search) {
+DocumentCollectionSchema.statics.searchCollections = function (search, user) {
   let DocumentCollection = this
 
   let andQuery = []
@@ -74,8 +73,14 @@ DocumentCollectionSchema.statics.searchCollections = function (search) {
     }
   })
     .limit(10)
-    .then((results) => {
-      return Promise.resolve(results)
+    .lean()
+    .then((collections) => {
+      for (let i = 0; i < collections.length; i++) {
+        if (collections[i].author._id === user._id || user.privileges._id === 'admin') {
+          collections[i].own = true
+        }
+      }
+      return Promise.resolve(collections)
     }, (e) => {
       return Promise.reject(e)
     })

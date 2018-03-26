@@ -2,9 +2,6 @@ const express = require('express')
 const router = express.Router()
 const _ = require('lodash')
 
-const history = require('connect-history-api-fallback')
-router.use(history())
-
 // Middleware
 const {
   authenticate,
@@ -98,13 +95,10 @@ router.post('/search/', authenticate, asyncMiddleware(async (req, res) => {
     })
   }
 
-  let collections = await DocumentCollection.searchCollections(body)
+  let collections = await DocumentCollection.searchCollections(body, req.user)
 
   if (collections.length) {
-    res.status(200)
-      .header('x-userid', req.user._id)
-      .header('x-userprivileges', req.user.privileges)
-      .send(collections)
+    res.status(200).send(collections)
   } else {
     res.status(404).json({
       messages: ['La ricerca non ha prodotto risultati.']

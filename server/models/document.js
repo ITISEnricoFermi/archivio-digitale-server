@@ -93,7 +93,7 @@ DocumentSchema.statics.searchDocuments = function (search, user) {
   var andQuery = []
 
   if (user.privileges === 'user') {
-    var orQuery = {
+    andQuery.push({
       $or: [{
         visibility: 'pubblico'
       }, {
@@ -107,12 +107,12 @@ DocumentSchema.statics.searchDocuments = function (search, user) {
           }
         }]
       }]
-    }
+    })
+  } else {
+    andQuery.push({})
   }
 
-  andQuery.push(orQuery || {})
-
-  if (search.name) {
+  if (search.fulltext) {
     andQuery.push({
       $text: {
         $search: search.fulltext
@@ -167,16 +167,21 @@ DocumentSchema.statics.searchDocuments = function (search, user) {
       $meta: 'textScore'
     }
   })
-    .limit(10)
-    .then((results) => {
-      return Promise.resolve(results)
+    .limit(10).lean()
+    .then((documents) => {
+      for (let i = 0; i < documents.length; i++) {
+        if (documents[i].author._id === user._id || user.privileges._id === 'admin') {
+          documents[i].own = true
+        }
+      }
+      return Promise.resolve(documents)
     })
     .catch((e) => {
       return Promise.reject(e)
     })
 }
 
-DocumentSchema.statics.searchPublicDocuments = function (search) {
+DocumentSchema.statics.searchPublicDocuments = function (search, user) {
   let Document = this
 
   var andQuery = []
@@ -239,8 +244,13 @@ DocumentSchema.statics.searchPublicDocuments = function (search) {
     }
   })
     .limit(10)
-    .then((results) => {
-      return Promise.resolve(results)
+    .then((documents) => {
+      for (let i = 0; i < documents.length; i++) {
+        if (documents[i].author._id === user._id || user.privileges._id === 'admin') {
+          documents[i].own = true
+        }
+      }
+      return Promise.resolve(documents)
     })
     .catch((e) => {
       return Promise.reject(e)

@@ -2,9 +2,6 @@ const express = require('express')
 const router = express.Router()
 const _ = require('lodash')
 
-const history = require('connect-history-api-fallback')
-router.use(history())
-
 // Middleware
 const {
   authenticate,

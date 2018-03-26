@@ -7,9 +7,6 @@ const validator = require('validator')
 const path = require('path')
 const fs = require('fs')
 
-const history = require('connect-history-api-fallback')
-router.use(history())
-
 const {
   ObjectId
 } = mongoose.Types
@@ -60,7 +57,7 @@ const {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '..', 'public', 'documents'))
+    cb(null, path.join(__dirname, '..', 'public', 'public', 'documents'))
   },
   filename: function (req, file, cb) {
     cb(null, new Date().toISOString() + path.extname(file.originalname))
@@ -163,11 +160,12 @@ router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
  * Utente loggato
  */
 router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
+  console.log('Ciao')
   let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'class', 'section', 'visibility', 'description'])
 
   // Validazione
   if (!req.file) {
-    return res.status(500).send({
+    return res.status(500).json({
       messages: ['Nessun file caricato.']
     })
   }
@@ -202,7 +200,7 @@ router.patch('/:id', authenticate, editDocument, checkDocument, checkErrors, asy
   })
 
   if (document) {
-    return res.status(200).send({
+    return res.status(200).json({
       messages: ['Documento modificato con successo.']
     })
   }
@@ -225,11 +223,11 @@ router.delete('/:id', authenticate, editDocument, asyncMiddleware(async (req, re
 
   fs.unlink(path.join(__dirname, '..', 'public', 'documents', document.directory), function (err) {
     if (err) {
-      return res.status(500).send({
+      return res.status(500).json({
         messages: ['Impossibile eliminare il documento.']
       })
     }
-    res.status(200).send({
+    res.status(200).json({
       messages: ['Documento eliminato correttamente.']
     })
   })
@@ -242,19 +240,17 @@ router.post('/search/', authenticate, asyncMiddleware(async (req, res) => {
   })
 
   if (empty) {
-    return res.status(500).send({
+    return res.status(500).json({
       messages: ['Nessuna query di ricerca.']
     })
   }
 
   let documents = await Document.searchDocuments(body, req.user)
+
   if (documents.length) {
-    res.status(200)
-      .header('x-userid', req.user._id)
-      .header('x-userprivileges', req.user.privileges)
-      .send(documents)
+    res.status(200).send(documents)
   } else {
-    res.status(200).send({
+    res.status(404).json({
       messages: ['La ricerca non ha prodotto risultati.']
     })
   }
@@ -284,12 +280,16 @@ router.get('/recent/', authenticate, asyncMiddleware(async (req, res) => {
     .sort({
       _id: -1
     })
+    .lean()
 
   if (documents) {
-    res.status(200)
-      .header('x-userid', req.user._id)
-      .header('x-userprivileges', req.user.privileges._id)
-      .send(documents)
+    for (let i = 0; i < documents.length; i++) {
+      if (documents[i].author._id === req.user._id || req.user.privileges._id === 'admin') {
+        documents[i].own = true
+      }
+    }
+
+    res.status(200).send(documents)
   } else {
     res.status(200).json({
       messages: ['Nessun documento presente.']
