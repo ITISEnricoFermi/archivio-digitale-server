@@ -7,7 +7,6 @@ const cookieParser = require('cookie-parser')
 const socketIO = require('socket.io')
 const path = require('path')
 const helmet = require('helmet')
-const history = require('connect-history-api-fallback')
 
 const {
   mongoose
@@ -43,7 +42,6 @@ const io = socketIO(server)
 
 const port = process.env.PORT || 3000
 
-app.use(history())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())

@@ -3,8 +3,10 @@ const router = express.Router()
 const _ = require('lodash')
 const validator = require('validator')
 
-// Middleware
+const history = require('connect-history-api-fallback')
+router.use(history())
 
+// Middleware
 const {
   asyncMiddleware
 } = require('../middleware/async')

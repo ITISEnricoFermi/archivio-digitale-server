@@ -3,6 +3,9 @@ const router = express.Router()
 const path = require('path')
 const _ = require('lodash')
 
+const history = require('connect-history-api-fallback')
+router.use(history())
+
 // Middleware
 
 const {

@@ -7,6 +7,9 @@ const validator = require('validator')
 const path = require('path')
 const fs = require('fs')
 
+const history = require('connect-history-api-fallback')
+router.use(history())
+
 const {
   ObjectId
 } = mongoose.Types
