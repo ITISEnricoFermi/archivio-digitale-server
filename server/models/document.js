@@ -1,14 +1,5 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const _ = require('lodash')
-
-const {
-  ObjectId
-} = require('mongodb')
-
-const {
-  DocumentCollection
-} = require('./document_collection')
 
 var DocumentSchema = new mongoose.Schema({
   name: {
@@ -164,6 +155,77 @@ DocumentSchema.statics.searchDocuments = function (search, user) {
       visibility: search.visibility
     })
   }
+
+  return Document.find({
+    $and: andQuery
+  }, {
+    score: {
+      $meta: 'textScore'
+    }
+  }).sort({
+    score: {
+      $meta: 'textScore'
+    }
+  })
+    .limit(10)
+    .then((results) => {
+      return Promise.resolve(results)
+    })
+    .catch((e) => {
+      return Promise.reject(e)
+    })
+}
+
+DocumentSchema.statics.searchPublicDocuments = function (search) {
+  let Document = this
+
+  var andQuery = []
+
+  if (search.fulltext) {
+    andQuery.push({
+      $text: {
+        $search: search.fulltext
+      }
+    })
+  }
+
+  if (search.type) {
+    andQuery.push({
+      type: search.type
+    })
+  }
+
+  if (search.faculty) {
+    andQuery.push({
+      faculty: search.faculty
+    })
+  }
+
+  if (search.subject) {
+    andQuery.push({
+      subject: search.subject
+    })
+  }
+
+  if (search.class) {
+    andQuery.push({
+      class: search.class
+    })
+  }
+
+  if (search.section) {
+    andQuery.push({
+      section: search.section
+    })
+  }
+
+  if (andQuery.length === 0) {
+    return Promise.reject(new Error('Nessuna query di ricerca.'))
+  }
+
+  andQuery.push({
+    visibility: 'pubblico'
+  })
 
   return Document.find({
     $and: andQuery

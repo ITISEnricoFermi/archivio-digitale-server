@@ -116,23 +116,28 @@ UserSchema.methods.toJSON = function () {
   return _.pick(userObject, ['_id', 'firstname', 'lastname', 'email', 'state', 'privileges', 'accesses', 'img'])
 }
 
-UserSchema.methods.generateAuthToken = function () {
-  var user = this
-  var access = 'auth'
-  var token = jwt.sign({
-    _id: user._id.toHexString(),
-    access
-  }, process.env.JWT_SECRET).toString()
+UserSchema.methods.generateAuthToken = async function () {
+  try {
+    let user = this
+    let access = 'auth'
+    let token = jwt.sign({
+      _id: user._id.toHexString(),
+      access
+    }, process.env.JWT_SECRET).toString()
 
-  user.tokens.push({
-    access,
-    token
-  })
-
-  return user.save()
-    .then(() => {
-      return token
+    user = await user.update({
+      $push: {
+        tokens: {
+          access,
+          token
+        }
+      }
     })
+
+    return Promise.resolve(token)
+  } catch (e) {
+    return Promise.reject(e)
+  }
 }
 
 UserSchema.methods.removeToken = function (token) {

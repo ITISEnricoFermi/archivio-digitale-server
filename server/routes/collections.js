@@ -96,10 +96,17 @@ router.post('/search/', authenticate, asyncMiddleware(async (req, res) => {
   }
 
   let collections = await DocumentCollection.searchCollections(body)
-  res.status(200)
-    .header('x-userid', req.user._id)
-    .header('x-userprivileges', req.user.privileges)
-    .send(collections)
+
+  if (collections.length) {
+    res.status(200)
+      .header('x-userid', req.user._id)
+      .header('x-userprivileges', req.user.privileges)
+      .send(collections)
+  } else {
+    res.status(404).json({
+      messages: ['La ricerca non ha prodotto risultati.']
+    })
+  }
 }))
 
 module.exports = router

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const _ = require('lodash')
 
 // Models
 const {

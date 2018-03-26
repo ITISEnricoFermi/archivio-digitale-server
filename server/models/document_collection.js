@@ -2,10 +2,6 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const _ = require('lodash')
 
-const {
-  ObjectId
-} = require('mongodb')
-
 var DocumentCollectionSchema = new mongoose.Schema({
   documentCollection: { // Nome della collezione
     type: String,

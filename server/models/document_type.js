@@ -1,10 +1,5 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const _ = require('lodash')
-
-const {
-  ObjectId
-} = require('mongodb')
 
 var DocumentTypeSchema = new mongoose.Schema({
   _id: {

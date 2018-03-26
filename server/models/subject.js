@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const _ = require('lodash')
 
 var SubjectSchema = new mongoose.Schema({
   _id: {

@@ -147,10 +147,6 @@ const upload = multer({
   fileFilter
 }).single('file')
 
-router.get('/*', authenticate, (req, res, next) => {
-  next()
-})
-
 router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
   let document = await Document.findById(req.params.id).lean()
   let collection = await DocumentCollection.findOne({
@@ -249,14 +245,14 @@ router.post('/search/', authenticate, asyncMiddleware(async (req, res) => {
   }
 
   let documents = await Document.searchDocuments(body, req.user)
-  if (documents) {
+  if (documents.length) {
     res.status(200)
       .header('x-userid', req.user._id)
       .header('x-userprivileges', req.user.privileges)
       .send(documents)
   } else {
     res.status(200).send({
-      messages: ['Nessun documento presente.']
+      messages: ['La ricerca non ha prodotto risultati.']
     })
   }
 }))
@@ -289,10 +285,10 @@ router.get('/recent/', authenticate, asyncMiddleware(async (req, res) => {
   if (documents) {
     res.status(200)
       .header('x-userid', req.user._id)
-      .header('x-userprivileges', req.user.privileges)
+      .header('x-userprivileges', req.user.privileges._id)
       .send(documents)
   } else {
-    res.status(200).send({
+    res.status(200).json({
       messages: ['Nessun documento presente.']
     })
   }

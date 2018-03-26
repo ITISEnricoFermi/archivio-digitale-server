@@ -50,7 +50,7 @@ const {
 /*
  * Utente non loggato
  */
-router.get('/getFaculties', authenticate, asyncMiddleware(async (req, res) => {
+router.get('/getFaculties', asyncMiddleware(async (req, res) => {
   let faculties = await Faculty.getFaculties()
   res.status(200).send(faculties)
 }))
