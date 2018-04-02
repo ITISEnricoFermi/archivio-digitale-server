@@ -282,9 +282,9 @@ router.get('/recent/', authenticate, asyncMiddleware(async (req, res) => {
     })
     .lean()
 
-  if (documents) {
+  if (documents.length) {
     for (let i = 0; i < documents.length; i++) {
-      if (documents[i].author._id === req.user._id || req.user.privileges._id === 'admin') {
+      if (String(documents[i].author._id) === String(req.user._id) || req.user.privileges._id === 'admin') {
         documents[i].own = true
       }
     }

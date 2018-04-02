@@ -57,4 +57,22 @@ router.post('/search/documents/', asyncMiddleware(async (req, res) => {
   }
 }))
 
+router.get('/recent/:type', asyncMiddleware(async (req, res) => {
+  let documents = await Document.find({
+    visibility: 'pubblico',
+    type: req.params.type
+  })
+    .sort({
+      _id: -1
+    })
+    .limit(9)
+  if (documents.length) {
+    res.status(200).json(documents)
+  } else {
+    res.status(404).json({
+      messages: ['Nessun documento presente.']
+    })
+  }
+}))
+
 module.exports = router

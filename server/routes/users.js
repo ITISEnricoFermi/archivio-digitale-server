@@ -72,20 +72,24 @@ router.get('/me/documents/:visibility', authenticate, asyncMiddleware(async (req
     author: req.user._id,
     visibility: req.params.visibility
   })
-    .populate('author', 'firstname lastname img')
-    .populate('type')
-    .populate('faculty')
-    .populate('subject')
-    .populate('class')
-    .populate('section')
     .sort({
       _id: 1
     })
+    .lean()
 
-  return res.status(200)
-    .header('x-userid', req.user._id)
-    .header('x-userprivileges', req.user.privileges)
-    .send(documents)
+  if (documents.length) {
+    for (let i = 0; i < documents.length; i++) {
+      if (String(documents[i].author._id) === String(req.user._id) || req.user.privileges._id === 'admin') {
+        documents[i].own = true
+      }
+    }
+
+    res.status(200).send(documents)
+  } else {
+    res.status(200).json({
+      messages: ['Nessun documento presente.']
+    })
+  }
 }))
 
 /*

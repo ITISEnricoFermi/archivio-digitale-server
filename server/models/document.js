@@ -170,7 +170,7 @@ DocumentSchema.statics.searchDocuments = function (search, user) {
     .limit(10).lean()
     .then((documents) => {
       for (let i = 0; i < documents.length; i++) {
-        if (documents[i].author._id === user._id || user.privileges._id === 'admin') {
+        if (String(documents[i].author._id) === String(user._id) || user.privileges._id === 'admin') {
           documents[i].own = true
         }
       }
@@ -253,7 +253,7 @@ DocumentSchema.statics.searchPublicDocuments = function (search, user) {
 }
 
 DocumentSchema.pre('find', function (next) {
-  this.populate('author')
+  this.populate('author', 'firstname lastname img')
     .populate('type', 'type')
     .populate({
       path: 'faculty',
@@ -277,7 +277,7 @@ DocumentSchema.pre('find', function (next) {
 })
 
 DocumentSchema.pre('findOne', function (next) {
-  this.populate('author')
+  this.populate('author', 'firstname lastname img')
     .populate('type', 'type')
     .populate({
       path: 'faculty',

@@ -76,7 +76,7 @@ DocumentCollectionSchema.statics.searchCollections = function (search, user) {
     .lean()
     .then((collections) => {
       for (let i = 0; i < collections.length; i++) {
-        if (collections[i].author._id === user._id || user.privileges._id === 'admin') {
+        if (String(collections[i].author._id) === String(user._id) || user.privileges._id === 'admin') {
           collections[i].own = true
         }
       }
