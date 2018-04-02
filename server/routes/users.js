@@ -135,10 +135,12 @@ router.patch('/me/pic/', authenticate, upload.single('picToUpload'), asyncMiddle
     })
   }
 
-  let user = await User.findById(req.user._id)
+  await User.findByIdAndUpdate(req.user._id, {
+    $set: {
+      img: file.filename
+    }
+  })
 
-  user.img = file.filename
-  await user.save()
   res.status(200).send({
     messages: ['Immagine di profilo aggiornata con successo.']
   })
