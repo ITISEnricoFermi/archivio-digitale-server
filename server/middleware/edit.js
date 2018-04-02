@@ -21,7 +21,7 @@ let editDocument = asyncMiddleware(async (req, res, next) => {
     })
   }
 
-  if (document.author._id === req.user._id || req.user.privileges === 'admin') {
+  if (String(document.author._id) === String(req.user._id) || req.user.privileges._id === 'admin') {
     return next()
   } else {
     return res.status(401).send({
@@ -39,7 +39,7 @@ let editCollection = asyncMiddleware(async (req, res, next) => {
     })
   }
 
-  if (collection.author._id === req.user._id || req.user.privileges === 'admin') {
+  if (String(collection.author._id) === String(req.user._id) || req.user.privileges._id === 'admin') {
     return next()
   } else {
     return res.status(401).send({
