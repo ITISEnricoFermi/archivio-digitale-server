@@ -211,9 +211,9 @@ router.patch('/:id', authenticate, editDocument, checkDocument, checkErrors, asy
  * Utente proprietario o admin
  */
 router.delete('/:id', authenticate, editDocument, asyncMiddleware(async (req, res) => {
-  let document = await Document.findById(req.params.id)
-  await document.remove()
-  document = await DocumentCollection.update({
+  let document = await Document.findByIdAndRemove(req.params.id)
+
+  await DocumentCollection.update({
     documents: ObjectId(req.params.id)
   }, {
     $pull: {
@@ -221,7 +221,7 @@ router.delete('/:id', authenticate, editDocument, asyncMiddleware(async (req, re
     }
   })
 
-  fs.unlink(path.join(__dirname, '..', 'public', 'documents', document.directory), function (err) {
+  fs.unlink(path.join(__dirname, '..', 'public', 'public', 'documents', document.directory), function (err) {
     if (err) {
       return res.status(500).json({
         messages: ['Impossibile eliminare il documento.']
