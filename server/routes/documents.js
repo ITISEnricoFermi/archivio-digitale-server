@@ -70,14 +70,10 @@ const fileFilter = asyncMiddleware(async (req, file, cb) => {
 
   if (document.name == null || document.name.length < 1) {
     return cb(new Error('Il campo del nome è vuoto.'), false)
-  } else {
-    document.name = validator.escape(document.name)
   }
 
   if (document.description == null || document.description < 1) {
     cb(new Error('Il campo della descrizione è vuoto.'), false)
-  } else {
-    document.description = validator.escape(document.description)
   }
 
   if (document.type == null || document.type.length < 1) {

@@ -174,7 +174,7 @@ let checkCollection = asyncMiddleware(async (req, res, next) => {
     req.messages.push('Il campo del nome della collezione è vuoto.')
   } else {
     console.log(collection.documentCollection)
-    collection.documentCollection = _.upperFirst(validator.escape(collection.documentCollection))
+    collection.documentCollection = _.upperFirst(collection.documentCollection)
     console.log(collection.documentCollection)
   }
 
@@ -187,8 +187,6 @@ let checkDocument = asyncMiddleware(async (req, res, next) => {
 
   if (document.name == null || document.name.length < 1) {
     req.messages.push('Il campo del nome è vuoto.')
-  } else {
-    document.name = validator.escape(document.name)
   }
 
   if (document.type == null || document.type.length < 1) {
@@ -229,8 +227,6 @@ let checkDocument = asyncMiddleware(async (req, res, next) => {
 
   if (document.description == null || document.visibility.length < 1) {
     req.messages.push('Il campo della descrizione è vuoto.')
-  } else {
-    document.description = validator.escape(document.description)
   }
 
   req.body.document = document
