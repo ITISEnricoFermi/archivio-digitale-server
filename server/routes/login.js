@@ -22,9 +22,13 @@ router.post('/', asyncMiddleware(async (req, res) => {
 
   // Validazione
   if (validator.isEmpty(body.email) || !validator.isEmail(body.email)) {
-    return res.status(400).send('Email non valida.')
+    return res.status(400).json({
+      messages: ['Email non valida.']
+    })
   } else if (validator.isEmpty(body.password) || body.password.length < 6) {
-    return res.status(400).send('Password non valida o troppo breve. (min. 6).')
+    return res.status(400).json({
+      messages: ['Password non valida o troppo breve. (min. 6).']
+    })
   }
 
   let user = await User.findByCredentials(body.email, body.password)

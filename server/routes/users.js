@@ -41,6 +41,11 @@ const {
   asyncMiddleware
 } = require('../middleware/async')
 
+const {
+  checkOldUser,
+  checkErrors
+} = require('../middleware/check')
+
 // Models
 const {
   User
@@ -106,20 +111,18 @@ router.get('/me/documents/count/:visibility', authenticate, asyncMiddleware(asyn
 /*
  * Utente loggato
  */
-router.patch('/me/', authenticate, asyncMiddleware(async (req, res) => {
-  var body = _.pick(req.body, ['old', 'new'])
+router.patch('/me/', authenticate, checkOldUser, checkErrors, asyncMiddleware(async (req, res) => {
+  let body = req.body.user
 
-  let user = await User.findByCredentials(req.user.email, body.old)
+  let user = await User.findByIdAndUpdate(req.user._id, {
+    $set: {
+      firstname: body.firstname,
+      lastname: body.lastname,
+      email: body.email,
+      password: body.password
+    }
+  })
 
-  if (validator.isEmpty(body.new) || body.new.length < 6) {
-    return res.status(400).send('Password non valida o troppo breve. (min. 6).')
-  } else if (body.old === body.new) {
-    return res.status(400).send('La password attuale è uguale a quella nuova.')
-  }
-
-  user.password = body.new
-  user.tokens = []
-  await user.save()
   res.status(200).send(user)
 }))
 

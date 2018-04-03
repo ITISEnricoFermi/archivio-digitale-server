@@ -12,13 +12,17 @@ var authenticate = async (req, res, next) => {
     req.token = req.header('x-auth') || req.cookies.token
     next()
   } catch (e) {
-    return res.status(401).send('Non è stato eseguito l\'accesso con un account valido.')
+    return res.status(401).json({
+      messages: ['Non è stato eseguito l\'accesso con un account valido.']
+    })
   }
 }
 
 var authenticateAdmin = (req, res, next) => {
   if (req.user.privileges._id !== 'admin') {
-    return res.status(401).send('Non si detengono i privilegi necessari.')
+    return res.status(401).json({
+      messages: ['Non si detengono i privilegi necessari.']
+    })
   }
 
   next()
@@ -30,7 +34,9 @@ var authenticateUser = (req, res, next) => {
   var id = req.body.id || req.params.id
 
   if (id !== _id) {
-    return res.statu(401).send('Non si detengono i privilegi necessari.')
+    return res.statu(401).json({
+      messages: ['Non si detengono i privilegi necessari.']
+    })
   }
 
   next()

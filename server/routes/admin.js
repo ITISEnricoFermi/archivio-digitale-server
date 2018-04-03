@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const _ = require('lodash')
+const bcrypt = require('bcryptjs')
 
 // Middleware
 const {
@@ -143,13 +144,17 @@ router.post('/refuseRequestById', authenticate, authenticateAdmin, asyncMiddlewa
  * Utente admin
  */
 router.post('/resetPassword', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let user = await User.findById(req.body._id)
-  let hash = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7)
-  user.tokens = []
-  user.password = hash
-  await user.save()
-  return res.status(200).send({
+  let password = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7)
+
+  let salt = await bcrypt.genSalt(10)
+  let hash = await bcrypt.hash(password, salt)
+
+  await User.findByIdAndUpdate(req.body._id, {
+    tokens: [],
     password: hash
+  })
+  return res.status(200).send({
+    password: password
   })
 }))
 

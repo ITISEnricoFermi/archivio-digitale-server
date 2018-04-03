@@ -233,10 +233,62 @@ let checkDocument = asyncMiddleware(async (req, res, next) => {
   next()
 })
 
+let checkOldUser = asyncMiddleware(async (req, res, next) => {
+  let user = req.body.user
+
+  if (user.firstname == null || user.firstname.length < 1) {
+    req.messages.push('Il campo del nome è vuoto.')
+  } else {
+    console.log(user.firstname)
+    user.firstname = _.startCase(_.lowerCase(user.firstname))
+    user.firstname = validator.trim(validator.whitelist(user.firstname, re))
+    console.log(user.firstname)
+  }
+
+  if (user.lastname == null || user.lastname.length < 1) {
+    req.messages.push('Il campo del cognome è vuoto.')
+  } else {
+    console.log(user.lastname)
+    user.lastname = _.startCase(_.lowerCase(user.lastname))
+    user.lastname = validator.trim(validator.whitelist(user.lastname, re))
+    console.log(user.lastname)
+  }
+
+  if (user.email == null || user.email.length < 1) {
+    req.messages.push('Il campo dell\'email è vuoto.')
+  } else if (!validator.isEmail(user.email)) {
+    req.messages.push('L\'email inserita non è valida.')
+  } else {
+    let dbUser = await User.findByEmail(user.email)
+    if (dbUser && String(req.user._id) !== String(dbUser._id)) {
+      req.messages.push('Un utente è già registrato con l\'email inserita.')
+    }
+  }
+
+  if (validator.isEmpty(user.passwords.old) && validator.isEmpty(user.passwords.new)) {
+    return next()
+  }
+
+  if (validator.isEmpty(user.passwords.new) || user.passwords.new.length < 6) {
+    req.messages.push('Password non valida o troppo breve. (min. 6).')
+  } else if (user.passwords.old === user.passwords.new) {
+    req.messages.push('La password attuale è uguale a quella nuova.')
+  } else if (!await User.findByCredentials(req.user.email, user.passwords.old)) {
+    req.messages.push('La password attuale non è corretta.')
+  } else {
+    user.password = user.passwords.new
+    delete user.passwords
+  }
+
+  req.body.user = user
+  next()
+})
+
 module.exports = {
   adminCheckOldUser,
   adminCheckNewUser,
   checkCollection,
   checkDocument,
-  checkErrors
+  checkErrors,
+  checkOldUser
 }
