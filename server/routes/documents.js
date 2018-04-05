@@ -293,4 +293,27 @@ router.get('/recent/', authenticate, asyncMiddleware(async (req, res) => {
   }
 }))
 
+router.post('/search/partial/', authenticate, asyncMiddleware(async (req, res) => {
+  let query = req.body.query
+  let regex = query.split(' ').join('|')
+
+  let documents = await Document.find({
+    name: {
+      $regex: regex,
+      $options: 'i'
+    }
+  }, {
+    type: false,
+    faculty: false,
+    subject: false,
+    visibility: false,
+    description: false,
+    author: false,
+    directory: false,
+    __v: false
+  }).limit(10)
+
+  res.status(200).json(documents)
+}))
+
 module.exports = router

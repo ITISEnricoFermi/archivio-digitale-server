@@ -58,6 +58,8 @@ router.patch('/:id', authenticate, editCollection, checkCollection, checkErrors,
     body.authorizations = []
   }
 
+  body.documents.filter(document => document._id)
+
   let collection = await DocumentCollection.findByIdAndUpdate(req.params.id, {
     $set: body
   })

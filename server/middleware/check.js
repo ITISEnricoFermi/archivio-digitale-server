@@ -25,12 +25,20 @@ const {
 } = require('../models/subject')
 
 const {
+  Document
+} = require('../models/document')
+
+const {
   DocumentType
 } = require('../models/document_type')
 
 const {
   DocumentVisibility
 } = require('../models/document_visibility')
+
+const {
+  CollectionPermission
+} = require('../models/collection_permission')
 
 let checkErrors = (req, res, next) => {
   if (req.messages.length !== 0) {
@@ -173,9 +181,43 @@ let checkCollection = asyncMiddleware(async (req, res, next) => {
   if (collection.documentCollection == null || collection.documentCollection.length < 1) {
     req.messages.push('Il campo del nome della collezione è vuoto.')
   } else {
-    console.log(collection.documentCollection)
     collection.documentCollection = _.upperFirst(collection.documentCollection)
-    console.log(collection.documentCollection)
+  }
+
+  if (collection.permissions == null || collection.permissions.length < 1) {
+    req.messages.push('Il campo dei permessi di modifica è vuoto.')
+  } else {
+    let permissions = await CollectionPermission.count({
+      _id: collection.permissions
+    })
+
+    if (!permissions) {
+      req.messages.push('Uno dei permessi di modifica non è valido.')
+    }
+  }
+
+  if ((collection.permissions !== null || collection.permissions.length > 0) && (collection.authorizations !== null || collection.authorizations.length > 0)) {
+    let authorizations = await User.count({
+      _id: {
+        $in: collection.authorizations.map(authorization => authorization._id)
+      }
+    })
+
+    if (authorizations !== collection.authorizations.length) {
+      req.messages.push('Una delle autorizzazioni non è valida.')
+    }
+  }
+
+  if (collection.documents) {
+    let documents = await Document.count({
+      _id: {
+        $in: collection.documents.map(document => document._id)
+      }
+    })
+
+    if (documents !== collection.documents.length) {
+      req.messages.push('Uno dei documenti non è valido.')
+    }
   }
 
   req.body.collection = collection
@@ -235,24 +277,6 @@ let checkDocument = asyncMiddleware(async (req, res, next) => {
 
 let checkOldUser = asyncMiddleware(async (req, res, next) => {
   let user = req.body.user
-
-  if (user.firstname == null || user.firstname.length < 1) {
-    req.messages.push('Il campo del nome è vuoto.')
-  } else {
-    console.log(user.firstname)
-    user.firstname = _.startCase(_.lowerCase(user.firstname))
-    user.firstname = validator.trim(validator.whitelist(user.firstname, re))
-    console.log(user.firstname)
-  }
-
-  if (user.lastname == null || user.lastname.length < 1) {
-    req.messages.push('Il campo del cognome è vuoto.')
-  } else {
-    console.log(user.lastname)
-    user.lastname = _.startCase(_.lowerCase(user.lastname))
-    user.lastname = validator.trim(validator.whitelist(user.lastname, re))
-    console.log(user.lastname)
-  }
 
   if (user.email == null || user.email.length < 1) {
     req.messages.push('Il campo dell\'email è vuoto.')

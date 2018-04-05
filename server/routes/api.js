@@ -58,9 +58,25 @@ router.get('/getFaculties', asyncMiddleware(async (req, res) => {
 /*
  * Utente non loggato
  */
-router.get('/getSubjects', asyncMiddleware(async (req, res) => {
+router.get('/subjects/', asyncMiddleware(async (req, res) => {
   let subjects = await Subject.getSubjects()
   res.status(200).send(subjects)
+}))
+
+router.post('/subjects/search/partial/', asyncMiddleware(async (req, res) => {
+  let query = req.body.query
+  let regex = query.split(' ').join('|')
+
+  let subjects = await Subject.find({
+    subject: {
+      $regex: regex,
+      $options: 'i'
+    }
+  }, {
+    __v: false
+  }).limit(10)
+
+  res.status(200).json(subjects)
 }))
 
 /*
@@ -109,14 +125,6 @@ router.get('/getClasses', asyncMiddleware(async (req, res) => {
 router.get('/getCollectionsPermissions', asyncMiddleware(async (req, res) => {
   let permissions = await CollectionPermission.getPermissions()
   res.status(200).send(permissions)
-}))
-
-/*
- * Utente loggato
- */
-router.get('/getUsers', authenticate, asyncMiddleware(async (req, res) => {
-  let users = await User.getUsers()
-  res.status(200).send(users)
 }))
 
 // router.get('/trends', authenticate, (req, res) => {

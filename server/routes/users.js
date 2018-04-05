@@ -116,8 +116,6 @@ router.patch('/me/', authenticate, checkOldUser, checkErrors, asyncMiddleware(as
 
   let user = await User.findByIdAndUpdate(req.user._id, {
     $set: {
-      firstname: body.firstname,
-      lastname: body.lastname,
       email: body.email,
       password: body.password
     }
@@ -160,6 +158,44 @@ router.delete('/me/', authenticate, asyncMiddleware(async (req, res) => {
   res.status(200).clearCookie('token').send({
     messages: ['Utente disabilitato con successo.']
   })
+}))
+
+/*
+ * Utente loggato
+ */
+router.post('/search/partial/', authenticate, asyncMiddleware(async (req, res) => {
+  let query = req.body.query
+  let regex = query.split(' ').join('|')
+
+  let users = await User.find({
+    $and: [{
+      $or: [{
+        firstname: {
+          $regex: regex,
+          $options: 'i'
+        }
+      }, {
+        lastname: {
+          $regex: regex,
+          $options: 'i'
+        }
+      }]
+    }, {
+      _id: {
+        $ne: req.user._id
+      }
+    }]
+  }, {
+    accesses: false,
+    privileges: false,
+    state: false,
+    email: false,
+    password: false,
+    tokens: false,
+    __v: false
+  }).limit(10)
+
+  res.status(200).json(users)
 }))
 
 /*

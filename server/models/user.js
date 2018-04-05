@@ -215,8 +215,15 @@ UserSchema.statics.findByCredentials = function (email, password) {
 UserSchema.statics.getUsers = function () {
   var User = this
 
-  return User.find()
-    .select(['firstname', 'lastname'])
+  return User.find({}, {
+    accesses: false,
+    privileges: false,
+    state: false,
+    img: false,
+    email: false,
+    password: false,
+    tokens: false
+  })
     .then((results) => {
       return Promise.resolve(results)
     })

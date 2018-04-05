@@ -83,9 +83,22 @@ io.on('connection', (socket) => {
     io.emit('newUser')
   })
 
+  socket.on('collectionDeleted', () => {
+    io.emit('collectionDeleted')
+  })
+
+  socket.on('collectionUpdated', () => {
+    io.emit('collectionUpdated')
+  })
+
   socket.on('userUpdated', (user) => {
-    // io.emit('userUpdated', user)
-    socket.broadcast.emit('userUpdated', user)
+    io.emit('userUpdated', user)
+    // socket.broadcast.emit('userUpdated', user) <===== DA VEDERE
+  })
+
+  socket.on('userDeleted', (user) => {
+    // io.emit('userDeleted', user)
+    socket.broadcast.emit('userDeleted')
   })
 })
 
