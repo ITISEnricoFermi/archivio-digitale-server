@@ -25,15 +25,25 @@ router.put('/', asyncMiddleware(async (req, res) => {
   let user = new User(body)
 
   if (validator.isEmpty(body.firstname) || !validator.isAlpha(body.firstname)) {
-    return res.status(400).send('Nome non valido.')
+    return res.status(400).send({
+      messages: ['Nome non valido.']
+    })
   } else if (validator.isEmpty(body.lastname) || !validator.isAlpha(body.lastname)) {
-    return res.status(400).send('Cognome non valido')
+    return res.status(400).send({
+      messages: ['Cognome non valido']
+    })
   } else if (validator.isEmpty(body.email) || !validator.isEmail(body.email)) {
-    return res.status(400).send('Email non valida.')
+    return res.status(400).send({
+      messages: ['Email non valida.']
+    })
   } else if (validator.isEmpty(body.password) || body.password.length < 6) {
-    return res.status(400).send('Password non valida o troppo breve. (min. 6).')
+    return res.status(400).send({
+      messages: ['Password non valida o troppo breve. (min. 6).']
+    })
   } else if (body.accesses.length === 0) {
-    return res.status(400).send('Inserire delle autorizzazioni.')
+    return res.status(400).send({
+      messages: 'Inserire delle autorizzazioni.'
+    })
   }
 
   // Formattazione

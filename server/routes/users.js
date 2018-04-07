@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const _ = require('lodash')
-const validator = require('validator')
 const multer = require('multer')
 const path = require('path')
+const bcrypt = require('bcryptjs')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -114,7 +114,15 @@ router.get('/me/documents/count/:visibility', authenticate, asyncMiddleware(asyn
 router.patch('/me/', authenticate, checkOldUser, checkErrors, asyncMiddleware(async (req, res) => {
   let body = req.body.user
 
-  let user = await User.findByIdAndUpdate(req.user._id, {
+  if (body.password) {
+    let salt = await bcrypt.genSalt(10)
+    let hash = await bcrypt.hash(body.password, salt)
+    body.password = hash
+  }
+
+  let user = await User.findOneAndUpdate({
+    _id: req.user._id
+  }, {
     $set: {
       email: body.email,
       password: body.password

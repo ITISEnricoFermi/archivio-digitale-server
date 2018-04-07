@@ -183,33 +183,55 @@ UserSchema.statics.findByEmail = function (email) {
     })
 }
 
-UserSchema.statics.findByCredentials = function (email, password) {
+UserSchema.statics.findByCredentials = async function (email, password) {
   var User = this
 
-  return User.findOne({
-    email
-  })
-    .then((user) => {
-      if (!user) {
-        return Promise.reject(new Error('Nessun utente registrato con l\'email inserita.'))
-      }
-
-      if (user.state !== 'active') {
-        return Promise.reject(new Error('Il tuo account è stato disabilitato.'))
-      }
-
-      return bcrypt.compare(password, user.password)
-        .then((result) => {
-          if (result) {
-            return Promise.resolve(user)
-          } else {
-            return Promise.reject(new Error('Password errata'))
-          }
-        })
-        .catch((e) => {
-          return Promise.reject(e)
-        })
+  try {
+    let user = await User.findOne({
+      email
     })
+
+    if (!user) {
+      return Promise.reject(new Error('Nessun utente registrato con l\'email inserita.'))
+    }
+
+    if (user.state !== 'active') {
+      return Promise.reject(new Error('Il tuo account è stato disabilitato.'))
+    }
+
+    if (await bcrypt.compare(password, user.password)) {
+      return Promise.resolve(user)
+    } else {
+      return Promise.reject(new Error('Password errata'))
+    }
+  } catch (e) {
+    return Promise.reject(e)
+  }
+
+  // return User.findOne({
+  //   email
+  // })
+  //   .then((user) => {
+  //     if (!user) {
+  //       return Promise.reject(new Error('Nessun utente registrato con l\'email inserita.'))
+  //     }
+  //
+  //     if (user.state !== 'active') {
+  //       return Promise.reject(new Error('Il tuo account è stato disabilitato.'))
+  //     }
+  //
+  //     return bcrypt.compare(password, user.password)
+  //       .then((result) => {
+  //         if (result) {
+  //           return Promise.resolve(user)
+  //         } else {
+  //           return Promise.reject(new Error('Password errata'))
+  //         }
+  //       })
+  //       .catch((e) => {
+  //         return Promise.reject(e)
+  //       })
+  //   })
 }
 
 UserSchema.statics.getUsers = function () {

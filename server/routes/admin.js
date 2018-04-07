@@ -46,7 +46,7 @@ router.put('/users/', authenticate, authenticateAdmin, adminCheckNewUser, checkE
  * Utente admin
  */
 router.patch('/users/:id', authenticate, authenticateAdmin, adminCheckOldUser, checkErrors, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body.user, ['firstname', 'lastname', 'email', 'privileges', 'accesses'])
+  let body = _.pick(req.body.user, ['firstname', 'lastname', 'state', 'email', 'privileges', 'accesses'])
 
   let user = await User.findByIdAndUpdate(req.params.id, {
     $set: body
@@ -189,20 +189,14 @@ router.post('/resetPassword', authenticate, authenticateAdmin, asyncMiddleware(a
  * Utente loggato
  * Utente admin
  */
-router.post('/togglePrivileges', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let user = await User.findById(req.body._id)
-  user.privileges === 'admin' ? user.privileges = 'user' : user.privileges = 'admin'
-  res.status(200).send(await user.save())
-}))
-
-/*
- * Utente loggato
- * Utente admin
- */
-router.post('/toggleState', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let user = await User.findById(req.body._id)
-  user.state === 'active' ? user.state = 'disabled' : user.state = 'active'
-  res.status(200).send(await user.save())
+router.post('/toggleState/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  let body = _.pick(req.body, ['_id', 'state'])
+  let user = await User.findByIdAndUpdate(body._id, {
+    $set: {
+      state: body.state === 'active' ? 'disabled' : 'active'
+    }
+  })
+  res.status(200).json(user)
 }))
 
 module.exports = router
