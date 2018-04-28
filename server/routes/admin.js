@@ -177,7 +177,6 @@ router.post('/resetPassword', authenticate, authenticateAdmin, asyncMiddleware(a
   let hash = await bcrypt.hash(password, salt)
 
   await User.findByIdAndUpdate(req.body._id, {
-    tokens: [],
     password: hash
   })
   return res.status(200).send({

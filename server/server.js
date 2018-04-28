@@ -8,6 +8,8 @@ const socketIO = require('socket.io')
 const path = require('path')
 const helmet = require('helmet')
 const history = require('connect-history-api-fallback')
+const compression = require('compression')
+const morgan = require('morgan')
 
 const {
   mongoose
@@ -48,6 +50,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(helmet())
+app.use(morgan('dev'))
+app.use(compression())
 
 app.use((req, res, next) => {
   req.messages = []
@@ -106,8 +110,6 @@ io.on('connection', (socket) => {
  * Utente loggato
  */
 app.get('/logout', authenticate, asyncMiddleware(async (req, res) => {
-  let user = await User.findById(req.user._id)
-  await user.removeToken(req.token)
   res.clearCookie('token').redirect('/')
 }))
 

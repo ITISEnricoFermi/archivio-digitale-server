@@ -1,16 +1,21 @@
 const _ = require('lodash')
+const jwt = require('jsonwebtoken')
 
 const {
   User
 } = require('./../models/user')
 
 // Verifica che sia stato eseguito l'accesso con un account valido
-var authenticate = async (req, res, next) => {
+const authenticate = async (req, res, next) => {
   try {
-    let user = await User.findByToken(req.header('x-auth') || req.cookies.token)
+    let token = req.header('x-auth') || req.cookies.token
+
+    let decoded = jwt.verify(token, process.env.JWT_SECRET)
+    let user = await User.findById(decoded._id)
+
     req.user = _.pick(user, ['_id', 'firstname', 'lastname', 'email', 'privileges', 'accesses', 'img'])
-    req.token = req.header('x-auth') || req.cookies.token
-    next()
+    req.token = token
+    return next()
   } catch (e) {
     return res.status(401).json({
       messages: ['Non è stato eseguito l\'accesso con un account valido.']
@@ -18,7 +23,7 @@ var authenticate = async (req, res, next) => {
   }
 }
 
-var authenticateAdmin = (req, res, next) => {
+const authenticateAdmin = (req, res, next) => {
   if (req.user.privileges._id !== 'admin') {
     return res.status(401).json({
       messages: ['Non si detengono i privilegi necessari.']

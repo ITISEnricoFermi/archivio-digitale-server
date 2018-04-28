@@ -96,17 +96,7 @@ var UserSchema = new mongoose.Schema({
       validator: validator.isAlpha,
       message: '{VALUE} non è un stato valido.'
     }
-  },
-  tokens: [{ // OK
-    access: {
-      type: String,
-      required: true
-    },
-    token: {
-      type: String,
-      required: true
-    }
-  }]
+  }
 })
 
 UserSchema.methods.toJSON = function () {
@@ -123,33 +113,12 @@ UserSchema.methods.generateAuthToken = async function () {
     let token = jwt.sign({
       _id: user._id.toHexString(),
       access
-    }, process.env.JWT_SECRET).toString()
-
-    user = await user.update({
-      $push: {
-        tokens: {
-          access,
-          token
-        }
-      }
-    })
+    }, process.env.JWT_SECRET, { expiresIn: '1d' }).toString()
 
     return Promise.resolve(token)
   } catch (e) {
     return Promise.reject(e)
   }
-}
-
-UserSchema.methods.removeToken = function (token) {
-  var user = this
-
-  return user.update({
-    $pull: {
-      tokens: {
-        token
-      }
-    }
-  })
 }
 
 UserSchema.statics.findByToken = function (token) {
@@ -243,8 +212,7 @@ UserSchema.statics.getUsers = function () {
     state: false,
     img: false,
     email: false,
-    password: false,
-    tokens: false
+    password: false
   })
     .then((results) => {
       return Promise.resolve(results)

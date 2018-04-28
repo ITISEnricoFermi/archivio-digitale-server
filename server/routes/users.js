@@ -4,6 +4,7 @@ const _ = require('lodash')
 const multer = require('multer')
 const path = require('path')
 const bcrypt = require('bcryptjs')
+const fs = require('fs/promises')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -144,7 +145,11 @@ router.patch('/me/pic/', authenticate, upload.single('picToUpload'), asyncMiddle
     })
   }
 
-  await User.findByIdAndUpdate(req.user._id, {
+  let user = await User.findById(req.user._id)
+
+  await fs.unlink(path.join(__dirname, '..', 'public', 'pics', String(user.img)))
+
+  await user.update({
     $set: {
       img: file.filename
     }
@@ -161,7 +166,6 @@ router.patch('/me/pic/', authenticate, upload.single('picToUpload'), asyncMiddle
 router.delete('/me/', authenticate, asyncMiddleware(async (req, res) => {
   let user = await User.findById(req.user._id)
   user.state = 'disabled'
-  user.tokens = []
   await user.save()
   res.status(200).clearCookie('token').send({
     messages: ['Utente disabilitato con successo.']
