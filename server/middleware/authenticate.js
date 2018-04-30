@@ -13,7 +13,7 @@ const authenticate = async (req, res, next) => {
     let decoded = jwt.verify(token, process.env.JWT_SECRET)
     let user = await User.findById(decoded._id)
 
-    req.user = _.pick(user, ['_id', 'firstname', 'lastname', 'email', 'privileges', 'accesses', 'img'])
+    req.user = _.pick(user, ['_id', 'firstname', 'lastname', 'email', 'privileges', 'accesses'])
     req.token = token
     return next()
   } catch (e) {

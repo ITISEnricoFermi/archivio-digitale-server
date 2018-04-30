@@ -253,7 +253,7 @@ DocumentSchema.statics.searchPublicDocuments = function (search, user) {
 }
 
 DocumentSchema.pre('find', function (next) {
-  this.populate('author', 'firstname lastname img')
+  this.populate('author', 'firstname lastname')
     .populate('type', 'type')
     .populate({
       path: 'faculty',
@@ -277,7 +277,7 @@ DocumentSchema.pre('find', function (next) {
 })
 
 DocumentSchema.pre('findOne', function (next) {
-  this.populate('author', 'firstname lastname img')
+  this.populate('author', 'firstname lastname')
     .populate('type', 'type')
     .populate({
       path: 'faculty',

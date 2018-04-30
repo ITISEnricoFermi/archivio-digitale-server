@@ -41,13 +41,13 @@ var UserSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
-  img: { // OK
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 1,
-    default: '../static/elements/profile.svg'
-  },
+  // img: { // OK
+  //   type: String,
+  //   required: true,
+  //   trim: true,
+  //   minlength: 1,
+  //   default: '../static/elements/profile.svg'
+  // },
   // accesses: [{
   //   _id: {
   //     type: String,
@@ -103,7 +103,7 @@ UserSchema.methods.toJSON = function () {
   var user = this
   var userObject = user.toObject()
 
-  return _.pick(userObject, ['_id', 'firstname', 'lastname', 'email', 'state', 'privileges', 'accesses', 'img'])
+  return _.pick(userObject, ['_id', 'firstname', 'lastname', 'email', 'state', 'privileges', 'accesses'])
 }
 
 UserSchema.methods.generateAuthToken = async function () {
@@ -123,19 +123,14 @@ UserSchema.methods.generateAuthToken = async function () {
 
 UserSchema.statics.findByToken = function (token) {
   var User = this
-  // var decoded;
-
-  return jwt.verify(token, process.env.JWT_SECRET, (e, decoded) => {
-    if (e) {
-      return Promise.reject(e)
-    } else {
-      return User.findOne({
-        _id: decoded._id,
-        'tokens.token': token,
-        'tokens.access': 'auth'
-      })
+  try {
+    let decoded = jwt.verify(token, process.env.JWT_SECRET)
+    if (decoded) {
+      return User.findById(decoded._id)
     }
-  })
+  } catch (e) {
+    return Promise.reject(e)
+  }
 }
 
 UserSchema.statics.findByEmail = function (email) {
@@ -210,7 +205,6 @@ UserSchema.statics.getUsers = function () {
     accesses: false,
     privileges: false,
     state: false,
-    img: false,
     email: false,
     password: false
   })

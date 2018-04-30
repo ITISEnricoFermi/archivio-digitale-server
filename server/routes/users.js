@@ -4,14 +4,21 @@ const _ = require('lodash')
 const multer = require('multer')
 const path = require('path')
 const bcrypt = require('bcryptjs')
-const fs = require('fs/promises')
+const fs = require('fs')
+const fsPromises = require('fs/promises')
+const sharp = require('sharp')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '..', 'public', 'pics'))
+    let dir = path.join(__dirname, '..', 'public', 'pics', String(req.user._id))
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir)
+    }
+    cb(null, dir)
   },
   filename: function (req, file, cb) {
-    cb(null, String(req.user._id) + path.extname(file.originalname))
+    console.log(file)
+    cb(null, String(req.user._id) + '.jpeg')
   }
 })
 
@@ -60,7 +67,7 @@ const {
  * Utente loggato
  */
 router.get('/me/', authenticate, asyncMiddleware(async (req, res) => {
-  let user = _.pick(req.user, ['_id', 'firstname', 'lastname', 'email', 'accesses', 'privileges', 'img'])
+  let user = _.pick(req.user, ['_id', 'firstname', 'lastname', 'email', 'accesses', 'privileges'])
 
   let documents = await Document.count({
     author: user._id
@@ -145,15 +152,28 @@ router.patch('/me/pic/', authenticate, upload.single('picToUpload'), asyncMiddle
     })
   }
 
-  let user = await User.findById(req.user._id)
+  const sizes = [{
+    path: 'xlg',
+    xy: 1200
+  }, {
+    path: 'lg',
+    xy: 800
+  }, {
+    path: 'md',
+    xy: 500
+  }, {
+    path: 'sm',
+    xy: 300
+  }, {
+    path: 'xs',
+    xy: 100
+  }]
 
-  await fs.unlink(path.join(__dirname, '..', 'public', 'pics', String(user.img)))
+  for (let i = 0; i < sizes.length; i++) {
+    await sharp(file.path).resize(sizes[i].xy, sizes[i].xy).toFormat('jpeg').toFile(path.join(file.destination, sizes[i].path + '.jpeg'))
+  }
 
-  await user.update({
-    $set: {
-      img: file.filename
-    }
-  })
+  await fsPromises.unlink(path.join(__dirname, '..', 'public', 'pics', String(req.user._id), String(req.user._id) + '.jpeg'))
 
   res.status(200).send({
     messages: ['Immagine di profilo aggiornata con successo.']
@@ -203,7 +223,6 @@ router.post('/search/partial/', authenticate, asyncMiddleware(async (req, res) =
     state: false,
     email: false,
     password: false,
-    tokens: false,
     __v: false
   }).limit(10)
 

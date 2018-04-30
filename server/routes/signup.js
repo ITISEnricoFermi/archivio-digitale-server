@@ -2,6 +2,9 @@ const express = require('express')
 const router = express.Router()
 const _ = require('lodash')
 const validator = require('validator')
+const path = require('path')
+const sharp = require('sharp')
+const fs = require('fs')
 
 // Middleware
 const {
@@ -77,6 +80,34 @@ router.put('/', asyncMiddleware(async (req, res) => {
   }
 
   user = await user.save()
+
+  const sizes = [{
+    path: 'xlg',
+    xy: 1200
+  }, {
+    path: 'lg',
+    xy: 800
+  }, {
+    path: 'md',
+    xy: 500
+  }, {
+    path: 'sm',
+    xy: 300
+  }, {
+    path: 'xs',
+    xy: 100
+  }]
+
+  let dir = path.join(__dirname, '..', 'public', 'pics', String(user._id))
+
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
+
+  for (let i = 0; i < sizes.length; i++) {
+    await sharp(path.join(__dirname, '..', 'public', 'images', 'profile.svg')).resize(sizes[i].xy, sizes[i].xy).toFormat('jpeg').toFile(path.join(__dirname, '..', 'public', 'pics', String(user._id), sizes[i].path + '.jpeg'))
+  }
+
   let token = await user.generateAuthToken()
   return res.header('x-auth', token).send(user)
 }))
