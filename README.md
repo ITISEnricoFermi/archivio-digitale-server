@@ -8,7 +8,7 @@
 
 ## Installazione
 
-L'Archivio Digitale è suddiviso in due repository: archivio-fermi-server e [archivio-fermi-client](https://github.com/Richard1984/archivio-fermi-client).
+L'Archivio Digitale è suddiviso in due repository: [archivio-fermi-server](https://github.com/Richard1984/archivio-fermi-server) e [archivio-fermi-client](https://github.com/Richard1984/archivio-fermi-client).
 
 1. Clonare il repository nella destinazione desiderata
 
