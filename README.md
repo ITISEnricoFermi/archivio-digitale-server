@@ -72,7 +72,7 @@ $ sudo mongod
 2. Avviare il server
 
 ```shell
-$ cd cd archivio-fermi-server/server/
+$ cd archivio-fermi-server/server/
 $ node server.js
 ```
 
