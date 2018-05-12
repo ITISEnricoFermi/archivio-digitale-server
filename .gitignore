@@ -3,8 +3,8 @@ config.json
 .DS_Store
 
 
-server/public/documents/*
+server/public/public/documents/*
 server/public/pics/*
 
-!server/public/documents/.gitkeep
-!server/public/pics/.gitkeep 
+!server/public/public/documents/.gitkeep
+!server/public/pics/.gitkeep
