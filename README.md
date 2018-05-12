@@ -6,9 +6,11 @@
   Progetto Archivio Digitale sviluppato da Riccardo Sangiorgio per l'ITIS Enrico Fermi.
 </p>
 
-## Installazione
+## Getting Started
 
 L'Archivio Digitale è suddiviso in due repository: [archivio-fermi-server](https://github.com/Richard1984/archivio-fermi-server) e [archivio-fermi-client](https://github.com/Richard1984/archivio-fermi-client).
+
+### Installazione
 
 1. Clonare il repository nella destinazione desiderata
 
@@ -59,7 +61,7 @@ $ mv config.json.example config.json
 
 *JWT_SECRET* sarà la chiave utilizzata nei token. Si consiglia di utilizzare una stringa molto complessa.
 
-## Avvio del server
+### Avvio del server
 
 1. Avviare il database (MongoDB)
 
@@ -74,7 +76,7 @@ $ cd cd archivio-fermi-server/server/
 $ node server.js
 ```
 
-## Primo accesso
+### Primo accesso
 
 Subito dopo l'installazione del server è possibile entrare nella piattaforma utilizzando le credenziali dell'utente test.
 
