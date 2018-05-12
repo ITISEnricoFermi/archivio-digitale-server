@@ -53,7 +53,7 @@ $ mv config.json.example config.json
 }
 ```
 
-JWT_SECRET sarà la chiave utilizzata nei token. Si consiglia di utilizzare una stringa molto complessa.
+*JWT_SECRET* sarà la chiave utilizzata nei token. Si consiglia di utilizzare una stringa molto complessa.
 
 ## Avvio del server
 
@@ -74,8 +74,8 @@ $ node server.js
 
 Subito dopo l'installazione del server è possibile entrare nella piattaforma utilizzando le credenziali dell'utente test.
 
-* Email: alan.turing@test.com
-* Password: 123456
+* **Email:** alan.turing@test.com
+* **Password:** 123456
 
 L'utente detiene i privilegi di admin. Si consiglia di modificare la password dell'account una volta effettuato il primo accesso.
 
