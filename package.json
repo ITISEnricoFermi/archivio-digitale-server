@@ -4,7 +4,9 @@
   "description": "Archivio Digitale - ITIS Enrico Fermi",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "populate": "node server/db/seed.js",
+    "client": "git clone https://github.com/Richard1984/archivio-fermi-client.git && cd ./archivio-fermi-client/ && npm install && npm run build && mv dist/* ../server/public/"
   },
   "author": "Riccardo Sangiorgio",
   "license": "ISC",
