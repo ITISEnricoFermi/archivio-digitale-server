@@ -1,7 +1,7 @@
 require('./db/config/config.js')
 
 const express = require('express')
-const http = require('http')
+const https = require('https')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const socketIO = require('socket.io')
@@ -40,7 +40,7 @@ const users = require('./routes/users')
 const publicRoute = require('./routes/public')
 
 var app = express()
-var server = http.createServer(app)
+var server = https.createServer(app)
 const io = socketIO(server)
 
 const port = process.env.PORT || 3000
