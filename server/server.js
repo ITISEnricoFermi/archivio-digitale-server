@@ -50,7 +50,10 @@ if (process.env.SSL.key) {
     ca: fs.readFileSync(process.env.SSL.ca)
   }
 
+  console.log(options)
+
   server = require('https').createServer(options, app)
+  console.log(server)
 } else {
   server = require('http').createServer(app)
 }
