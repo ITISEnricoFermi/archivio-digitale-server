@@ -3,10 +3,8 @@
     "port": 3000,
     "MONGODB_URI": "mongodb://localhost:27017/archivio",
     "JWT_SECRET": "jwtSecret",
-    "SSL": {
-      "key": "/etc/letsencrypt/live/example.com/privkey.pem",
-      "cert": "/etc/letsencrypt/live/example.com/cert.pem",
-      "ca": "/etc/letsencrypt/live/example.com/chain.pem"
-    }
+    "KEY": "/etc/letsencrypt/live/example.com/privkey.pem",
+    "CERT": "/etc/letsencrypt/live/example.com/cert.pem",
+    "CA": "/etc/letsencrypt/live/example.com/chain.pem"
   }
 }

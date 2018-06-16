@@ -43,23 +43,16 @@ const app = express()
 
 let server
 
-console.log('SSL:', process.env.SSL.key)
-
-if (process.env.SSL.key) {
+if (process.env.KEY) {
   const options = {
-    key: fs.readFileSync(process.env.SSL.key),
-    cert: fs.readFileSync(process.env.SSL.cert),
-    ca: fs.readFileSync(process.env.SSL.ca)
+    key: fs.readFileSync(process.env.KEY),
+    cert: fs.readFileSync(process.env.CERT),
+    ca: fs.readFileSync(process.env.CA)
   }
 
-  console.log(options)
-
   server = require('https').createServer(options, app)
-  console.log(server)
-  console.log('Server creato con SSL.')
 } else {
   server = require('http').createServer(app)
-  console.log('Server creato senza SSL.')
 }
 
 const io = socketIO(server)
