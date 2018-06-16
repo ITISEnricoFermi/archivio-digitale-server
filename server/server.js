@@ -1,11 +1,11 @@
 require('./db/config/config.js')
 
+const fs = require('fs')
+const path = require('path')
 const express = require('express')
-const https = require('https')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const socketIO = require('socket.io')
-const path = require('path')
 const helmet = require('helmet')
 const history = require('connect-history-api-fallback')
 const compression = require('compression')
@@ -39,8 +39,22 @@ const login = require('./routes/login')
 const users = require('./routes/users')
 const publicRoute = require('./routes/public')
 
-var app = express()
-var server = https.createServer(app)
+const app = express()
+
+let server
+
+if (process.env.SSL.key) {
+  const options = {
+    key: fs.readFileSync(process.env.SSL.key),
+    cert: fs.readFileSync(process.env.SSL.cert),
+    ca: fs.readFileSync(process.env.SSL.ca)
+  }
+
+  server = require('https').createServer(options, app)
+} else {
+  server = require('http').createServer(app)
+}
+
 const io = socketIO(server)
 
 const port = process.env.PORT || 3000
