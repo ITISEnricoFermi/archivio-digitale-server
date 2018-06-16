@@ -5,7 +5,7 @@ const multer = require('multer')
 const path = require('path')
 const bcrypt = require('bcryptjs')
 const fs = require('fs')
-const fsPromises = require('fs/promises')
+const fsPromises = fs.promises
 const sharp = require('sharp')
 
 const storage = multer.diskStorage({
