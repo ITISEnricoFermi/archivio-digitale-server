@@ -43,17 +43,17 @@ const app = express()
 
 let server
 
-if (process.env.KEY) {
-  const options = {
-    key: fs.readFileSync(process.env.KEY, 'utf8'),
-    cert: fs.readFileSync(process.env.CERT, 'utf8'),
-    ca: fs.readFileSync(process.env.CA, 'utf8')
-  }
-
-  server = require('https').createServer(options, app)
-} else {
-  server = require('http').createServer(app)
-}
+// if (process.env.KEY) {
+//   const options = {
+//     key: fs.readFileSync(process.env.KEY, 'utf8'),
+//     cert: fs.readFileSync(process.env.CERT, 'utf8'),
+//     ca: fs.readFileSync(process.env.CA, 'utf8')
+//   }
+//
+//   server = require('https').createServer(options, app)
+// } else {
+server = require('http').createServer(app)
+// }
 
 const io = socketIO(server)
 
