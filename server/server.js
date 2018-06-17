@@ -45,9 +45,9 @@ let server
 
 if (process.env.KEY) {
   const options = {
-    key: fs.readFileSync(process.env.KEY),
-    cert: fs.readFileSync(process.env.CERT),
-    ca: fs.readFileSync(process.env.CA)
+    key: fs.readFileSync(process.env.KEY, 'utf8'),
+    cert: fs.readFileSync(process.env.CERT, 'utf8'),
+    ca: fs.readFileSync(process.env.CA, 'utf8')
   }
 
   server = require('https').createServer(options, app)
