@@ -2,6 +2,7 @@ require('./db/config/config.js')
 
 const fs = require('fs')
 const path = require('path')
+const http = require('http')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
@@ -40,20 +41,7 @@ const users = require('./routes/users')
 const publicRoute = require('./routes/public')
 
 const app = express()
-
-let server
-
-if (process.env.KEY) {
-  const options = {
-    key: fs.readFileSync(process.env.KEY, 'utf8'),
-    cert: fs.readFileSync(process.env.CERT, 'utf8'),
-    ca: fs.readFileSync(process.env.CA, 'utf8')
-  }
-
-  server = require('https').createServer(options, app)
-} else {
-  server = require('http').createServer(app)
-}
+const server = http.createServer(app)
 
 const io = socketIO(server)
 
