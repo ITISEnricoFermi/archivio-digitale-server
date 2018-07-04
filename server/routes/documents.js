@@ -209,7 +209,6 @@ router.patch('/:id', authenticate, editDocument, checkDocument, checkErrors, asy
  */
 router.delete('/:id', authenticate, editDocument, asyncMiddleware(async (req, res) => {
   let document = await Document.findByIdAndRemove(req.params.id)
-
   await DocumentCollection.update({
     documents: ObjectId(req.params.id)
   }, {
