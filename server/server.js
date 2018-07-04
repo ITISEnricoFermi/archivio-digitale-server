@@ -1,6 +1,5 @@
 require('./db/config/config.js')
 
-const fs = require('fs')
 const path = require('path')
 const http = require('http')
 const express = require('express')
@@ -70,8 +69,10 @@ app.use('/login', login)
 app.use('/users', users)
 app.use('/public', publicRoute)
 
+// Public directory
 app.use(express.static(path.join(__dirname, '/public')))
 
+// Socket events
 io.on('connection', (socket) => {
   socket.on('newDocument', () => {
     io.emit('newDocument')

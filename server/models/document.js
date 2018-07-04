@@ -84,6 +84,13 @@ var DocumentSchema = new mongoose.Schema({
     unique: true,
     minlength: 1,
     trim: true
+  },
+  mimetype: {
+    type: String,
+    required: true,
+    unique: false,
+    minlength: 1,
+    trim: true
   }
 })
 

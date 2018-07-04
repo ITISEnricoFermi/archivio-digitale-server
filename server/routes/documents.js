@@ -156,9 +156,9 @@ router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
  * Utente loggato
  */
 router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
-  console.log('Ciao')
   let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'class', 'section', 'visibility', 'description'])
 
+  console.log(req.file)
   // Validazione
   if (!req.file) {
     return res.status(500).json({
@@ -171,6 +171,7 @@ router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
   body.description = _.upperFirst(body.description)
   body.author = req.user._id
   body.directory = req.file.filename
+  body.mimetype = req.file.mimetype
 
   let document = new Document(body)
 
