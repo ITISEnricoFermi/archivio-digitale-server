@@ -9,7 +9,7 @@ const {
 const authenticate = async (req, res, next) => {
   try {
     let token = req.header('x-auth') || req.cookies.token
-
+    console.log(token)
     let decoded = jwt.verify(token, process.env.JWT_SECRET)
     let user = await User.findById(decoded._id)
 

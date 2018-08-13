@@ -2,9 +2,9 @@ const express = require('express')
 const router = express.Router()
 
 // Middleware
-const {
-  authenticate
-} = require('./../middleware/authenticate')
+// const {
+//   authenticate
+// } = require('./../middleware/authenticate')
 
 const {
   asyncMiddleware
@@ -36,16 +36,12 @@ const {
 } = require('./../models/privilege')
 
 const {
-  Class
-} = require('./../models/class')
+  Grade
+} = require('./../models/grade')
 
 const {
   CollectionPermission
 } = require('./../models/collection_permission')
-
-const {
-  User
-} = require('./../models/user')
 
 /*
  * Utente non loggato
@@ -114,8 +110,8 @@ router.get('/getPrivileges', asyncMiddleware(async (req, res) => {
 /*
  * Utente non loggato
  */
-router.get('/getClasses', asyncMiddleware(async (req, res) => {
-  let classes = await Class.getClasses()
+router.get('/getGrades', asyncMiddleware(async (req, res) => {
+  let classes = await Grade.getGrades()
   res.status(200).send(classes)
 }))
 

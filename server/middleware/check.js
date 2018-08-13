@@ -196,7 +196,7 @@ let checkCollection = asyncMiddleware(async (req, res, next) => {
     }
   }
 
-  if ((collection.permissions !== null || collection.permissions.length > 0) && (collection.authorizations !== null || collection.authorizations.length > 0)) {
+  if ((collection.permissions === 'utenti') && (collection.authorizations !== null || collection.authorizations.length > 0)) {
     let authorizations = await User.count({
       _id: {
         $in: collection.authorizations.map(authorization => authorization._id)

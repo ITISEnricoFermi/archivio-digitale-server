@@ -3,7 +3,6 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const _ = require('lodash')
 const multer = require('multer')
-const validator = require('validator')
 const path = require('path')
 const fs = require('fs')
 
@@ -13,8 +12,7 @@ const {
 
 // Middleware
 const {
-  authenticate,
-  authenticateAdmin
+  authenticate
 } = require('./../middleware/authenticate')
 
 const {
@@ -156,9 +154,8 @@ router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
  * Utente loggato
  */
 router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'class', 'section', 'visibility', 'description'])
+  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
 
-  console.log(req.file)
   // Validazione
   if (!req.file) {
     return res.status(500).json({
@@ -186,7 +183,17 @@ router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
  * Utente proprietario o admin
  */
 router.patch('/:id', authenticate, editDocument, checkDocument, checkErrors, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'class', 'section', 'visibility', 'description'])
+  //
+  // // NEW
+  // let { name, type, faculty, subject, grade, section, visibility, description } = req.body.document
+  //
+  // // Formattazione
+  // name = _.upperFirst(name)
+  // description = _.upperFirst(description)
+
+  // OLD
+
+  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
 
   // Formattazione
   body.name = _.upperFirst(body.name)
@@ -230,8 +237,8 @@ router.delete('/:id', authenticate, editDocument, asyncMiddleware(async (req, re
 }))
 
 router.post('/search/', authenticate, asyncMiddleware(async (req, res) => {
-  var body = _.pick(req.body, ['fulltext', 'type', 'faculty', 'subject', 'class', 'section', 'visibility'])
-  var empty = _.every(body, (el) => {
+  var body = _.pick(req.body, ['fulltext', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility'])
+  let empty = _.every(body, (el) => {
     return !el
   })
 

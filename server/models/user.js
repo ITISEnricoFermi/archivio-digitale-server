@@ -9,32 +9,32 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 1,
-    unique: false,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un nome valido.'
-    }
+    unique: false
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: '{VALUE} non è un nome valido.'
+    // }
   },
   lastname: { // OK
     type: String,
     required: true,
     minlength: 1,
-    unique: false,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un cognome valido.'
-    }
+    unique: false
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: '{VALUE} non è un cognome valido.'
+    // }
   },
   email: { // CONTROLLARE
     type: String,
     required: true,
     trim: true,
     minlength: 1,
-    unique: true,
-    validate: {
-      validator: validator.isEmail,
-      message: '{VALUE} non è un indirizzo email valido.'
-    }
+    unique: true
+    // validate: {
+    //   validator: validator.isEmail,
+    //   message: '{VALUE} non è un indirizzo email valido.'
+    // }
   },
   password: { // CONTROLLARE
     type: String,
@@ -66,10 +66,10 @@ var UserSchema = new mongoose.Schema({
     required: false,
     trim: true,
     minlength: 1,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un accesso valido.'
-    },
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: '{VALUE} non è un accesso valido.'
+    // },
     ref: 'Subject'
   }],
   privileges: { // CONTROLLARE
@@ -91,11 +91,11 @@ var UserSchema = new mongoose.Schema({
     trim: true,
     minlength: 1,
     unique: false,
-    default: 'pending',
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un stato valido.'
-    }
+    default: 'pending'
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: '{VALUE} non è un stato valido.'
+    // }
   }
 })
 

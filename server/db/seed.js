@@ -2,7 +2,7 @@ const colors = require('colors')
 
 const {
   loadClasses
-} = require('./loaders/class.loader')
+} = require('./loaders/grade.loader')
 
 const {
   loadCollectionPermissions
@@ -99,9 +99,10 @@ let loader = async () => {
     console.log('Impossibile creare gli utenti.'.red)
     return process.exit(1)
   }
-
-  await console.log('Il database è stato popolato.'.green)
-  return process.exit()
 }
 
 loader()
+  .then(() => {
+    console.log('Il database è stato popolato.'.green)
+    return process.exit()
+  }).catch(e => process.exit(1))

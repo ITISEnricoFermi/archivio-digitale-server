@@ -3,20 +3,19 @@ const {
 } = require('../mongoose')
 
 const {
-  Class
-} = require('../../models/class')
+  Grade
+} = require('../../models/grade')
 
-const classArray = require('../seeds/class.json')
+const classArray = require('../seeds/grade.json')
 
 let loadClasses = async () => {
   try {
-    let docs = await Class.insertMany(classArray, {
+    let docs = await Grade.insertMany(classArray, {
       ordered: false
     })
 
-    if (docs) {
-      return true
-    }
+    if (!docs.length) return false
+    return true
   } catch (e) {
     return false
   }

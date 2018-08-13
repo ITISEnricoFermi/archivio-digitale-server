@@ -10,6 +10,7 @@ const helmet = require('helmet')
 const history = require('connect-history-api-fallback')
 const compression = require('compression')
 const morgan = require('morgan')
+const cors = require('cors')
 
 const {
   mongoose
@@ -53,6 +54,15 @@ app.use(cookieParser())
 app.use(helmet())
 app.use(morgan('dev'))
 app.use(compression())
+app.use(cors({
+  origin: 'http://localhost:8080',
+  credentials: true,
+  method: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}))
+
+app.options('*', cors())
 
 app.use((req, res, next) => {
   req.messages = []
@@ -113,7 +123,7 @@ io.on('connection', (socket) => {
  * Utente loggato
  */
 app.get('/logout', authenticate, asyncMiddleware(async (req, res) => {
-  res.clearCookie('token').redirect('/')
+  res.status(200).clearCookie('token').redirect('/')
 }))
 
 app.use((err, req, res, next) => {

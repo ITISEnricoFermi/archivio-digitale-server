@@ -14,9 +14,8 @@ let loadDocumentTypes = async () => {
       ordered: false
     })
 
-    if (docs) {
-      return true
-    }
+    if (!docs.length) return false
+    return true
   } catch (e) {
     return false
   }

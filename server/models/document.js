@@ -13,10 +13,10 @@ var DocumentSchema = new mongoose.Schema({
     required: true,
     minlength: 1,
     trim: true,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un ID valido.'
-    },
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: '{VALUE} non è un ID valido.'
+    // },
     ref: 'document_type'
   },
   author: {
@@ -42,12 +42,12 @@ var DocumentSchema = new mongoose.Schema({
     unique: false,
     ref: 'Subject'
   },
-  class: {
+  grade: {
     type: Number,
     required: false,
     unique: false,
     trim: true,
-    ref: 'Class'
+    ref: 'Grade'
   },
   section: {
     type: String,
@@ -65,10 +65,10 @@ var DocumentSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 1,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un criterio di visibilità valido.'
-    },
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: '{VALUE} non è un criterio di visibilità valido.'
+    // },
     ref: 'document_visibility'
   },
   description: {
@@ -145,9 +145,9 @@ DocumentSchema.statics.searchDocuments = function (search, user) {
     })
   }
 
-  if (search.class) {
+  if (search.grade) {
     andQuery.push({
-      class: search.class
+      grade: search.grade
     })
   }
 
@@ -219,9 +219,9 @@ DocumentSchema.statics.searchPublicDocuments = function (search, user) {
     })
   }
 
-  if (search.class) {
+  if (search.grade) {
     andQuery.push({
-      class: search.class
+      grade: search.grade
     })
   }
 
@@ -271,8 +271,8 @@ DocumentSchema.pre('find', function (next) {
       select: 'subject'
     })
     .populate({
-      path: 'class',
-      select: 'class'
+      path: 'grade',
+      select: 'grade'
     })
     .populate({
       path: 'section',
@@ -295,8 +295,8 @@ DocumentSchema.pre('findOne', function (next) {
       select: 'subject'
     })
     .populate({
-      path: 'class',
-      select: 'class'
+      path: 'grade',
+      select: 'grade'
     })
     .populate({
       path: 'section',
