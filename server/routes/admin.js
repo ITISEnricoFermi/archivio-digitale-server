@@ -27,20 +27,27 @@ const {
   User
 } = require('./../models/user')
 
+// Schemas
+const {
+  create
+} = require('../schema/user.schema')
+
 /*
  * Utente loggato
  * Utente admin
  */
-router.put('/users/', authenticate, authenticateAdmin, adminCheckNewUser, checkErrors, asyncMiddleware(async (req, res) => {
+router.put('/users/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
   let body = _.pick(req.body.user, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
-  let user = new User(body)
+
+  // Controllo del form
+  create(body)
 
   // Formattazione
   body.firstname = _.startCase(_.lowerCase(body.firstname))
   body.lastname = _.startCase(_.lowerCase(body.lastname))
-  user.state = 'active'
+  body.state = 'active'
 
-  user = await user.save()
+  const user = await (new User(body)).save()
 
   const sizes = [{
     path: 'xlg',
@@ -59,14 +66,20 @@ router.put('/users/', authenticate, authenticateAdmin, adminCheckNewUser, checkE
     xy: 100
   }]
 
-  let dir = path.join(__dirname, '..', 'public', 'pics', String(user._id))
+  const dir = {
+    folder: path.join(__dirname, '..', 'public', 'pics', String(user._id)),
+    default: path.join(__dirname, '..', 'public', 'images', 'profile.svg')
+  }
 
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
+  if (!fs.existsSync(dir.folder)) {
+    fs.mkdirSync(dir.folder)
   }
 
   for (let i = 0; i < sizes.length; i++) {
-    await sharp(path.join(__dirname, '..', 'public', 'images', 'profile.svg')).resize(sizes[i].xy, sizes[i].xy).toFormat('jpeg').toFile(path.join(__dirname, '..', 'public', 'pics', String(user._id), sizes[i].path + '.jpeg'))
+    await sharp(dir.default)
+      .resize(sizes[i].xy, sizes[i].xy)
+      .toFormat('jpeg')
+      .toFile(path.join(dir.folder, sizes[i].path + '.jpeg'))
   }
 
   res.status(200).send(user)

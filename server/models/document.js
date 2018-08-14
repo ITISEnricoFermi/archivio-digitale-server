@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
 var DocumentSchema = new mongoose.Schema({
   name: {
@@ -13,10 +12,6 @@ var DocumentSchema = new mongoose.Schema({
     required: true,
     minlength: 1,
     trim: true,
-    // validate: {
-    //   validator: validator.isAlpha,
-    //   message: '{VALUE} non è un ID valido.'
-    // },
     ref: 'document_type'
   },
   author: {
@@ -54,10 +49,6 @@ var DocumentSchema = new mongoose.Schema({
     required: false,
     unique: false,
     trim: true,
-    // validate: {
-    //   validator: validator.isAlpha,
-    //   message: "{VALUE} non è una sezione valida."
-    // },
     ref: 'Section'
   },
   visibility: {
@@ -65,10 +56,6 @@ var DocumentSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 1,
-    // validate: {
-    //   validator: validator.isAlpha,
-    //   message: '{VALUE} non è un criterio di visibilità valido.'
-    // },
     ref: 'document_visibility'
   },
   description: {

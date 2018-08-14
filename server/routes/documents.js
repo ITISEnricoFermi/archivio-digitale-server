@@ -10,6 +10,11 @@ const {
   ObjectId
 } = mongoose.Types
 
+// Schema
+const {
+  create
+} = require('../schema/document.schema')
+
 // Middleware
 const {
   authenticate
@@ -63,54 +68,7 @@ const storage = multer.diskStorage({
 })
 
 const fileFilter = asyncMiddleware(async (req, file, cb) => {
-  let document = _.pick(JSON.parse(req.body.document), ['name', 'type', 'faculty', 'subject', 'visibility', 'description'])
-  let pass = null
-
-  if (document.name == null || document.name.length < 1) {
-    return cb(new Error('Il campo del nome è vuoto.'), false)
-  }
-
-  if (document.description == null || document.description < 1) {
-    cb(new Error('Il campo della descrizione è vuoto.'), false)
-  }
-
-  if (document.type == null || document.type.length < 1) {
-    return cb(new Error('Il campo del tipo è vuoto.'), false)
-  } else {
-    pass = await DocumentType.findById(document.type)
-    if (!pass) {
-      cb(new Error('Il tipo non è valido.'), false)
-    }
-  }
-
-  if (document.faculty == null || document.faculty.length < 1) {
-    cb(new Error('Il campo della specializzazione è vuoto.'), false)
-  } else {
-    pass = await Faculty.findById(document.faculty)
-    if (!pass) {
-      cb(new Error('La specializzazione non è valida.'), false)
-    }
-  }
-
-  if (document.subject == null || document.subject.length < 1) {
-    cb(new Error('Il campo della materia è vuoto.'), false)
-  } else {
-    pass = await Subject.findById(document.subject)
-    if (!pass) {
-      cb(new Error('La materia non è valida.'), false)
-    }
-  }
-
-  if (document.visibility == null || document.visibility.length < 1) {
-    cb(new Error('Il campo della visibilità è vuoto.'), false)
-  } else {
-    pass = await DocumentVisibility.findById(document.visibility)
-    if (!pass) {
-      cb(new Error('La visibilità non è valida.'), false)
-    }
-  }
-
-  req.body.document = document
+  req.body.document = _.pick(JSON.parse(req.body.document), ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
 
   const mimeypes = ['audio/aac', 'video/x-msvideo', 'text/csv', 'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -163,10 +121,13 @@ router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
     })
   }
 
+  // Controllo del form
+  create(body)
+
   // Formattazione
   body.name = _.upperFirst(body.name)
   body.description = _.upperFirst(body.description)
-  body.author = req.user._id
+  body.author = String(req.user._id)
   body.directory = req.file.filename
   body.mimetype = req.file.mimetype
 

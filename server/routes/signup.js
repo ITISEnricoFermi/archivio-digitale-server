@@ -24,7 +24,7 @@ const {
  * Utente non loggato
  */
 router.put('/', asyncMiddleware(async (req, res) => {
-  const body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'accesses'])
+  const body = _.pick(req.body.user, ['firstname', 'lastname', 'email', 'password', 'accesses'])
   let user = new User(body)
 
   if (validator.isEmpty(body.firstname) || !validator.isAlpha(body.firstname)) {

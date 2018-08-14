@@ -16,7 +16,7 @@ var GradeSchema = new mongoose.Schema({
   }
 })
 
-GradeSchema.statics.getGrade = function () {
+GradeSchema.statics.getGrades = function () {
   var Grade = this
 
   return Grade.find()

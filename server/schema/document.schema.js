@@ -1,6 +1,6 @@
 const joi = require('joi')
 
-const schema = joi.object().keys({
+const create = joi.object().keys({
   name:
   joi.string().error(new Error('Il titolo del documento deve essere una stringa.'))
     .min(1).error(new Error('Il titolo del documento deve essere specificato.'))
@@ -11,11 +11,11 @@ const schema = joi.object().keys({
     .trim()
     .lowercase()
     .required().error(new Error('Il tipo di documento deve essere specificato.')),
-  author:
-  joi.string().error(new Error('L\'autore del documento deve essere una stringa.'))
-    .min(1).error(new Error('L\'autore del documento deve essere specificato.'))
-    .trim()
-    .required().error(new Error('L\'autore del documento deve essere specificato.')),
+  // author:
+  // joi.string().error(new Error('L\'autore del documento deve essere una stringa.'))
+  //   .min(1).error(new Error('L\'autore del documento deve essere specificato.'))
+  //   .trim()
+  //   .required().error(new Error('L\'autore del documento deve essere specificato.')),
   faculty:
   joi.string().error(new Error('Il campo Specializzazione deve essere una stringa.'))
     .min(1).error(new Error('Il campo Specializzazione deve essere specificato.'))
@@ -53,32 +53,10 @@ const schema = joi.object().keys({
     .required().error(new Error('Il campo Descrizione deve essere specificato.'))
 })
 
-let data = {
-  name: 'Relazione',
-  type: 'appunti',
-  author: '5d67f5sd7f587',
-  faculty: 'informatica_telecomunicazioni',
-  subject: 'informatica',
-  grade: '5',
-  section: 'G',
-  visibility: 'pubblico',
-  description: 'Una bella relazione.'
-}
-
-joi.validate(data, schema, (err, value) => {
-  if (err) {
-    console.log(err.message)
-  } else {
-    console.log(value)
-  }
-})
-
 module.exports = {
   create (data) {
-    return joi.validate(data, schema, (err, value) => {
-      if (err) {
-        console.log(err)
-      }
-    })
+    const { error } = joi.validate(data, create)
+    if (error) throw error
+    return false
   }
 }
