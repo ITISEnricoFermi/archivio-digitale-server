@@ -220,7 +220,9 @@ router.post('/search/', authenticate, asyncMiddleware(async (req, res) => {
   }
 }))
 
-router.get('/recent/', authenticate, asyncMiddleware(async (req, res) => {
+router.get('/recent/:page/:number', authenticate, asyncMiddleware(async (req, res) => {
+  const { page, number } = req.params
+
   if (req.user.privileges === 'user') {
     var query = {
       $or: [{
@@ -240,7 +242,8 @@ router.get('/recent/', authenticate, asyncMiddleware(async (req, res) => {
   }
 
   let documents = await Document.find(query || {})
-    .limit(3)
+    .skip(Number(page) > 0 ? ((Number(page) - 1) * Number(number)) : 0)
+    .limit(Number(number))
     .sort({
       _id: -1
     })
@@ -255,7 +258,7 @@ router.get('/recent/', authenticate, asyncMiddleware(async (req, res) => {
 
     res.status(200).send(documents)
   } else {
-    res.status(200).json({
+    res.status(404).json({
       messages: ['Nessun documento presente.']
     })
   }
