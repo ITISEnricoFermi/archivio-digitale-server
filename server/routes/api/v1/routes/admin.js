@@ -10,27 +10,27 @@ const sharp = require('sharp')
 const {
   authenticate,
   authenticateAdmin
-} = require('./../middleware/authenticate')
+} = require('../../../../middleware/authenticate')
 
 const {
   adminCheckOldUser,
   adminCheckNewUser,
   checkErrors
-} = require('../middleware/check')
+} = require('../../../../middleware/check')
 
 const {
   asyncMiddleware
-} = require('../middleware/async')
+} = require('../../../../middleware/async')
 
 // Models
 const {
   User
-} = require('./../models/user')
+} = require('../../../../models/user')
 
 // Schemas
 const {
   create
-} = require('../schema/user.schema')
+} = require('../../../../schema/user.schema')
 
 /*
  * Utente loggato

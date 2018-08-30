@@ -6,25 +6,25 @@ const _ = require('lodash')
 const {
   authenticate,
   authenticateAdmin
-} = require('./../middleware/authenticate')
+} = require('../../../../middleware/authenticate')
 
 const {
   asyncMiddleware
-} = require('../middleware/async')
+} = require('../../../../middleware/async')
 
 const {
   editCollection
-} = require('../middleware/edit')
+} = require('../../../../middleware/edit')
 
 const {
   checkCollection,
   checkErrors
-} = require('../middleware/check')
+} = require('../../../../middleware/check')
 
 // Models
 const {
   DocumentCollection
-} = require('./../models/document_collection')
+} = require('../../../../models/document_collection')
 
 router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
   let collection = await DocumentCollection.findById(req.params.id)

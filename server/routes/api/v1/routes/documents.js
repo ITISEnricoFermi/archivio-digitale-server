@@ -13,50 +13,50 @@ const {
 // Schema
 const {
   create
-} = require('../schema/document.schema')
+} = require('../../../../schema/document.schema')
 
 // Middleware
 const {
   authenticate
-} = require('./../middleware/authenticate')
+} = require('../../../../middleware/authenticate')
 
 const {
   asyncMiddleware
-} = require('../middleware/async')
+} = require('../../../../middleware/async')
 
 const {
   editDocument
-} = require('../middleware/edit')
+} = require('../../../../middleware/edit')
 
 const {
   checkDocument,
   checkErrors
-} = require('../middleware/check')
+} = require('../../../../middleware/check')
 
 // Models
 const {
   Document
-} = require('./../models/document')
+} = require('../../../../models/document')
 
 const {
   DocumentCollection
-} = require('./../models/document_collection')
+} = require('../../../../models/document_collection')
 
-const {
-  DocumentType
-} = require('../models/document_type')
-
-const {
-  Faculty
-} = require('../models/faculty')
-
-const {
-  Subject
-} = require('../models/subject')
-
-const {
-  DocumentVisibility
-} = require('../models/document_visibility')
+// const {
+//   DocumentType
+// } = require('../../../../models/document_type')
+//
+// const {
+//   Faculty
+// } = require('../../../../models/faculty')
+//
+// const {
+//   Subject
+// } = require('../../../../models/subject')
+//
+// const {
+//   DocumentVisibility
+// } = require('../../../../models/document_visibility')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

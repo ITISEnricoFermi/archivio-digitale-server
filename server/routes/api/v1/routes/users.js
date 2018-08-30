@@ -43,25 +43,25 @@ const upload = multer({
 // Middleware
 const {
   authenticate
-} = require('./../middleware/authenticate')
+} = require('../../../../middleware/authenticate')
 
 const {
   asyncMiddleware
-} = require('../middleware/async')
+} = require('../../../../middleware/async')
 
 const {
   checkOldUser,
   checkErrors
-} = require('../middleware/check')
+} = require('../../../../middleware/check')
 
 // Models
 const {
   User
-} = require('./../models/user')
+} = require('../../../../models/user')
 
 const {
   Document
-} = require('./../models/document')
+} = require('../../../../models/document')
 
 /*
  * Utente loggato

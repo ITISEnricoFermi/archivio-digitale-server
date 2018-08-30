@@ -1,0 +1,31 @@
+const express = require('express')
+const router = express.Router()
+
+// Routes
+const admin = require('./routes/admin')
+const documents = require('./routes/documents')
+const collections = require('./routes/collections')
+const users = require('./routes/users')
+const sections = require('./routes/sections')
+const faculties = require('./routes/faculties')
+const subjects = require('./routes/subjects')
+const grades = require('./routes/grades')
+const privileges = require('./routes/privileges')
+const documentVisibility = require('./routes/document_visibility')
+const documentTypes = require('./routes/document_types')
+const collectionPermissions = require('./routes/collection_permissions')
+
+router.use('/admin', admin)
+router.use('/documents', documents)
+router.use('/collections', collections)
+router.use('/users', users)
+router.use('/sections', sections)
+router.use('/faculties', faculties)
+router.use('/subjects', subjects)
+router.use('/grades', grades)
+router.use('/privileges', privileges)
+router.use('/document_visibility', documentVisibility)
+router.use('/document_types', documentTypes)
+router.use('/collection_permissions', collectionPermissions)
+
+module.exports = router
