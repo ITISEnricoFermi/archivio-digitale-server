@@ -1,109 +1,104 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
-const _ = require('lodash')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const _ = require('lodash')
+const validator = require('validator')
+
+const {
+  Privilege
+} = require('../models/privilege')
+
+const {
+  Subject
+} = require('../models/subject')
 
 var UserSchema = new mongoose.Schema({
   firstname: { // OK
     type: String,
     required: true,
-    minlength: 1,
-    unique: false,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un nome valido.'
-    }
+    minlength: 1
+    // validate: new RegExp("[a-z]àáâäãåąçčćęèéêëėįìíîïłńñòóôöõøùúûüųūÿýżźñçčšžßŒÆ∂ð,\. '-", 'gi')
   },
   lastname: { // OK
     type: String,
     required: true,
-    minlength: 1,
-    unique: false,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un cognome valido.'
-    }
+    minlength: 1
+    // validate: new RegExp("[a-z]àáâäãåąçčćęèéêëėįìíîïłńñòóôöõøùúûüųūÿýżźñçčšžßŒÆ∂ð,\. '-", 'gi')
   },
-  email: { // CONTROLLARE
+  email: { // OK
     type: String,
     required: true,
+    unique: true,
     trim: true,
     minlength: 1,
-    unique: true,
     validate: {
       validator: validator.isEmail,
       message: '{VALUE} non è un indirizzo email valido.'
     }
   },
-  password: { // CONTROLLARE
+  password: {
     type: String,
     required: true,
+    trim: true,
     minlength: 6
   },
-  // img: { // OK
-  //   type: String,
-  //   required: true,
-  //   trim: true,
-  //   minlength: 1,
-  //   default: '../static/elements/profile.svg'
-  // },
-  // accesses: [{
-  //   _id: {
-  //     type: String,
-  //     required: false,
-  //     trim: true,
-  //     minlength: 1,
-  //     validate: {
-  //       validator: validator.isAlpha,
-  //       message: "{VALUE} non è un accesso valido."
-  //     },
-  //     ref: "Subject"
-  //   }
-  // }],
-  accesses: [{ // OK
-    type: String,
-    required: false,
-    trim: true,
-    minlength: 1,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un accesso valido.'
-    },
-    ref: 'Subject'
-  }],
-  privileges: { // CONTROLLARE
-    type: String,
-    required: false,
-    trim: true,
-    minlength: 1,
-    unique: false,
-    default: 'user',
-    // validate: {
-    //   validator: validator.isAlpha,
-    //   message: "{VALUE} non è un privilegio valido."
-    // },
-    ref: 'Privilege'
+  accesses: {
+    type: [{
+      type: String,
+      trim: true,
+      unique: true,
+      ref: 'Subject',
+      validate: [async (value) => {
+        let subject = await Subject.findById(value)
+        if (!subject) return false
+      }, '\'{VALUE}\' non è un permesso valido.']
+    }],
+    required: true,
+    minlength: 1
   },
-  state: { // OK
+  privileges: {
+    type: String,
+    trim: true,
+    minlength: 1,
+    default: 'user',
+    ref: 'Privilege',
+    validate: [async (value) => {
+      let privilege = await Privilege.findById(value)
+      if (!privilege) {
+        return false
+      }
+    }, 'Il privilegio inserito non è valido.']
+  },
+  state: {
     type: String,
     reuired: true,
     trim: true,
     minlength: 1,
-    unique: false,
-    default: 'pending',
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un stato valido.'
-    }
+    default: 'pending'
   }
 })
 
 UserSchema.methods.toJSON = function () {
-  var user = this
-  var userObject = user.toObject()
+  const user = this
+  const {
+    _id,
+    firstname,
+    lastname,
+    email,
+    state,
+    privileges,
+    accesses
+  } = user.toObject()
 
-  return _.pick(userObject, ['_id', 'firstname', 'lastname', 'email', 'state', 'privileges', 'accesses'])
+  return {
+    _id,
+    firstname,
+    lastname,
+    email,
+    state,
+    privileges,
+    accesses
+  }
 }
 
 UserSchema.methods.generateAuthToken = async function () {
@@ -171,31 +166,6 @@ UserSchema.statics.findByCredentials = async function (email, password) {
   } catch (e) {
     return Promise.reject(e)
   }
-
-  // return User.findOne({
-  //   email
-  // })
-  //   .then((user) => {
-  //     if (!user) {
-  //       return Promise.reject(new Error('Nessun utente registrato con l\'email inserita.'))
-  //     }
-  //
-  //     if (user.state !== 'active') {
-  //       return Promise.reject(new Error('Il tuo account è stato disabilitato.'))
-  //     }
-  //
-  //     return bcrypt.compare(password, user.password)
-  //       .then((result) => {
-  //         if (result) {
-  //           return Promise.resolve(user)
-  //         } else {
-  //           return Promise.reject(new Error('Password errata'))
-  //         }
-  //       })
-  //       .catch((e) => {
-  //         return Promise.reject(e)
-  //       })
-  //   })
 }
 
 UserSchema.statics.getUsers = function () {
@@ -218,6 +188,12 @@ UserSchema.statics.getUsers = function () {
 
 UserSchema.pre('save', function (next) {
   var user = this
+
+  // nome
+  user.firstname = _.startCase(_.lowerCase(user.firstname))
+
+  // cognome
+  user.lastname = _.startCase(_.lowerCase(user.lastname))
 
   if (!user.isModified('password')) {
     return next()

@@ -3,44 +3,37 @@ const router = express.Router()
 const _ = require('lodash')
 const bcrypt = require('bcryptjs')
 const path = require('path')
-const fs = require('fs')
 const sharp = require('sharp')
+const mkdirp = require('mkdirp')
 
 // Middleware
 const {
   authenticate,
   authenticateAdmin
-} = require('./../middleware/authenticate')
-
-const {
-  adminCheckOldUser,
-  adminCheckNewUser,
-  checkErrors
-} = require('../middleware/check')
+} = require('../../../../middleware/authenticate')
 
 const {
   asyncMiddleware
-} = require('../middleware/async')
+} = require('../../../../middleware/async')
 
 // Models
 const {
   User
-} = require('./../models/user')
+} = require('../../../../models/user')
 
 /*
  * Utente loggato
  * Utente admin
  */
-router.put('/users/', authenticate, authenticateAdmin, adminCheckNewUser, checkErrors, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body.user, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
-  let user = new User(body)
+router.put('/users/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  let body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
 
   // Formattazione
   body.firstname = _.startCase(_.lowerCase(body.firstname))
   body.lastname = _.startCase(_.lowerCase(body.lastname))
-  user.state = 'active'
+  body.state = 'active'
 
-  user = await user.save()
+  const user = await (new User(body)).save()
 
   const sizes = [{
     path: 'xlg',
@@ -59,31 +52,35 @@ router.put('/users/', authenticate, authenticateAdmin, adminCheckNewUser, checkE
     xy: 100
   }]
 
-  let dir = path.join(__dirname, '..', 'public', 'pics', String(user._id))
-
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
+  const dir = {
+    folder: path.join(__dirname, '..', '..', '..', '..', 'public', 'pics', String(user._id)),
+    default: path.join(__dirname, '..', '..', '..', '..', 'public', 'images', 'profile.svg')
   }
+
+  mkdirp(dir.folder)
 
   for (let i = 0; i < sizes.length; i++) {
-    await sharp(path.join(__dirname, '..', 'public', 'images', 'profile.svg')).resize(sizes[i].xy, sizes[i].xy).toFormat('jpeg').toFile(path.join(__dirname, '..', 'public', 'pics', String(user._id), sizes[i].path + '.jpeg'))
+    await sharp(dir.default)
+      .resize(sizes[i].xy, sizes[i].xy)
+      .toFormat('jpeg')
+      .toFile(path.join(dir.folder, sizes[i].path + '.jpeg'))
   }
 
-  res.status(200).send(user)
+  res.status(200).json(user)
 }))
 
 /*
  * Utente loggato
  * Utente admin
  */
-router.patch('/users/:id', authenticate, authenticateAdmin, adminCheckOldUser, checkErrors, asyncMiddleware(async (req, res) => {
+router.patch('/users/:id', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
   let body = _.pick(req.body.user, ['firstname', 'lastname', 'state', 'email', 'privileges', 'accesses'])
 
   let user = await User.findByIdAndUpdate(req.params.id, {
     $set: body
   })
 
-  res.status(200).send(user)
+  res.status(200).json(user)
 }))
 
 /*
@@ -91,7 +88,7 @@ router.patch('/users/:id', authenticate, authenticateAdmin, adminCheckOldUser, c
  * Utente admin
  */
 router.get('/users/:id', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  res.status(200).send(await User.findById(req.params.id))
+  res.status(200).json(await User.findById(req.params.id))
 }))
 
 /*

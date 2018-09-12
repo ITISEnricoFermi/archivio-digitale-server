@@ -36,7 +36,7 @@ router.get('/documents/*', asyncMiddleware(async (req, res, next) => {
 }))
 
 router.post('/search/documents/', asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body, ['fulltext', 'type', 'faculty', 'subject', 'class', 'section'])
+  let body = _.pick(req.body, ['fulltext', 'type', 'faculty', 'subject', 'grade', 'section'])
   let empty = _.every(body, (el) => {
     return !el
   })

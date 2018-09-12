@@ -6,22 +6,22 @@ var SectionSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minlength: 1,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un ID valido.'
-    }
+    minlength: 1
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: '{VALUE} non è un ID valido.'
+    // }
   },
   section: {
     type: String,
     required: true,
     unique: false,
     minlength: 1,
-    trim: true,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è una sezione valida.'
-    }
+    trim: true
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: '{VALUE} non è una sezione valida.'
+    // }
   }
 })
 

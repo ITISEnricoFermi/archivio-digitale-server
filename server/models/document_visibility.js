@@ -6,11 +6,11 @@ var DocumentVisibilitySchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 1,
-    trim: true,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un ID valido.'
-    }
+    trim: true
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: '{VALUE} non è un ID valido.'
+    // }
   },
   visibility: {
     type: String,

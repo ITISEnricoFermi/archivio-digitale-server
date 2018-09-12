@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const _ = require('lodash')
 const validator = require('validator')
 
 // Middleware
@@ -18,20 +17,20 @@ const {
  * Utente non loggato
  */
 router.post('/', asyncMiddleware(async (req, res) => {
-  var body = _.pick(req.body, ['email', 'password'])
+  let { email, password } = req.body
 
   // Validazione
-  if (validator.isEmpty(body.email) || !validator.isEmail(body.email)) {
+  if (validator.isEmpty(email) || !validator.isEmail(email)) {
     return res.status(400).json({
       messages: ['Email non valida.']
     })
-  } else if (validator.isEmpty(body.password) || body.password.length < 6) {
+  } else if (validator.isEmpty(password) || password.length < 6) {
     return res.status(400).json({
       messages: ['Password non valida o troppo breve. (min. 6).']
     })
   }
 
-  let user = await User.findByCredentials(body.email, body.password)
+  let user = await User.findByCredentials(email, password)
   let token = await user.generateAuthToken()
   res.cookie('token', token)
     .header('x-auth', token)

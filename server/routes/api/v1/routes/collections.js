@@ -4,27 +4,21 @@ const _ = require('lodash')
 
 // Middleware
 const {
-  authenticate,
-  authenticateAdmin
-} = require('./../middleware/authenticate')
+  authenticate
+} = require('../../../../middleware/authenticate')
 
 const {
   asyncMiddleware
-} = require('../middleware/async')
+} = require('../../../../middleware/async')
 
 const {
   editCollection
-} = require('../middleware/edit')
-
-const {
-  checkCollection,
-  checkErrors
-} = require('../middleware/check')
+} = require('../../../../middleware/edit')
 
 // Models
 const {
   DocumentCollection
-} = require('./../models/document_collection')
+} = require('../../../../models/document_collection')
 
 router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
   let collection = await DocumentCollection.findById(req.params.id)
@@ -34,7 +28,7 @@ router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
 /*
  * Utente loggato
  */
-router.put('/', authenticate, checkCollection, checkErrors, asyncMiddleware(async (req, res) => {
+router.put('/', authenticate, asyncMiddleware(async (req, res) => {
   let body = _.pick(req.body.collection, ['documentCollection', 'permissions', 'authorizations'])
 
   // Formattazione
@@ -44,6 +38,20 @@ router.put('/', authenticate, checkCollection, checkErrors, asyncMiddleware(asyn
     body.authorizations = []
   }
 
+  // TODO: Permessi collezioni in base alla scelta
+  // if ((collection.permissions === 'utenti') && (collection.authorizations !== null || collection.authorizations.length > 0)) {
+  //   let authorizations = await User.count({
+  //     _id: {
+  //       $in: collection.authorizations.map(authorization => authorization._id)
+  //     }
+  //   })
+  //
+  //   if (authorizations !== collection.authorizations.length) {
+  //     req.messages.push('Una delle autorizzazioni non è valida.')
+  //   }
+  // }
+  //
+
   let collection = new DocumentCollection(body)
   await collection.save()
   res.status(201).send({
@@ -51,7 +59,7 @@ router.put('/', authenticate, checkCollection, checkErrors, asyncMiddleware(asyn
   })
 }))
 
-router.patch('/:id', authenticate, editCollection, checkCollection, checkErrors, asyncMiddleware(async (req, res) => {
+router.patch('/:id', authenticate, editCollection, asyncMiddleware(async (req, res) => {
   let body = _.pick(req.body.collection, ['documentCollection', 'permissions', 'authorizations', 'documents'])
 
   if (body.permissions !== 'utenti') {

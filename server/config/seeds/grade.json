@@ -1,16 +1,16 @@
 [{
   "_id": 1,
-  "class": 1
+  "grade": 1
 }, {
   "_id": 2,
-  "class": 2
+  "grade": 2
 }, {
   "_id": 3,
-  "class": 3
+  "grade": 3
 }, {
   "_id": 4,
-  "class": 4
+  "grade": 4
 }, {
   "_id": 5,
-  "class": 5
+  "grade": 5
 }]

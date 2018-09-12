@@ -6,22 +6,22 @@ var PrivilegeSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 1,
-    trim: true,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un ID valido.'
-    }
+    trim: true
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: '{VALUE} non è un ID valido.'
+    // }
   },
   privilege: {
     type: String,
     required: true,
     unique: false,
     minlength: 1,
-    trim: true,
-    validate: {
-      validator: validator.isAlpha,
-      message: '{VALUE} non è un privilegio valido.'
-    }
+    trim: true
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: '{VALUE} non è un privilegio valido.'
+    // }
   }
 })
 

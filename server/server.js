@@ -1,4 +1,5 @@
-require('./db/config/config.js')
+require('./config/env/env.js')
+require('./config/mongoose')
 
 const path = require('path')
 const http = require('http')
@@ -10,49 +11,44 @@ const helmet = require('helmet')
 const history = require('connect-history-api-fallback')
 const compression = require('compression')
 const morgan = require('morgan')
+const cors = require('cors')
 
-const {
-  mongoose
-} = require('./db/mongoose')
-
-// Models
-const {
-  User
-} = require('./models/user')
-
-// Middleware
-const {
-  authenticate
-} = require('./middleware/authenticate')
-
-const {
-  asyncMiddleware
-} = require('./middleware/async')
+// VARS
+const port = process.env.PORT || 3000
+const env = process.env.NODE_ENV || 'development'
 
 // Routes
-const admin = require('./routes/admin')
-const documents = require('./routes/documents')
-const collections = require('./routes/collections')
-const api = require('./routes/api')
 const signup = require('./routes/signup')
 const login = require('./routes/login')
-const users = require('./routes/users')
+const api = require('./routes/api/api')
+const logout = require('./routes/logout')
 const publicRoute = require('./routes/public')
 
+// INIT
 const app = express()
 const server = http.createServer(app)
-
 const io = socketIO(server)
 
-const port = process.env.PORT || 3000
+if (env === 'development') {
+  app.use(morgan('dev'))
+} else {
+  app.use(history())
+}
 
-app.use(history())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(helmet())
-app.use(morgan('dev'))
 app.use(compression())
+app.use(cors({
+  origin: 'http://localhost:8080',
+  credentials: true,
+  method: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}))
+
+app.options('*', cors())
 
 app.use((req, res, next) => {
   req.messages = []
@@ -60,14 +56,11 @@ app.use((req, res, next) => {
 })
 
 // Routes
-app.use('/admin', admin)
-app.use('/documents', documents)
-app.use('/collections', collections)
-app.use('/api', api)
 app.use('/signup', signup)
 app.use('/login', login)
-app.use('/users', users)
+app.use('/logout', logout)
 app.use('/public', publicRoute)
+app.use('/api', api)
 
 // Public directory
 app.use(express.static(path.join(__dirname, '/public')))
@@ -109,20 +102,22 @@ io.on('connection', (socket) => {
   })
 })
 
-/*
- * Utente loggato
- */
-app.get('/logout', authenticate, asyncMiddleware(async (req, res) => {
-  res.clearCookie('token').redirect('/')
-}))
-
 app.use((err, req, res, next) => {
+  let message
+  switch (err.name) {
+    case 'ValidationError':
+
+      for (let field in err.errors) {
+        message = err.errors[field].message
+      }
+      break
+    default:
+      message = err.message
+  }
   res.status(500).send({
-    messages: [err.message]
+    messages: [message]
   })
   next(err)
 })
 
-server.listen(port, () => {
-  console.log(`Server started on port ${port}.`)
-})
+server.listen(port, () => console.log(`Server started on port ${port}.`))

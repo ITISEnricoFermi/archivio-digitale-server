@@ -3,7 +3,6 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const _ = require('lodash')
 const multer = require('multer')
-const validator = require('validator')
 const path = require('path')
 const fs = require('fs')
 
@@ -13,47 +12,41 @@ const {
 
 // Middleware
 const {
-  authenticate,
-  authenticateAdmin
-} = require('./../middleware/authenticate')
+  authenticate
+} = require('../../../../middleware/authenticate')
 
 const {
   asyncMiddleware
-} = require('../middleware/async')
+} = require('../../../../middleware/async')
 
 const {
   editDocument
-} = require('../middleware/edit')
-
-const {
-  checkDocument,
-  checkErrors
-} = require('../middleware/check')
+} = require('../../../../middleware/edit')
 
 // Models
 const {
   Document
-} = require('./../models/document')
+} = require('../../../../models/document')
 
 const {
   DocumentCollection
-} = require('./../models/document_collection')
+} = require('../../../../models/document_collection')
 
-const {
-  DocumentType
-} = require('../models/document_type')
-
-const {
-  Faculty
-} = require('../models/faculty')
-
-const {
-  Subject
-} = require('../models/subject')
-
-const {
-  DocumentVisibility
-} = require('../models/document_visibility')
+// const {
+//   DocumentType
+// } = require('../../../../models/document_type')
+//
+// const {
+//   Faculty
+// } = require('../../../../models/faculty')
+//
+// const {
+//   Subject
+// } = require('../../../../models/subject')
+//
+// const {
+//   DocumentVisibility
+// } = require('../../../../models/document_visibility')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -65,54 +58,7 @@ const storage = multer.diskStorage({
 })
 
 const fileFilter = asyncMiddleware(async (req, file, cb) => {
-  let document = _.pick(JSON.parse(req.body.document), ['name', 'type', 'faculty', 'subject', 'visibility', 'description'])
-  let pass = null
-
-  if (document.name == null || document.name.length < 1) {
-    return cb(new Error('Il campo del nome è vuoto.'), false)
-  }
-
-  if (document.description == null || document.description < 1) {
-    cb(new Error('Il campo della descrizione è vuoto.'), false)
-  }
-
-  if (document.type == null || document.type.length < 1) {
-    return cb(new Error('Il campo del tipo è vuoto.'), false)
-  } else {
-    pass = await DocumentType.findById(document.type)
-    if (!pass) {
-      cb(new Error('Il tipo non è valido.'), false)
-    }
-  }
-
-  if (document.faculty == null || document.faculty.length < 1) {
-    cb(new Error('Il campo della specializzazione è vuoto.'), false)
-  } else {
-    pass = await Faculty.findById(document.faculty)
-    if (!pass) {
-      cb(new Error('La specializzazione non è valida.'), false)
-    }
-  }
-
-  if (document.subject == null || document.subject.length < 1) {
-    cb(new Error('Il campo della materia è vuoto.'), false)
-  } else {
-    pass = await Subject.findById(document.subject)
-    if (!pass) {
-      cb(new Error('La materia non è valida.'), false)
-    }
-  }
-
-  if (document.visibility == null || document.visibility.length < 1) {
-    cb(new Error('Il campo della visibilità è vuoto.'), false)
-  } else {
-    pass = await DocumentVisibility.findById(document.visibility)
-    if (!pass) {
-      cb(new Error('La visibilità non è valida.'), false)
-    }
-  }
-
-  req.body.document = document
+  req.body.document = _.pick(JSON.parse(req.body.document), ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
 
   const mimeypes = ['audio/aac', 'video/x-msvideo', 'text/csv', 'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -156,9 +102,8 @@ router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
  * Utente loggato
  */
 router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'class', 'section', 'visibility', 'description'])
+  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
 
-  console.log(req.file)
   // Validazione
   if (!req.file) {
     return res.status(500).json({
@@ -169,7 +114,7 @@ router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
   // Formattazione
   body.name = _.upperFirst(body.name)
   body.description = _.upperFirst(body.description)
-  body.author = req.user._id
+  body.author = String(req.user._id)
   body.directory = req.file.filename
   body.mimetype = req.file.mimetype
 
@@ -185,8 +130,18 @@ router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
  * Utente loggato
  * Utente proprietario o admin
  */
-router.patch('/:id', authenticate, editDocument, checkDocument, checkErrors, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'class', 'section', 'visibility', 'description'])
+router.patch('/:id', authenticate, editDocument, asyncMiddleware(async (req, res) => {
+  //
+  // // NEW
+  // let { name, type, faculty, subject, grade, section, visibility, description } = req.body.document
+  //
+  // // Formattazione
+  // name = _.upperFirst(name)
+  // description = _.upperFirst(description)
+
+  // OLD
+
+  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
 
   // Formattazione
   body.name = _.upperFirst(body.name)
@@ -230,8 +185,8 @@ router.delete('/:id', authenticate, editDocument, asyncMiddleware(async (req, re
 }))
 
 router.post('/search/', authenticate, asyncMiddleware(async (req, res) => {
-  var body = _.pick(req.body, ['fulltext', 'type', 'faculty', 'subject', 'class', 'section', 'visibility'])
-  var empty = _.every(body, (el) => {
+  var body = _.pick(req.body, ['fulltext', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility'])
+  let empty = _.every(body, (el) => {
     return !el
   })
 
@@ -252,7 +207,9 @@ router.post('/search/', authenticate, asyncMiddleware(async (req, res) => {
   }
 }))
 
-router.get('/recent/', authenticate, asyncMiddleware(async (req, res) => {
+router.get('/recent/:page/:number', authenticate, asyncMiddleware(async (req, res) => {
+  const { page, number } = req.params
+
   if (req.user.privileges === 'user') {
     var query = {
       $or: [{
@@ -272,7 +229,8 @@ router.get('/recent/', authenticate, asyncMiddleware(async (req, res) => {
   }
 
   let documents = await Document.find(query || {})
-    .limit(3)
+    .skip(Number(page) > 0 ? ((Number(page) - 1) * Number(number)) : 0)
+    .limit(Number(number))
     .sort({
       _id: -1
     })
@@ -287,7 +245,7 @@ router.get('/recent/', authenticate, asyncMiddleware(async (req, res) => {
 
     res.status(200).send(documents)
   } else {
-    res.status(200).json({
+    res.status(404).json({
       messages: ['Nessun documento presente.']
     })
   }
