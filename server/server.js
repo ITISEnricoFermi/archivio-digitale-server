@@ -1,4 +1,4 @@
-require('./config/env/env.js')
+require('./config/env/env')
 require('./config/mongoose')
 
 const path = require('path')
@@ -16,6 +16,9 @@ const cors = require('cors')
 // VARS
 const port = process.env.PORT || 3000
 const env = process.env.NODE_ENV || 'development'
+
+// Middleware
+const error = require('./middleware/error')
 
 // Routes
 const signup = require('./routes/signup')
@@ -103,22 +106,6 @@ io.on('connection', (socket) => {
   })
 })
 
-app.use((err, req, res, next) => {
-  let message
-  switch (err.name) {
-    case 'ValidationError':
-
-      for (let field in err.errors) {
-        message = err.errors[field].message
-      }
-      break
-    default:
-      message = err.message
-  }
-  res.status(500).send({
-    messages: [message]
-  })
-  next(err)
-})
+app.use(error())
 
 server.listen(port, () => console.log(`Server started on port ${port}.`))
