@@ -1,26 +1,29 @@
-const _ = require('lodash')
-const jwt = require('jsonwebtoken')
+const passport = require('passport')
 
+// Config
 const {
-  User
-} = require('./../models/user')
+  bearer
+} = require('../config/passport')
 
-// Verifica che sia stato eseguito l'accesso con un account valido
-const authenticate = async (req, res, next) => {
-  try {
-    let token = req.header('x-auth') || req.cookies.token
-    let decoded = jwt.verify(token, process.env.JWT_SECRET)
-    let user = await User.findById(decoded._id)
+passport.use('bearer', bearer)
 
-    req.user = _.pick(user, ['_id', 'firstname', 'lastname', 'email', 'privileges', 'accesses'])
-    req.token = token
-    return next()
-  } catch (e) {
-    return res.status(401).json({
-      messages: ['Non è stato eseguito l\'accesso con un account valido.']
+const authenticate = (req, res, next) => passport.authenticate('bearer', {
+  session: false,
+  failureFlash: true
+}, (err, user, info) => {
+  if (err) {
+    return res.status(500).json({
+      message: 'Si è verificato un errore durante la verifica dell\'utente.'
     })
+  } else if (!user) {
+    return res.status(401).json({
+      message: info
+    })
+  } else {
+    req.user = user
+    return next()
   }
-}
+})(req, res, next)
 
 const authenticateAdmin = (req, res, next) => {
   if (req.user.privileges._id !== 'admin') {

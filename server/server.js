@@ -12,6 +12,7 @@ const helmet = require('helmet')
 const compression = require('compression')
 const morgan = require('morgan')
 const cors = require('cors')
+const passport = require('passport')
 
 // VARS
 const port = process.env.PORT || 3000
@@ -44,6 +45,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(helmet())
 app.use(compression())
+app.use(passport.initialize())
 app.use(cors({
   origin: 'http://localhost:8080',
   credentials: true,
@@ -58,6 +60,11 @@ app.use((req, res, next) => {
   req.messages = []
   next()
 })
+
+// const {
+//   asyncMiddleware
+// } = require('./middleware/async')
+// app.use(asyncMiddleware)
 
 // Routes
 app.use('/signup', signup)
@@ -103,6 +110,18 @@ io.on('connection', (socket) => {
   socket.on('userDeleted', (user) => {
     // io.emit('userDeleted', user)
     socket.broadcast.emit('userDeleted')
+  })
+})
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    title: 'Archivio Digitale - ITIS Enrico Fermi',
+    author: [{
+      name: 'Riccardo Sangiorgio',
+      email: 'richard.sangiorgio@gmail.com',
+      url: 'https://riccardosangiorgio.com'
+    }],
+    legal: 'This project is licensed under the MIT License.'
   })
 })
 

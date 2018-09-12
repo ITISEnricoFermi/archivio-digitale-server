@@ -1,40 +1,33 @@
 const express = require('express')
+const passport = require('passport')
 const router = express.Router()
-const validator = require('validator')
+
+// Config
+const {
+  login
+} = require('../config/passport')
 
 // Middleware
-
 const {
   asyncMiddleware
 } = require('../middleware/async')
 
-// Models
-const {
-  User
-} = require('./../models/user')
+passport.use('login', login)
 
 /*
  * Utente non loggato
  */
-router.post('/', asyncMiddleware(async (req, res) => {
-  let { email, password } = req.body
-
-  // Validazione
-  if (validator.isEmpty(email) || !validator.isEmail(email)) {
-    return res.status(400).json({
-      messages: ['Email non valida.']
-    })
-  } else if (validator.isEmpty(password) || password.length < 6) {
-    return res.status(400).json({
-      messages: ['Password non valida o troppo breve. (min. 6).']
-    })
+router.post('/', passport.authenticate('login', { session: false }), asyncMiddleware(async (req, res) => {
+  const {user} = req
+  let token
+  try {
+    token = await user.generateAuthToken()
+  } catch (e) {
+    throw new Error('Si è verificato un errore durante la generazione del token.')
   }
-
-  let user = await User.findByCredentials(email, password)
-  let token = await user.generateAuthToken()
-  res.cookie('token', token)
-    .header('x-auth', token)
-    .send(token)
+  res.status(200).json({
+    token
+  })
 }))
 
 module.exports = router

@@ -5,8 +5,12 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
-    "populate": "node server/db/seed.js",
+    "populate": "node server/config/seed.js",
     "client": "./client.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Richard1984/archivio-fermi-server.git"
   },
   "author": {
     "name": "Riccardo Sangiorgio",
@@ -14,6 +18,10 @@
     "url": "https://riccardosangiorgio.com"
   },
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Richard1984/archivio-fermi-server/issues"
+  },
+  "homepage": "https://github.com/Richard1984/archivio-fermi-server#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
@@ -30,6 +38,9 @@
     "mongoose": "^5.2.14",
     "morgan": "^1.9.1",
     "multer": "^1.3.1",
+    "passport": "^0.4.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "^1.0.0",
     "sharp": "^0.20.8",
     "socket.io": "^2.1.1",
     "validator": "^9.4.1"

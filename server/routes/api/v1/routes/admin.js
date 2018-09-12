@@ -28,9 +28,6 @@ const {
 router.put('/users/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
   let body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
 
-  // Formattazione
-  body.firstname = _.startCase(_.lowerCase(body.firstname))
-  body.lastname = _.startCase(_.lowerCase(body.lastname))
   body.state = 'active'
 
   const user = await (new User(body)).save()

@@ -10,6 +10,8 @@ const {
   asyncMiddleware
 } = require('../middleware/async')
 
+// router.use(asyncMiddleware)
+
 // Models
 const {
   User
@@ -20,7 +22,12 @@ const {
  */
 router.put('/', asyncMiddleware(async (req, res) => {
   const body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'accesses'])
-  let user = await (new User(body)).save()
+  let user
+  try {
+    user = await (new User(body)).save()
+  } catch (e) {
+    throw e
+  }
 
   const sizes = [{
     path: 'xlg',
@@ -44,7 +51,11 @@ router.put('/', asyncMiddleware(async (req, res) => {
   mkdirp(dir)
 
   for (let i = 0; i < sizes.length; i++) {
-    await sharp(path.join(__dirname, '..', 'public', 'images', 'profile.svg')).resize(sizes[i].xy, sizes[i].xy).toFormat('jpeg').toFile(path.join(__dirname, '..', 'public', 'pics', String(user._id), sizes[i].path + '.jpeg'))
+    try {
+      await sharp(path.join(__dirname, '..', 'public', 'images', 'profile.svg')).resize(sizes[i].xy, sizes[i].xy).toFormat('jpeg').toFile(path.join(__dirname, '..', 'public', 'pics', String(user._id), sizes[i].path + '.jpeg'))
+    } catch (e) {
+      throw new Error('Si è verificato un errore durante la creazione dell\'utente.')
+    }
   }
 
   res.status(200).json(user)
