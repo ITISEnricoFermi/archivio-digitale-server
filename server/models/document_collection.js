@@ -1,44 +1,70 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
+const _ = require('lodash')
 
-var DocumentCollectionSchema = new mongoose.Schema({
-  documentCollection: { // Nome della collezione
+const {
+  ObjectId
+} = mongoose.Schema
+
+// Models
+const {
+  CollectionPermission
+} = require('../models/collection_permission')
+
+const {
+  Document
+} = require('../models/document')
+
+const {
+  User
+} = require('../models/user')
+
+let DocumentCollectionSchema = new mongoose.Schema({
+  documentCollection: {
     type: String,
     required: true,
-    minlength: 1,
-    unique: false
+    minlength: 1
   },
-  author: { // Autore della collezione
-    type: mongoose.Schema.ObjectId,
+  author: {
+    type: ObjectId,
     required: true,
     minlength: 1,
-    unique: false,
     trim: true,
     ref: 'User'
   },
-  documents: [{
-    type: mongoose.Schema.ObjectId,
-    required: false,
-    minlength: 1,
-    unique: false,
-    trim: true,
-    ref: 'Document'
-  }],
-  permissions: { // Possibilià di modifica e di aggiunta di documenti
+  documents: {
+    type: [{
+      type: ObjectId,
+      minlength: 1,
+      required: true,
+      trim: true,
+      ref: 'Document',
+      validate: [async (value) => {
+        let document = await Document.findById(value)
+        if (!document) return false
+      }, '\'{VALUE}\' non è un documento valido']
+    }]
+  },
+  permissions: {
     type: String,
     default: 'tutti',
-    required: false,
-    unique: false,
     trim: true,
-    ref: 'collection_permission'
+    ref: 'collection_permission',
+    validate: [async (value) => {
+      console.log(value)
+      let permissions = await CollectionPermission.findById(value)
+      if (!permissions) return false
+    }, 'Uno dei permessi di modifica non è valido.']
   },
-  authorizations: [{ // Proprietari della collezione
-    type: mongoose.Schema.ObjectId,
-    required: false,
+  authorizations: [{
+    type: ObjectId,
     minlength: 1,
-    unique: false,
+    required: true,
     trim: true,
-    ref: 'User'
+    ref: 'User',
+    validate: [async (value) => {
+      let authorization = await User.findByid(value)
+      if (!authorization) return false
+    }, '\'{VALUE}\' non è un utente valido.']
   }]
 })
 
@@ -86,6 +112,12 @@ DocumentCollectionSchema.statics.searchCollections = function (search, user) {
     })
 }
 
+DocumentCollectionSchema.pre('save', function (next) {
+  let collection = this
+  collection.documentCollection = _.upperFirst(collection.documentCollection)
+  next()
+})
+
 DocumentCollectionSchema.pre('find', function (next) {
   this.populate('author')
     .populate('documents')
@@ -108,7 +140,7 @@ DocumentCollectionSchema.index({
   documentCollection: 'text'
 })
 
-var DocumentCollection = mongoose.model('document_collection', DocumentCollectionSchema)
+const DocumentCollection = mongoose.model('document_collection', DocumentCollectionSchema)
 
 module.exports = {
   DocumentCollection

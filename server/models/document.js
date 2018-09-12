@@ -1,53 +1,85 @@
 const mongoose = require('mongoose')
 
+const {
+  ObjectId
+} = mongoose.Schema
+
+// Models
+const {
+  DocumentType
+} = require('../models/document_type')
+
+const {
+  Faculty
+} = require('../models/faculty')
+
+const {
+  Subject
+} = require('../models/subject')
+
+const {
+  DocumentVisibility
+} = require('../models/document_visibility')
+
 var DocumentSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 1,
-    unique: false
+    minlength: 1
   },
   type: {
     type: String,
     required: true,
     minlength: 1,
     trim: true,
-    ref: 'document_type'
+    ref: 'document_type',
+    validate: [async (value) => {
+      let documentType = await DocumentType.findById(value)
+      if (!documentType) {
+        return false
+      }
+    }, '\'{VALUE}\' non è un tipo valido.']
   },
   author: {
-    type: mongoose.Schema.ObjectId,
+    type: ObjectId,
     required: true,
     minlength: 1,
-    unique: false,
     trim: true,
     ref: 'User'
   },
   faculty: {
     type: String,
-    unique: false,
-    required: false,
+    require: true,
+    minlength: 1,
     trim: true,
-    ref: 'Faculty'
+    ref: 'Faculty',
+    validate: [async (value) => {
+      let faculty = await Faculty.findById(value)
+      if (!faculty) {
+        return false
+      }
+    }, '\'{VALUE}\' non è una specializzazione valida.']
   },
   subject: {
     type: String,
     required: true,
     trim: true,
     minlength: 1,
-    unique: false,
-    ref: 'Subject'
+    ref: 'Subject',
+    validate: [async (value) => {
+      let subject = await Subject.findById(value)
+      if (!subject) {
+        return false
+      }
+    }, '\'{VALUE}\' non è una materia valida.']
   },
   grade: {
     type: Number,
-    required: false,
-    unique: false,
     trim: true,
     ref: 'Grade'
   },
   section: {
     type: String,
-    required: false,
-    unique: false,
     trim: true,
     ref: 'Section'
   },
@@ -56,14 +88,18 @@ var DocumentSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 1,
-    ref: 'document_visibility'
+    ref: 'document_visibility',
+    validate: [async (value) => {
+      let documentVisibility = await DocumentVisibility.findById(value)
+      if (!documentVisibility) {
+        return false
+      }
+    }, '\'{VALUE}\' non è un criterio di visibilità valido.']
   },
   description: {
     type: String,
     required: true,
-    unique: false,
-    minlength: 1,
-    trim: false
+    minlength: 1
   },
   directory: {
     type: String,
@@ -75,14 +111,13 @@ var DocumentSchema = new mongoose.Schema({
   mimetype: {
     type: String,
     required: true,
-    unique: false,
     minlength: 1,
     trim: true
   }
 })
 
 DocumentSchema.statics.searchDocuments = function (search, user) {
-  var Document = this
+  const Document = this
 
   var andQuery = []
 

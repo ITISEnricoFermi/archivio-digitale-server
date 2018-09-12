@@ -3,20 +3,14 @@ const router = express.Router()
 const _ = require('lodash')
 const bcrypt = require('bcryptjs')
 const path = require('path')
-const fs = require('fs')
 const sharp = require('sharp')
+const mkdirp = require('mkdirp')
 
 // Middleware
 const {
   authenticate,
   authenticateAdmin
 } = require('../../../../middleware/authenticate')
-
-const {
-  adminCheckOldUser,
-  adminCheckNewUser,
-  checkErrors
-} = require('../../../../middleware/check')
 
 const {
   asyncMiddleware
@@ -27,20 +21,12 @@ const {
   User
 } = require('../../../../models/user')
 
-// Schemas
-const {
-  create
-} = require('../../../../schema/user.schema')
-
 /*
  * Utente loggato
  * Utente admin
  */
 router.put('/users/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body.user, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
-
-  // Controllo del form
-  create(body)
+  let body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
 
   // Formattazione
   body.firstname = _.startCase(_.lowerCase(body.firstname))
@@ -67,13 +53,11 @@ router.put('/users/', authenticate, authenticateAdmin, asyncMiddleware(async (re
   }]
 
   const dir = {
-    folder: path.join(__dirname, '..', 'public', 'pics', String(user._id)),
-    default: path.join(__dirname, '..', 'public', 'images', 'profile.svg')
+    folder: path.join(__dirname, '..', '..', '..', '..', 'public', 'pics', String(user._id)),
+    default: path.join(__dirname, '..', '..', '..', '..', 'public', 'images', 'profile.svg')
   }
 
-  if (!fs.existsSync(dir.folder)) {
-    fs.mkdirSync(dir.folder)
-  }
+  mkdirp(dir.folder)
 
   for (let i = 0; i < sizes.length; i++) {
     await sharp(dir.default)
@@ -82,21 +66,21 @@ router.put('/users/', authenticate, authenticateAdmin, asyncMiddleware(async (re
       .toFile(path.join(dir.folder, sizes[i].path + '.jpeg'))
   }
 
-  res.status(200).send(user)
+  res.status(200).json(user)
 }))
 
 /*
  * Utente loggato
  * Utente admin
  */
-router.patch('/users/:id', authenticate, authenticateAdmin, adminCheckOldUser, checkErrors, asyncMiddleware(async (req, res) => {
+router.patch('/users/:id', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
   let body = _.pick(req.body.user, ['firstname', 'lastname', 'state', 'email', 'privileges', 'accesses'])
 
   let user = await User.findByIdAndUpdate(req.params.id, {
     $set: body
   })
 
-  res.status(200).send(user)
+  res.status(200).json(user)
 }))
 
 /*
@@ -104,7 +88,7 @@ router.patch('/users/:id', authenticate, authenticateAdmin, adminCheckOldUser, c
  * Utente admin
  */
 router.get('/users/:id', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  res.status(200).send(await User.findById(req.params.id))
+  res.status(200).json(await User.findById(req.params.id))
 }))
 
 /*

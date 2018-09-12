@@ -10,7 +10,7 @@ const sharp = require('sharp')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    let dir = path.join(__dirname, '..', 'public', 'pics', String(req.user._id))
+    let dir = path.join(__dirname, '..', '..', '..', '..', 'public', 'pics', String(req.user._id))
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir)
     }
@@ -48,11 +48,6 @@ const {
 const {
   asyncMiddleware
 } = require('../../../../middleware/async')
-
-const {
-  checkOldUser,
-  checkErrors
-} = require('../../../../middleware/check')
 
 // Models
 const {
@@ -119,8 +114,20 @@ router.get('/me/documents/count/:visibility', authenticate, asyncMiddleware(asyn
 /*
  * Utente loggato
  */
-router.patch('/me/', authenticate, checkOldUser, checkErrors, asyncMiddleware(async (req, res) => {
+router.patch('/me/', authenticate, asyncMiddleware(async (req, res) => {
   let body = req.body.user
+
+  // TODO: Verifica dei criteri
+  // if (validator.isEmpty(user.passwords.new) || user.passwords.new.length < 6) {
+  //   req.messages.push('Password non valida o troppo breve. (min. 6).')
+  // } else if (user.passwords.old === user.passwords.new) {
+  //   req.messages.push('La password attuale è uguale a quella nuova.')
+  // } else if (!await User.findByCredentials(req.user.email, user.passwords.old)) {
+  //   req.messages.push('La password attuale non è corretta.')
+  // } else {
+  //   user.password = user.passwords.new
+  //   delete user.passwords
+  // }
 
   if (body.password) {
     let salt = await bcrypt.genSalt(10)
@@ -173,7 +180,7 @@ router.patch('/me/pic/', authenticate, upload.single('picToUpload'), asyncMiddle
     await sharp(file.path).resize(sizes[i].xy, sizes[i].xy).toFormat('jpeg').toFile(path.join(file.destination, sizes[i].path + '.jpeg'))
   }
 
-  await fsPromises.unlink(path.join(__dirname, '..', 'public', 'pics', String(req.user._id), String(req.user._id) + '.jpeg'))
+  await fsPromises.unlink(path.join(__dirname, '..', '..', '..', '..', 'public', 'pics', String(req.user._id), String(req.user._id) + '.jpeg'))
 
   res.status(200).send({
     messages: ['Immagine di profilo aggiornata con successo.']

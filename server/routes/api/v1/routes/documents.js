@@ -10,11 +10,6 @@ const {
   ObjectId
 } = mongoose.Types
 
-// Schema
-const {
-  create
-} = require('../../../../schema/document.schema')
-
 // Middleware
 const {
   authenticate
@@ -27,11 +22,6 @@ const {
 const {
   editDocument
 } = require('../../../../middleware/edit')
-
-const {
-  checkDocument,
-  checkErrors
-} = require('../../../../middleware/check')
 
 // Models
 const {
@@ -121,9 +111,6 @@ router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
     })
   }
 
-  // Controllo del form
-  create(body)
-
   // Formattazione
   body.name = _.upperFirst(body.name)
   body.description = _.upperFirst(body.description)
@@ -143,7 +130,7 @@ router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
  * Utente loggato
  * Utente proprietario o admin
  */
-router.patch('/:id', authenticate, editDocument, checkDocument, checkErrors, asyncMiddleware(async (req, res) => {
+router.patch('/:id', authenticate, editDocument, asyncMiddleware(async (req, res) => {
   //
   // // NEW
   // let { name, type, faculty, subject, grade, section, visibility, description } = req.body.document

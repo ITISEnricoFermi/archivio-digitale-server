@@ -1,5 +1,5 @@
-require('./db/config/config.js')
-require('./db/mongoose')
+require('./config/env/env.js')
+require('./config/mongoose')
 
 const path = require('path')
 const http = require('http')
@@ -103,8 +103,19 @@ io.on('connection', (socket) => {
 })
 
 app.use((err, req, res, next) => {
+  let message
+  switch (err.name) {
+    case 'ValidationError':
+
+      for (let field in err.errors) {
+        message = err.errors[field].message
+      }
+      break
+    default:
+      message = err.message
+  }
   res.status(500).send({
-    messages: [err.message]
+    messages: [message]
   })
   next(err)
 })
