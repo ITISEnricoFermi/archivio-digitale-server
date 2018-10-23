@@ -93,52 +93,52 @@ router.get('/users/:id', authenticate, authenticateAdmin, asyncMiddleware(async 
  * Utente admin
  */
 router.get('/users/search/:key', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  // let regex = req.params.key.split(' ')
-  // regex = regex.join('|')
-  //
-  // let users = await User.find({
-  //   $and: [{
-  //     $or: [{
-  //       firstname: {
-  //         $regex: regex,
-  //         $options: 'i'
-  //       }
-  //     }, {
-  //       lastname: {
-  //         $regex: regex,
-  //         $options: 'i'
-  //       }
-  //     }]
-  //   }, {
-  //     _id: {
-  //       $ne: req.user._id
-  //     }
-  //   }, {
-  //     state: {
-  //       $ne: 'pending'
-  //     }
-  //   }]
-  // })
+  let regex = req.params.key.split(' ')
+  regex = regex.join('|')
 
   let users = await User.find({
-    $text: {
-      $search: req.params.key
-    },
-    _id: {
-      $ne: req.user._id
-    },
-    state: {
-      $ne: 'pending'
-    }
-  }, {
-    score: {
-      $meta: 'textScore'
-    }
-  }).sort({
-    score: {
-      $meta: 'textScore'
-    }
+    $and: [{
+      $or: [{
+        firstname: {
+          $regex: regex,
+          $options: 'i'
+        }
+      }, {
+        lastname: {
+          $regex: regex,
+          $options: 'i'
+        }
+      }]
+    }, {
+      _id: {
+        $ne: req.user._id
+      }
+    }, {
+      state: {
+        $ne: 'pending'
+      }
+    }]
   })
+
+  // let users = await User.find({
+  //   $text: {
+  //     $search: req.params.key
+  //   },
+  //   _id: {
+  //     $ne: req.user._id
+  //   },
+  //   state: {
+  //     $ne: 'pending'
+  //   }
+  // }, {
+  //   score: {
+  //     $meta: 'textScore'
+  //   }
+  // }).sort({
+  //   score: {
+  //     $meta: 'textScore'
+  //   }
+  // })
 
   if (users.length && req.params.key.length !== 0) {
     res.status(200).json(users)

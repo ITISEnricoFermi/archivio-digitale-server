@@ -61,11 +61,6 @@ app.use((req, res, next) => {
   next()
 })
 
-// const {
-//   asyncMiddleware
-// } = require('./middleware/async')
-// app.use(asyncMiddleware)
-
 // Routes
 app.use('/signup', signup)
 app.use('/login', login)

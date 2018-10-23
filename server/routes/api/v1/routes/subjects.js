@@ -19,7 +19,7 @@ router.get('/', asyncMiddleware(async (req, res) => {
   res.status(200).send(subjects)
 }))
 
-router.post('/subjects/search/partial/', asyncMiddleware(async (req, res) => {
+router.post('/search/partial/', asyncMiddleware(async (req, res) => {
   let query = req.body.query
   let regex = query.split(' ').join('|')
 

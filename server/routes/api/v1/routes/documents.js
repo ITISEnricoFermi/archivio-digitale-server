@@ -50,7 +50,7 @@ const {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '..', 'public', 'public', 'documents'))
+    cb(null, path.join(__dirname, '..', '..', '..', '..', 'public', 'public', 'documents'))
   },
   filename: function (req, file, cb) {
     cb(null, new Date().toISOString() + path.extname(file.originalname))

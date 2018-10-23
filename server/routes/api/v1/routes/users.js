@@ -64,7 +64,7 @@ const {
 router.get('/me/', authenticate, asyncMiddleware(async (req, res) => {
   let user = _.pick(req.user, ['_id', 'firstname', 'lastname', 'email', 'accesses', 'privileges'])
 
-  let documents = await Document.count({
+  let documents = await Document.countDocuments({
     author: user._id
   })
 
@@ -104,7 +104,7 @@ router.get('/me/documents/:visibility', authenticate, asyncMiddleware(async (req
  * Utente loggato
  */
 router.get('/me/documents/count/:visibility', authenticate, asyncMiddleware(async (req, res) => {
-  let documents = await Document.count({
+  let documents = await Document.countDocuments({
     author: req.user._id,
     visibility: req.params.visibility
   })
@@ -239,7 +239,7 @@ router.post('/search/partial/', authenticate, asyncMiddleware(async (req, res) =
 /*
  Utente loggato
  */
-router.post('/me/logged', authenticate, (req, res) => {
+router.post('/me/logged/', authenticate, (req, res) => {
   res.status(200).send()
 })
 
