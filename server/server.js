@@ -17,6 +17,7 @@ const passport = require('passport')
 // VARS
 const port = process.env.PORT || 3000
 const env = process.env.NODE_ENV || 'development'
+const whitelist = process.env.CORS_WHITELIST || ['http://localhost:8080']
 
 // Middleware
 const error = require('./middleware/error')
@@ -45,8 +46,15 @@ app.use(cookieParser())
 app.use(helmet())
 app.use(compression())
 app.use(passport.initialize())
+
 app.use(cors({
-  origin: 'http://localhost:8080',
+  origin (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true,
   method: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
