@@ -77,6 +77,7 @@ app.use('/api', api)
 
 // Public directory
 app.use(express.static(path.join(__dirname, '/public')))
+app.use(express.static(path.join(__dirname, '/client')))
 
 // Socket events
 io.on('connection', (socket) => {

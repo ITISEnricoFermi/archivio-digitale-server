@@ -2,12 +2,10 @@
 # SCRIPT TO INSTALL THE CLIENT #
 ################################
 
-rm -f ./server/public/index.html
-rm -Rf ./server/public/static/
-rm -f ./server/public/service-worker.js
+rm -Rf ./server/client/*
 git clone https://github.com/Richard1984/archivio-fermi-client.git
 cd ./archivio-fermi-client/
 npm install
 npm run build
-mv dist/* ../server/public/
+mv dist/* ../server/client/
 rm -Rf ./archivio-fermi-client/
