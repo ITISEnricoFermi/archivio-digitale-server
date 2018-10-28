@@ -35,9 +35,9 @@ const io = socketIO(server)
 
 if (env === 'development') {
   app.use(morgan('dev'))
-} else {
-  app.use(history())
 }
+
+app.use(history())
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
