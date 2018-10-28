@@ -48,13 +48,7 @@ app.use(compression())
 app.use(passport.initialize())
 
 app.use(cors({
-  origin (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
+  origin: true,
   credentials: true,
   method: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
