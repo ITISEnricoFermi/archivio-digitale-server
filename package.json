@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server/server.js",
     "populate": "node server/config/seed.js",
-    "client": "./client.sh"
+    "client": "./client.sh",
+    "install": "npm i && npm run populate && npm run client"
   },
   "repository": {
     "type": "git",
