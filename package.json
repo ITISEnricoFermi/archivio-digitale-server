@@ -1,10 +1,10 @@
 {
   "name": "archivio",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "Archivio Digitale - ITIS Enrico Fermi",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "NODE_ENV=production node server/server.js",
     "populate": "node server/config/seed.js",
     "client": "./client.sh",
     "install": "npm i && npm run populate && npm run client"
@@ -18,7 +18,7 @@
     "email": "richard.sangiorgio@gmail.com",
     "url": "https://riccardosangiorgio.com"
   },
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Richard1984/archivio-fermi-server/issues"
   },

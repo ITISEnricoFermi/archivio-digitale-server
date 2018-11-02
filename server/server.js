@@ -17,7 +17,8 @@ const passport = require('passport')
 // VARS
 const port = process.env.PORT || 3000
 const env = process.env.NODE_ENV || 'development'
-const whitelist = process.env.CORS_WHITELIST || ['http://localhost:8080']
+const {version, author} = require('../package.json')
+// const whitelist = process.env.CORS_WHITELIST || ['http://localhost:8080']
 
 // Middleware
 const error = require('./middleware/error')
@@ -36,9 +37,9 @@ const io = socketIO(server)
 
 if (env === 'development') {
   app.use(morgan('dev'))
+} else {
+  app.use(history())
 }
-
-app.use(history())
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -46,6 +47,21 @@ app.use(cookieParser())
 app.use(helmet())
 app.use(compression())
 app.use(passport.initialize())
+
+// app.use(cors({
+//   origin (origin, callback) {
+//     console.log(origin)
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   },
+//   credentials: true,
+//   method: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   preflightContinue: false,
+//   optionsSuccessStatus: 204
+// }))
 
 app.use(cors({
   origin: true,
@@ -113,11 +129,8 @@ io.on('connection', (socket) => {
 app.get('/', (req, res) => {
   res.status(200).json({
     title: 'Archivio Digitale - ITIS Enrico Fermi',
-    author: [{
-      name: 'Riccardo Sangiorgio',
-      email: 'richard.sangiorgio@gmail.com',
-      url: 'https://riccardosangiorgio.com'
-    }],
+    version,
+    author,
     legal: 'This project is licensed under the MIT License.'
   })
 })

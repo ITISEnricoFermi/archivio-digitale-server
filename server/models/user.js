@@ -46,7 +46,7 @@ var UserSchema = new mongoose.Schema({
     type: [{
       type: String,
       trim: true,
-      unique: true,
+      // unique: true,
       ref: 'Subject',
       validate: [async (value) => {
         let subject = await Subject.findById(value)
