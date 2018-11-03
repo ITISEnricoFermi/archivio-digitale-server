@@ -1,6 +1,6 @@
 {
   "name": "archivio",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Archivio Digitale - ITIS Enrico Fermi",
   "main": "server/server.js",
   "scripts": {
