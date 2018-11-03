@@ -61,19 +61,20 @@ router.put('/', authenticate, asyncMiddleware(async (req, res) => {
 
 router.patch('/:id', authenticate, editCollection, asyncMiddleware(async (req, res) => {
   let body = _.pick(req.body.collection, ['documentCollection', 'permissions', 'authorizations', 'documents'])
+  const id = req.params.id
 
   if (body.permissions !== 'utenti') {
     body.authorizations = []
   }
 
-  body.documents.filter(document => document._id)
+  body.documents = body.documents.map(document => document._id)
 
-  let collection = await DocumentCollection.findByIdAndUpdate(req.params.id, {
+  let collection = await DocumentCollection.findByIdAndUpdate(id, {
     $set: body
   })
 
   if (collection) {
-    return res.status(200).send({
+    return res.status(200).json({
       messages: ['Collezione modificata con successo.']
     })
   }
@@ -83,10 +84,11 @@ router.patch('/:id', authenticate, editCollection, asyncMiddleware(async (req, r
  * Utente loggato
  */
 router.delete('/:id', authenticate, editCollection, asyncMiddleware(async (req, res) => {
-  let collection = await DocumentCollection.findByIdAndRemove(req.params.id)
+  const id = req.params.id
+  let collection = await DocumentCollection.findByIdAndRemove(id)
 
   if (collection) {
-    return res.status(200).send({
+    return res.status(200).json({
       messages: ['Collezione eliminata correttamente.']
     })
   }

@@ -131,6 +131,8 @@ router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
  * Utente proprietario o admin
  */
 router.patch('/:id', authenticate, editDocument, asyncMiddleware(async (req, res) => {
+  const id = req.params.id
+
   //
   // // NEW
   // let { name, type, faculty, subject, grade, section, visibility, description } = req.body.document
@@ -147,7 +149,7 @@ router.patch('/:id', authenticate, editDocument, asyncMiddleware(async (req, res
   body.name = _.upperFirst(body.name)
   body.description = _.upperFirst(body.description)
 
-  let document = await Document.findByIdAndUpdate(req.params.id, {
+  let document = await Document.findByIdAndUpdate(id, {
     $set: body
   })
 
@@ -164,9 +166,7 @@ router.patch('/:id', authenticate, editDocument, asyncMiddleware(async (req, res
  */
 router.delete('/:id', authenticate, editDocument, asyncMiddleware(async (req, res) => {
   const { id } = req.params
-  let document = await Document.findOneAndDelete({
-    _id: id
-  })
+  let document = await Document.findByIdAndRemove(id)
   await DocumentCollection.updateOne({
     documents: ObjectId(id)
   }, {
