@@ -160,6 +160,16 @@ router.patch('/:id', authenticate, editDocument, asyncMiddleware(async (req, res
   }
 }))
 
+router.get('/:id/collections', authenticate, asyncMiddleware(async (req, res) => {
+  const {id} = req.params
+
+  const collections = await DocumentCollection.find({
+    documents: id
+  })
+
+  res.status(200).json(collections)
+}))
+
 /*
  * Utente loggato
  * Utente proprietario o admin
