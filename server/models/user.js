@@ -151,17 +151,23 @@ UserSchema.statics.findByCredentials = async function (email, password) {
     })
 
     if (!user) {
-      return Promise.reject(new Error('Nessun utente registrato con l\'email inserita.'))
+      const e = new Error('Nessun utente registrato con l\'email inserita.')
+      e.name = 'bad_email'
+      return Promise.reject(e)
     }
 
     if (user.state !== 'active') {
-      return Promise.reject(new Error('Il tuo account è stato disabilitato.'))
+      const e = new Error('Il tuo account è stato disabilitato.')
+      e.name = 'account_disabled'
+      return Promise.reject(e)
     }
 
     if (await bcrypt.compare(password, user.password)) {
       return Promise.resolve(user)
     } else {
-      return Promise.reject(new Error('Password errata'))
+      const e = new Error('La password inserita non è corretta.')
+      e.name = 'bad_password'
+      return Promise.reject(e)
     }
   } catch (e) {
     return Promise.reject(e)

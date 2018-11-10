@@ -16,12 +16,7 @@ const {
  */
 router.post('/', signin, asyncMiddleware(async (req, res) => {
   const {user} = req
-  let token
-  try {
-    token = await user.generateAuthToken()
-  } catch (e) {
-    throw e
-  }
+  const token = await user.generateAuthToken()
   res.status(200).json({
     token
   })

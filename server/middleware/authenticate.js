@@ -32,7 +32,24 @@ const signin = (req, res, next) => passport.authenticate('login', {
   failureFlash: true
 }, (err, user, info) => {
   if (err) {
-    next(new Error('Si è verificato un errore durante il login.'))
+    const { name } = err
+    switch (name) {
+      case 'bad_email':
+        err.code = 404
+        next(err)
+        break
+      case 'account_disabled':
+        err.code = 401
+        next(err)
+        break
+      case 'bad_password':
+        err.code = 401
+        next(err)
+        break
+      default:
+        next(new Error('Si è verificato un errore durante il login.'))
+        break
+    }
   } else if (!user) {
     return res.status(401).json({
       message: info

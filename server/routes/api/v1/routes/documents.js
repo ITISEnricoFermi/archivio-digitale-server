@@ -185,7 +185,7 @@ router.delete('/:id', authenticate, editDocument, asyncMiddleware(async (req, re
     }
   })
 
-  fs.unlink(path.join(__dirname, '..', 'public', 'public', 'documents', document.directory), (err) => {
+  fs.unlink(path.join(__dirname, '..', '..', '..', '..', 'public', 'public', 'documents', document.directory), (err) => {
     if (err) {
       return res.status(500).json({
         messages: ['Impossibile eliminare il documento.']

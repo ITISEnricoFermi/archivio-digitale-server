@@ -13,7 +13,10 @@ const login = new LocalStrategy({
 },
 async (username, password, done) => {
   try {
-    let user = await User.findByCredentials(username, password)
+    const user = await User.findByCredentials(username, password)
+    if (!user) {
+      return done(null, false)
+    }
     done(null, user)
   } catch (e) {
     done(e)

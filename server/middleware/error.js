@@ -19,7 +19,7 @@ const error = (err, req, res, next) => {
     default:
       message = err.message
   }
-  res.status(500).send({
+  res.status(err.code || 500).send({
     messages: [message]
   })
   next(err)
