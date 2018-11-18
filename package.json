@@ -7,7 +7,7 @@
     "start": "NODE_ENV=production node server/server.js",
     "populate": "node server/config/seed.js",
     "client": "./client.sh",
-    "install": "npm i && npm run populate && npm run client"
+    "init": "npm i && npm run populate && npm run client"
   },
   "repository": {
     "type": "git",
