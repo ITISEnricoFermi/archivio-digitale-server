@@ -3,12 +3,6 @@ const util = require('util')
 const figlet = util.promisify(require('figlet'))
 const chalk = require('chalk')
 const checkAnswer = require('./utils/checkAnswer')
-//
-// const ora = require('ora')
-// const spinner = ora({
-//   spinner: 'moon',
-//   text: 'hey'
-// }).start()
 
 const install = async () => {
   const data = await figlet('Archivio Digitale')

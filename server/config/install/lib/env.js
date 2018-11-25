@@ -46,8 +46,10 @@ module.exports = async () => {
   })
 
   try {
-    // console.log('\n')
-    const spinner = ora('\nSalvando le impostazioni.').start()
+    const spinner = ora({
+      spinner: 'moon',
+      text: '\nSalvando le impostazioni.'
+    }).start()
     fs.writeFileSync(config, JSON.stringify({ development, production }, undefined, 2))
     spinner.succeed(chalk.green('Impostazioni aggiornate.\n'))
   } catch (e) {

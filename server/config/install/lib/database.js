@@ -3,7 +3,10 @@ const loader = require('../../loader/loader')
 const ora = require('ora')
 
 module.exports = async () => {
-  const spinner = ora('Popolando il database.').start()
+  const spinner = ora({
+    spinner: 'moon',
+    text: 'Popolando il database.'
+  }).start()
   try {
     const messages = await loader
     for (let message in messages) {

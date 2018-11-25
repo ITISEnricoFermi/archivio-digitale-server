@@ -6,7 +6,10 @@ module.exports = async () => {
     loadUsers
   } = require('../../loader/loaders/user.loader')
 
-  const spinner = ora('Creando utente admin.').start()
+  const spinner = ora({
+    spinner: 'moon',
+    text: 'Creando utente admin.'
+  }).start()
 
   try {
     const message = await loadUsers
