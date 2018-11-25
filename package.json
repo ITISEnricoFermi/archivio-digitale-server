@@ -5,9 +5,10 @@
   "main": "server/server.js",
   "scripts": {
     "start": "NODE_ENV=production node server/server.js",
-    "populate": "node server/config/seed.js",
+    "populate": "node server/config/seed/seed.js",
     "client": "./client.sh",
-    "init": "npm i && npm run populate && npm run client"
+    "config": "node server/config/install/install.js",
+    "init": "npm i && npm run config"
   },
   "repository": {
     "type": "git",
@@ -36,7 +37,7 @@
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
     "mkdirp": "^0.5.1",
-    "mongoose": "^5.3.12",
+    "mongoose": "^5.3.13",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "passport": "^0.4.0",
@@ -47,12 +48,17 @@
     "validator": "^9.4.1"
   },
   "devDependencies": {
+    "chalk": "^2.4.1",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0"
+    "eslint-plugin-standard": "^3.1.0",
+    "figlet": "^1.2.1",
+    "ora": "^3.0.0",
+    "readline-sync": "^1.4.9",
+    "shelljs": "^0.8.3"
   },
   "engines": {
     "node": ">=10.9.0"
