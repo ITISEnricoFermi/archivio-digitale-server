@@ -28,7 +28,7 @@ const sizes = [{
 }]
 
 const loadUsers = new Promise((resolve, reject) => {
-  return User.insertMany(users)
+  return User.create(users)
     .then(response => {
       let files = []
 

@@ -22,12 +22,7 @@ const {
  */
 router.put('/', asyncMiddleware(async (req, res) => {
   const body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'accesses'])
-  let user
-  try {
-    user = await (new User(body)).save()
-  } catch (e) {
-    throw e
-  }
+  let user = await (new User(body)).save()
 
   const sizes = [{
     path: 'xlg',

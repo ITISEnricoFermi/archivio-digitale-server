@@ -156,9 +156,13 @@ UserSchema.statics.findByCredentials = async function (email, password) {
       return Promise.reject(e)
     }
 
-    if (user.state !== 'active') {
+    if (user.state === 'disabled') {
       const e = new Error('Il tuo account è stato disabilitato.')
       e.name = 'account_disabled'
+      return Promise.reject(e)
+    } else if (user.state === 'pending') {
+      const e = new Error('Il tuo account è in attesa di verifica.')
+      e.name = 'account_pending'
       return Promise.reject(e)
     }
 
