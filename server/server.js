@@ -18,6 +18,7 @@ const passport = require('passport')
 const port = process.env.PORT || 3000
 const env = process.env.NODE_ENV || 'development'
 const {version, author} = require('../package.json')
+process.env.root = __dirname
 // const whitelist = process.env.CORS_WHITELIST || ['http://localhost:8080']
 
 // Middleware

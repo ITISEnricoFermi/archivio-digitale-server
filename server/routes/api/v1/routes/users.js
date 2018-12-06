@@ -10,7 +10,7 @@ const sharp = require('sharp')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    let dir = path.join(__dirname, '..', '..', '..', '..', 'public', 'pics', String(req.user._id))
+    let dir = path.join(process.env.root, 'public', 'pics', String(req.user._id))
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir)
     }
@@ -115,7 +115,7 @@ router.get('/me/documents/count/:visibility', authenticate, asyncMiddleware(asyn
  * Utente loggato
  */
 router.patch('/me/', authenticate, asyncMiddleware(async (req, res) => {
-  let body = req.body.user
+  let body = req.body
 
   // TODO: Verifica dei criteri
   // if (validator.isEmpty(user.passwords.new) || user.passwords.new.length < 6) {
@@ -180,7 +180,7 @@ router.patch('/me/pic/', authenticate, upload.single('picToUpload'), asyncMiddle
     await sharp(file.path).resize(sizes[i].xy, sizes[i].xy).toFormat('jpeg').toFile(path.join(file.destination, sizes[i].path + '.jpeg'))
   }
 
-  await fsPromises.unlink(path.join(__dirname, '..', '..', '..', '..', 'public', 'pics', String(req.user._id), String(req.user._id) + '.jpeg'))
+  await fsPromises.unlink(path.join(process.env.root, 'public', 'pics', String(req.user._id), String(req.user._id) + '.jpeg'))
 
   res.status(200).send({
     messages: ['Immagine di profilo aggiornata con successo.']

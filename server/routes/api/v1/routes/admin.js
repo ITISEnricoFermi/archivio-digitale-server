@@ -71,7 +71,7 @@ router.put('/users/', authenticate, authenticateAdmin, asyncMiddleware(async (re
  * Utente admin
  */
 router.patch('/users/:id', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body.user, ['firstname', 'lastname', 'state', 'email', 'privileges', 'accesses'])
+  let body = _.pick(req.body, ['firstname', 'lastname', 'state', 'email', 'privileges', 'accesses'])
 
   let user = await User.findByIdAndUpdate(req.params.id, {
     $set: body

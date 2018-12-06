@@ -102,7 +102,7 @@ router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
  * Utente loggato
  */
 router.put('/', authenticate, upload, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
+  let body = _.pick(req.body, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
 
   // Validazione
   if (!req.file) {
@@ -143,7 +143,7 @@ router.patch('/:id', authenticate, editDocument, asyncMiddleware(async (req, res
 
   // OLD
 
-  let body = _.pick(req.body.document, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
+  let body = _.pick(req.body, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
 
   // Formattazione
   body.name = _.upperFirst(body.name)
