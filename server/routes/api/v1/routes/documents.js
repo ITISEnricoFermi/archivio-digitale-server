@@ -58,7 +58,7 @@ const storage = multer.diskStorage({
 })
 
 const fileFilter = asyncMiddleware(async (req, file, cb) => {
-  req.body.document = _.pick(JSON.parse(req.body.document), ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
+  // req.body.document = _.pick(req.body, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
 
   const mimeypes = ['audio/aac', 'video/x-msvideo', 'text/csv', 'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',

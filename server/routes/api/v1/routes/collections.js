@@ -29,7 +29,7 @@ router.get('/info/:id', authenticate, asyncMiddleware(async (req, res) => {
  * Utente loggato
  */
 router.put('/', authenticate, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body.collection, ['documentCollection', 'permissions', 'authorizations'])
+  let body = _.pick(req.body, ['documentCollection', 'permissions', 'authorizations'])
 
   // Formattazione
   body.author = req.user._id
@@ -60,7 +60,7 @@ router.put('/', authenticate, asyncMiddleware(async (req, res) => {
 }))
 
 router.patch('/:id', authenticate, editCollection, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body.collection, ['documentCollection', 'permissions', 'authorizations', 'documents'])
+  let body = _.pick(req.body, ['documentCollection', 'permissions', 'authorizations', 'documents'])
   const id = req.params.id
 
   if (body.permissions !== 'utenti') {
