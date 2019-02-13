@@ -1,0 +1,10 @@
+version: "2"
+
+services:
+  archivio-server:
+    environment:
+      - MONGODB_URI: mongodb://database:27017/archivio
+      - JWT_SECRET: 3xWXqcD@z@t86YGKr2zP
+      - NODE_ENV: development
+    ports:
+      - 3000:3000
