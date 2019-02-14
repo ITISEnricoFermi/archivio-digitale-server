@@ -22,6 +22,7 @@ services:
     restart: always
     volumes:
       - database-data:/data/db
+      - database-config:/data/configdb
     environment:
       MONGO_INITDB_DATABASE: archivio
     networks:
@@ -32,4 +33,5 @@ networks:
 
 volumes:
   database-data:
+  database-config:
   server-data:
