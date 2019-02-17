@@ -6,9 +6,9 @@ services:
     image: archivio-fermi-server
     command: sh -c "npm run populate && node server/server.js"
     environment:
-      MONGODB_URI: "mongodb://database:27017/archivio"
-      JWT_SECRET: 3xWXqcDzt86YGKr2zP
-      NODE_ENV: development
+      - MONGODB_URI=mongodb://database:27017/archivio
+      - JWT_SECRET=3xWXqcDzt86YGKr2zP
+      - NODE_ENV=development
     volumes:
       - server-data:/usr/app/server/public
     ports:
@@ -25,7 +25,7 @@ services:
       - database-data:/data/db
       - database-config:/data/configdb
     environment:
-      MONGO_INITDB_DATABASE: archivio
+      - MONGO_INITDB_DATABASE=archivio
     networks:
       api-network:
 
