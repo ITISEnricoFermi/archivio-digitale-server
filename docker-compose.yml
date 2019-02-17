@@ -2,9 +2,8 @@ version: "2"
 
 services:
   archivio-server:
-    build:
-      context: .
-    image: archivio-server
+    build: .
+    image: archivio-fermi-server
     command: sh -c "npm run populate && node server/server.js"
     environment:
       MONGODB_URI: "mongodb://database:27017/archivio"
