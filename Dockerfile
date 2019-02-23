@@ -13,4 +13,5 @@ ENV DOCKER=true
 ENV PORT=3000
 EXPOSE 3000
 
-CMD [ "node", "server/server.js"]
+CMD ["sh", "-c", "npm run populate && node server/server.js"]
+
