@@ -24,12 +24,12 @@ RequestSchema.statics.addRequest = function (id) {
   var Request = this
 
   if (!ObjectId.isValid(id)) {
-    return Promise.reject("L'ID fornito non è valido.")
+    return Promise.reject(new Error("L'ID fornito non è valido."))
   }
 
   return User.findById(id).then((user) => {
     if (!user) {
-      return Promise.reject("Nessun utente registrato con l'ID fornito.")
+      return Promise.reject(new Error("Nessun utente registrato con l'ID fornito."))
     }
 
     var request = new Request({

@@ -1,0 +1,37 @@
+version: "2"
+
+services:
+  archivio-server:
+    build: .
+    image: archivio-fermi-server
+    environment:
+      - MONGODB_URI=mongodb://database:27017/archivio
+      - JWT_SECRET=3xWXqcDzt86YGKr2zP
+      - NODE_ENV=development
+    volumes:
+      - server-data:/usr/app/server/public
+    ports:
+      - 3000:3000
+    depends_on:
+      - database
+    networks:
+      api-network:
+
+  database:
+    image: mongo:3.4.19-jessie
+    restart: always
+    volumes:
+      - database-data:/data/db
+      - database-config:/data/configdb
+    environment:
+      - MONGO_INITDB_DATABASE=archivio
+    networks:
+      api-network:
+
+networks:
+  api-network:
+
+volumes:
+  database-data:
+  database-config:
+  server-data:
