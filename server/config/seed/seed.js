@@ -2,7 +2,7 @@ const { yellow, green, red } = require('colors')
 const mongoose = require('../mongoose')
 
 mongoose.connection.once('open', async () => {
-  mongoose.connection.db.listCollections().toArray((err, collections) => {
+  mongoose.connection.db.listCollections().toArray(async (err, collections) => {
     if (err) {
       console.log(red(err.message))
       return process.exit()
@@ -13,19 +13,29 @@ mongoose.connection.once('open', async () => {
       return process.exit()
     }
 
-    const loader = require('../loader/loader')
+    try {
+      const loader = require('../loader/loader')
 
-    loader
-      .then(messages => {
-        for (let message in messages) {
-          console.log(yellow(messages[message]))
-        }
-        console.log(green('Il database è stato popolato.'))
-        return process.exit()
-      })
-      .catch(e => {
-        console.error(red(e.message))
-        return process.exit()
-      })
+      const messages = await loader
+
+      for (let message in messages) {
+        console.log(yellow(messages[message]))
+      }
+
+      console.log(green('Il database è stato popolato.'))
+
+      const {
+        loadUsers
+      } = require('../loader/loaders/user.loader')
+
+      await loadUsers
+
+      console.log(yellow('Utente admin creato correttamente.'))
+
+      return process.exit()
+    } catch (e) {
+      console.error(red(e.message))
+      return process.exit()
+    }
   })
 })
