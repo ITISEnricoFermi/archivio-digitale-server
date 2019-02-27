@@ -81,7 +81,7 @@ $ node server.js
 Subito dopo l'installazione del server è possibile entrare nella piattaforma utilizzando le credenziali dell'utente test.
 
 * **Email:** alan.turing@test.com
-* **Password:** 123456
+* **Password:** alanturing
 
 L'utente detiene i privilegi di admin. Si consiglia di modificare la password dell'account una volta effettuato il primo accesso.
 
