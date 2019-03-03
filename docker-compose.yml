@@ -11,7 +11,7 @@ services:
     volumes:
       - server-data:/usr/app/server/public
     ports:
-      - 3000:3000
+      - 3000:80
     depends_on:
       - database
     networks:
