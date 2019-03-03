@@ -214,7 +214,7 @@ router.post('/resetPassword', authenticate, authenticateAdmin, asyncMiddleware(a
 
 router.post('/mails/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
   const { subject, recipients, message } = req.body
-  const response = await axios.post('http://mailer/send', {
+  const response = await axios.post(process.env.MAILER_URL, {
     subject, recipients, message
   })
   res.status(200).json(response)
