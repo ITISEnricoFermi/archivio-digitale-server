@@ -93,9 +93,11 @@ router.get('/users/:id', authenticate, authenticateAdmin, asyncMiddleware(async 
  * Utente loggato
  * Utente admin
  */
-router.get('/users/search/:key', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let regex = req.params.key.split(' ')
-  regex = regex.join('|')
+router.post('/users/search/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
+  let query = req.body.query
+  let regex = query.split(' ').join('|')
+  // let regex = req.params.key.split(' ')
+  // regex = regex.join('|')
 
   let users = await User.find({
     $and: [{
@@ -119,7 +121,7 @@ router.get('/users/search/:key', authenticate, authenticateAdmin, asyncMiddlewar
         $ne: 'pending'
       }
     }]
-  })
+  }).limit(10)
 
   // let users = await User.find({
   //   $text: {
@@ -141,7 +143,7 @@ router.get('/users/search/:key', authenticate, authenticateAdmin, asyncMiddlewar
   //   }
   // })
 
-  if (users.length && req.params.key.length !== 0) {
+  if (users.length) {
     res.status(200).json(users)
   } else {
     res.status(404).json({
