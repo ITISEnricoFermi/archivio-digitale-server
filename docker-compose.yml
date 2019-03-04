@@ -3,7 +3,7 @@ version: "2"
 services:
   archivio-server:
     build: .
-    image: richard1984/archivio-fermi-server
+    image: itisenricofermi/archivio-digitale-server
     environment:
       - MONGODB_URI=mongodb://database:27017/archivio
       - JWT_SECRET=3xWXqcDzt86YGKr2zP
