@@ -1,7 +1,7 @@
 {
-  "name": "archivio",
+  "name": "archivio-digitale-server",
   "version": "0.0.5",
-  "description": "Archivio Digitale - ITIS Enrico Fermi",
+  "description": "Archivio Digitale",
   "main": "server/server.js",
   "scripts": {
     "start": "NODE_ENV=production node server/server.js",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Richard1984/archivio-fermi-server.git"
+    "url": "git+https://github.com/ITISEnricoFermi/archivio-digitale-server.git"
   },
   "author": {
     "name": "Riccardo Sangiorgio",
@@ -22,9 +22,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Richard1984/archivio-fermi-server/issues"
+    "url": "https://github.com/ITISEnricoFermi/archivio-digitale-server/issues"
   },
-  "homepage": "https://github.com/Richard1984/archivio-fermi-server#readme",
+  "homepage": "https://github.com/ITISEnricoFermi/archivio-digitale-server#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
