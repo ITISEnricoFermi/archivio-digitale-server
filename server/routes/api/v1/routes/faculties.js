@@ -1,22 +1,15 @@
 const express = require('express')
 const router = express.Router()
 
+const {
+  getFaculties
+} = require('../../../../controllers/faculties')
+
 // Middleware
 const {
   asyncMiddleware
 } = require('../../../../middleware/async')
 
-// Model
-const {
-  Faculty
-} = require('../../../../models/faculty')
-
-/*
- * Utente non loggato
- */
-router.get('/', asyncMiddleware(async (req, res) => {
-  let faculties = await Faculty.getFaculties()
-  res.status(200).send(faculties)
-}))
+router.get('/', asyncMiddleware(getFaculties))
 
 module.exports = router

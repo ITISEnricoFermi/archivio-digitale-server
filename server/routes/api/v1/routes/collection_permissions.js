@@ -1,22 +1,15 @@
 const express = require('express')
 const router = express.Router()
 
+const {
+  getCollectionPermissions
+} = require('../../../../controllers/collection_permissions')
+
 // Middleware
 const {
   asyncMiddleware
 } = require('../../../../middleware/async')
 
-// Model
-const {
-  CollectionPermission
-} = require('../../../../models/collection_permission')
-
-/*
- * Utente non loggato
- */
-router.get('/', asyncMiddleware(async (req, res) => {
-  let permissions = await CollectionPermission.getPermissions()
-  res.status(200).send(permissions)
-}))
+router.get('/', asyncMiddleware(getCollectionPermissions))
 
 module.exports = router
