@@ -1,6 +1,4 @@
 #!/bin/sh
 cd /usr/app
-echo Runing database population...
-yarn populate
-echo Runing server.
-node server/server.js
+echo Running database population and server
+npm run populate && node server/server.js
