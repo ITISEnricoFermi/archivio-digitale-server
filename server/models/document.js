@@ -1,4 +1,8 @@
 const mongoose = require('mongoose')
+const mongoosastic = require('mongoosastic')
+
+const { client } = require('../config/elsastic')
+
 
 const {
   ObjectId
@@ -25,7 +29,8 @@ var DocumentSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 1
+    minlength: 1,
+    es_indexed: true
   },
   type: {
     type: String,
@@ -45,7 +50,8 @@ var DocumentSchema = new mongoose.Schema({
     required: true,
     minlength: 1,
     trim: true,
-    ref: 'User'
+    ref: 'User',
+    es_indexed: true
   },
   faculty: {
     type: String,
@@ -99,7 +105,8 @@ var DocumentSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
-    minlength: 1
+    minlength: 1,
+    es_indexed: true
   },
   directory: {
     type: String,
@@ -350,7 +357,21 @@ DocumentSchema.index({
   description: 'text'
 })
 
+DocumentSchema.plugin(mongoosastic, {  
+  esClient: client
+})
+
 var Document = mongoose.model('Document', DocumentSchema)
+
+Document.createMapping(function (err, mapping) {  
+  if(err){
+    console.log('error creating mapping (you can safely ignore this)');
+    console.log(err);
+  }else{
+    console.log('mapping created!');
+    console.log(mapping);
+  }
+});
 
 module.exports = {
   Document

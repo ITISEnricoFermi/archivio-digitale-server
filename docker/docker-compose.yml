@@ -10,6 +10,7 @@ services:
       - MONGODB_URI=mongodb://database:27017/archivio
       - JWT_SECRET=3xWXqcDzt86YGKr2zP
       - NODE_ENV=development
+      - ES_HOST=elasticsearch
     volumes:
       - server-data:/usr/app/server/public
     ports:
@@ -21,12 +22,24 @@ services:
 
   database:
     image: mongo:3.4.19-jessie
-    restart: always
     volumes:
-      - database-data:/data/db
+      - mongo-data:/data/db
       - database-config:/data/configdb
     environment:
       - MONGO_INITDB_DATABASE=archivio
+    networks:
+      api-network:
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    environment:
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+    ports:
+      - "9300:9300"
+      - "9200:9200"
     networks:
       api-network:
 
@@ -37,3 +50,6 @@ volumes:
   database-data:
   database-config:
   server-data:
+  esdata:
+  mongo-data:
+    external: true

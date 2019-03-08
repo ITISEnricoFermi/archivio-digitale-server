@@ -1,8 +1,11 @@
 const mongoose = require('mongoose')
+const mongoosastic = require('mongoosastic')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const _ = require('lodash')
 const validator = require('validator')
+
+const { client } = require('../config/elsastic')
 
 const {
   Privilege
@@ -16,13 +19,15 @@ var UserSchema = new mongoose.Schema({
   firstname: { // OK
     type: String,
     required: true,
-    minlength: 1
+    minlength: 1,
+    es_indexed: true
     // validate: new RegExp("[a-z]àáâäãåąçčćęèéêëėįìíîïłńñòóôöõøùúûüųūÿýżźñçčšžßŒÆ∂ð,\. '-", 'gi')
   },
   lastname: { // OK
     type: String,
     required: true,
-    minlength: 1
+    minlength: 1,
+    es_indexed: true
     // validate: new RegExp("[a-z]àáâäãåąçčćęèéêëėįìíîïłńñòóôöõøùúûüųūÿýżźñçčšžßŒÆ∂ð,\. '-", 'gi')
   },
   email: { // OK
@@ -241,7 +246,21 @@ UserSchema.index({
   lastname: 'text'
 })
 
+UserSchema.plugin(mongoosastic, {  
+  esClient: client
+})
+
 var User = mongoose.model('User', UserSchema)
+
+User.createMapping(function (err, mapping) {  
+  if(err){
+    console.log('error creating mapping (you can safely ignore this)');
+    console.log(err);
+  }else{
+    console.log('mapping created!');
+    console.log(mapping);
+  }
+});
 
 module.exports = {
   User
