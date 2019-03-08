@@ -2,7 +2,9 @@ version: "2"
 
 services:
   archivio-server:
-    build: .
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
     image: itisenricofermi/archivio-digitale-server
     environment:
       - MONGODB_URI=mongodb://database:27017/archivio
@@ -11,7 +13,7 @@ services:
     volumes:
       - server-data:/usr/app/server/public
     ports:
-      - 3000:80
+      - 4000:80
     depends_on:
       - database
     networks:
