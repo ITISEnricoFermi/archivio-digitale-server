@@ -205,6 +205,11 @@ router.delete('/me/', authenticate, asyncMiddleware(async (req, res) => {
 router.post('/search/partial/', authenticate, asyncMiddleware(async (req, res) => {
   let query = req.body.query
   let regex = query.split(' ').join('|')
+  if (process.env.DOCKER) {
+    return User.search( { query_string: { query } }, { hydrate:true }, function(err,results) {  
+      res.status(200).json(results)
+    })
+  }
 
   let users = await User.find({
     $and: [{
