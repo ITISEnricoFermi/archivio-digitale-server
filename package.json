@@ -10,7 +10,8 @@
     "config": "node server/config/install/install.js",
     "init": "npm i && npm run config",
     "lint": "eslint --fix ./server/**",
-    "docker-build": "docker build -t itisenricofermi/archivio-digitale-server -f ./docker/Dockerfile ."
+    "docker-build": "docker build -t itisenricofermi/archivio-digitale-server -f ./docker/Dockerfile .",
+    "docker-compose": "npm run docker-build && docker-compose -f docker/docker-compose.yml up -d"
   },
   "repository": {
     "type": "git",
