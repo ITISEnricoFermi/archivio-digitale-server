@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 cd /usr/app
 
 # from https://github.com/docker-library/postgres
