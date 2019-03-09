@@ -114,7 +114,7 @@ const searchUser = async (req, res) => {
       }
     }]
   }, {
-    email: false,
+    // email: false,
     password: false,
     __v: false
   }).limit(10)
