@@ -24,7 +24,7 @@ file_env() {
 	unset "$fileVar"
 }
 
-file_env "JWT_SECRET" "supersecretsecret"
+file_env "JWT_SECRET"
 
 echo Running database population and server
 npm run populate && node server/server.js
