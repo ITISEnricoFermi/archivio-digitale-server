@@ -1,17 +1,21 @@
-version: "2"
+version: "3.1"
 
 services:
   archivio-server:
-    build: .
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
     image: itisenricofermi/archivio-digitale-server
+    secrets:
+      - jwt_secret_ex
     environment:
       - MONGODB_URI=mongodb://database:27017/archivio
-      - JWT_SECRET=3xWXqcDzt86YGKr2zP
+      - JWT_SECRET_FILE=/run/secrets/jwt_secret_ex
       - NODE_ENV=development
     volumes:
       - server-data:/usr/app/server/public
     ports:
-      - 3000:80
+      - 4000:80
     depends_on:
       - database
     networks:
@@ -27,6 +31,10 @@ services:
       - MONGO_INITDB_DATABASE=archivio
     networks:
       api-network:
+
+secrets:
+  jwt_secret_ex:
+    file: secret-test.txt
 
 networks:
   api-network:
