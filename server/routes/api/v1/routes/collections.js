@@ -12,15 +12,15 @@ const {
 // Middleware
 const {
   authenticate
-} = require('../../../../middleware/authenticate')
+} = require('../../../../middlewares/authenticate')
 
 const {
   asyncMiddleware
-} = require('../../../../middleware/async')
+} = require('../../../../middlewares/async')
 
 const {
   editCollection
-} = require('../../../../middleware/edit')
+} = require('../../../../middlewares/edit')
 
 router.get('/:id', authenticate, asyncMiddleware(getCollection))
 router.post('/', authenticate, asyncMiddleware(postCollection))

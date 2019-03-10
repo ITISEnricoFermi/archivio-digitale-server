@@ -7,7 +7,7 @@ const _ = require('lodash')
 
 const {
   asyncMiddleware
-} = require('../middleware/async')
+} = require('../middlewares/async')
 
 // Models
 const {

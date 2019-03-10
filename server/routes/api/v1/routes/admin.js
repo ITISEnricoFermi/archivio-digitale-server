@@ -28,28 +28,36 @@ const {
 const {
   authenticate,
   authenticateAdmin
-} = require('../../../../middleware/authenticate')
+} = require('../../../../middlewares/authenticate')
+
+const checkErrors = require('../../../../middlewares/check')
 
 const {
   asyncMiddleware
-} = require('../../../../middleware/async')
+} = require('../../../../middlewares/async')
+
+const {
+  User
+} = require('../../../../models/user')
 
 router.post('/users/',
+  authenticate,
+  authenticateAdmin,
+  body('email').custom((value) => User.findByEmail(value)
+    .then(user => {
+      if (user) {
+        return Promise.reject(new Error('L\'email inserita è già in uso.'))
+      }
+    })),
   body('firstname')
     .not().isEmpty().withMessage('Il nome è obbligatorio.')
-    .not().equals('undefined').withMessage('Il nome è obbligatorio.')
     .trim()
     .escape(),
-  (req, res, next) => {
-    console.log(req.body.firstname)
-    next()
-  },
   check('lastname')
     .not().isEmpty().withMessage('Il cognome è obbligatorio.')
     .trim()
     .escape(),
-  authenticate,
-  authenticateAdmin,
+  checkErrors,
   asyncMiddleware(postUser))
 
 router.patch('/users/:id',

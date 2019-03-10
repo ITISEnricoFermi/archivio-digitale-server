@@ -15,16 +15,16 @@ const {
 // Middleware
 const {
   authenticate
-} = require('../../../../middleware/authenticate')
-const upload = require('../../../../middleware/file_upload')
+} = require('../../../../middlewares/authenticate')
+const upload = require('../../../../middlewares/file_upload')
 
 const {
   asyncMiddleware
-} = require('../../../../middleware/async')
+} = require('../../../../middlewares/async')
 
 const {
   editDocument
-} = require('../../../../middleware/edit')
+} = require('../../../../middlewares/edit')
 
 router.get('/:id', authenticate, asyncMiddleware(getDocument))
 router.post('/', authenticate, upload, asyncMiddleware(postDocument))

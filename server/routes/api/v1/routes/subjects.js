@@ -9,7 +9,7 @@ const {
 // Middleware
 const {
   asyncMiddleware
-} = require('../../../../middleware/async')
+} = require('../../../../middlewares/async')
 
 router.get('/', asyncMiddleware(getSubjects))
 router.get('/search/partial/:query', asyncMiddleware(searchSubjects))

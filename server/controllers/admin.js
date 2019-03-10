@@ -13,8 +13,8 @@ const postUser = async (req, res) => {
   let body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
 
   body.state = 'active'
-
-  const user = await (new User(body)).save()
+  const prototype = new User(body)
+  const user = await prototype.save()
 
   const sizes = [{
     path: 'xlg',
@@ -40,12 +40,17 @@ const postUser = async (req, res) => {
 
   mkdirp(dir.folder)
 
+  const pics = []
+
   for (let i = 0; i < sizes.length; i++) {
-    await sharp(dir.default)
+    pics.push(sharp(dir.default)
       .resize(sizes[i].xy, sizes[i].xy)
       .toFormat('jpeg')
       .toFile(path.join(dir.folder, sizes[i].path + '.jpeg'))
+    )
   }
+
+  await Promise.all(pics)
 
   res.status(200).json(user)
 }

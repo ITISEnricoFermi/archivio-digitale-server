@@ -8,7 +8,7 @@ const {
 // Middleware
 const {
   asyncMiddleware
-} = require('../../../../middleware/async')
+} = require('../../../../middlewares/async')
 
 router.get('/', asyncMiddleware(getCollectionPermissions))
 

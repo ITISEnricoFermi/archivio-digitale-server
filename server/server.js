@@ -22,7 +22,7 @@ process.env.root = __dirname
 // const whitelist = process.env.CORS_WHITELIST || ['http://localhost:8080']
 
 // Middleware
-const error = require('./middleware/error')
+const error = require('./middlewares/error')
 
 // Routes
 const signup = require('./routes/signup')

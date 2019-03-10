@@ -184,9 +184,16 @@ const patchPicOfUser = async (req, res) => {
     xy: 100
   }]
 
+  const pics = []
+
   for (let i = 0; i < sizes.length; i++) {
-    await sharp(file.path).resize(sizes[i].xy, sizes[i].xy).toFormat('jpeg').toFile(path.join(file.destination, sizes[i].path + '.jpeg'))
+    pics.push(sharp(file.path)
+      .resize(sizes[i].xy, sizes[i].xy)
+      .toFormat('jpeg')
+      .toFile(path.join(file.destination, sizes[i].path + '.jpeg')))
   }
+
+  await Promise.all(pics)
 
   await fsPromises.unlink(path.join(process.env.root, 'public', 'pics', String(id), String(id) + '.jpeg'))
 

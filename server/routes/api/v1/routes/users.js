@@ -39,11 +39,11 @@ const upload = multer({
 // Middleware
 const {
   authenticate
-} = require('../../../../middleware/authenticate')
+} = require('../../../../middlewares/authenticate')
 
 const {
   asyncMiddleware
-} = require('../../../../middleware/async')
+} = require('../../../../middlewares/async')
 
 const {
   getUser,
