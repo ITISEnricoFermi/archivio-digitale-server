@@ -1,0 +1,1 @@
+mongo-connector -m 127.0.0.1:30001 -t 127.0.0.1:9200 -d elastic2_doc_manager
