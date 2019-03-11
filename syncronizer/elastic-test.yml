@@ -1,6 +1,19 @@
 version: "3.3"
 
 services:
+  connector:
+    build:
+      context: .
+      dockerfile: sync-Dockerfile
+    image: custom-connector
+    networks:
+      - mongo-cluster
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+      - elastic
+
   mongo1:
     image: mongo:3.4.19-jessie
     command: mongod --dbpath /data/db --replSet mongo-set
@@ -23,24 +36,15 @@ services:
     ports:
       - 30003:27017
 
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.1
+    networks:
+      - mongo-cluster
+    ports:
+      - 9200:9200
+
 networks:
   mongo-cluster:
 
-#   config = {
-#   	"_id" : "my-mongo-set",
-#   	"members" : [
-#   		{
-#   			"_id" : 0,
-#   			"host" : "mongo1:27017"
-#   		},
-#   		{
-#   			"_id" : 1,
-#   			"host" : "mongo2:27017"
-#   		},
-#   		{
-#   			"_id" : 2,
-#   			"host" : "mongo3:27017"
-#   		}
-#   	]
-#   }
+#   config = { "_id" : "mongo-set", "members" : [{"_id" : 0,"host" : "mongo1:27017"},{"_id" : 1,"host" : "mongo2:27017"},{"_id" : 2,"host" : "mongo3:27017"}]}
 #   rs.initiate(config)
