@@ -11,3 +11,6 @@ server/public/pics/*
 !server/public/public/documents/.gitkeep
 !server/public/pics/.gitkeep
 !server/client/.gitkeep
+
+*.log
+*.timestamp

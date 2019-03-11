@@ -1,0 +1,2 @@
+mongo-connector
+elastic2-doc-manager[elastic5]
