@@ -4,12 +4,12 @@ const router = express.Router()
 // Config
 const {
   signin
-} = require('../middleware/authenticate')
+} = require('../middlewares/authenticate')
 
 // Middleware
 const {
   asyncMiddleware
-} = require('../middleware/async')
+} = require('../middlewares/async')
 
 /*
  * Utente non loggato

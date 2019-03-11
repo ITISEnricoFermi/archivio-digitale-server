@@ -1,237 +1,114 @@
 const express = require('express')
 const router = express.Router()
-const _ = require('lodash')
-const bcrypt = require('bcryptjs')
-const path = require('path')
-const sharp = require('sharp')
-const mkdirp = require('mkdirp')
-const axios = require('axios')
+const mongoose = require('mongoose')
+const {
+  sanitizeParam
+} = require('express-validator/filter')
 
+const {
+  check,
+  body
+} = require('express-validator/check')
+
+const {
+  ObjectId
+} = mongoose.Types
+
+const {
+  postUser,
+  patchUser,
+  sendEmail,
+  getRequests,
+  acceptRequest,
+  refuseRequest,
+  toggleState,
+  resetPassword
+} = require('../../../../controllers/admin')
 // Middleware
 const {
   authenticate,
   authenticateAdmin
-} = require('../../../../middleware/authenticate')
+} = require('../../../../middlewares/authenticate')
+
+const checkErrors = require('../../../../middlewares/check')
 
 const {
   asyncMiddleware
-} = require('../../../../middleware/async')
+} = require('../../../../middlewares/async')
 
-// Models
 const {
   User
 } = require('../../../../models/user')
 
-/*
- * Utente loggato
- * Utente admin
- */
-router.put('/users/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
-
-  body.state = 'active'
-
-  const user = await (new User(body)).save()
-
-  const sizes = [{
-    path: 'xlg',
-    xy: 1200
-  }, {
-    path: 'lg',
-    xy: 800
-  }, {
-    path: 'md',
-    xy: 500
-  }, {
-    path: 'sm',
-    xy: 300
-  }, {
-    path: 'xs',
-    xy: 100
-  }]
-
-  const dir = {
-    folder: path.join(__dirname, '..', '..', '..', '..', 'public', 'pics', String(user._id)),
-    default: path.join(__dirname, '..', '..', '..', '..', 'public', 'images', 'profile.svg')
-  }
-
-  mkdirp(dir.folder)
-
-  for (let i = 0; i < sizes.length; i++) {
-    await sharp(dir.default)
-      .resize(sizes[i].xy, sizes[i].xy)
-      .toFormat('jpeg')
-      .toFile(path.join(dir.folder, sizes[i].path + '.jpeg'))
-  }
-
-  res.status(200).json(user)
-}))
-
-/*
- * Utente loggato
- * Utente admin
- */
-router.patch('/users/:id', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body, ['firstname', 'lastname', 'state', 'email', 'privileges', 'accesses'])
-
-  let user = await User.findByIdAndUpdate(req.params.id, {
-    $set: body
-  })
-
-  res.status(200).json(user)
-}))
-
-/*
- * Utente loggato
- * Utente admin
- */
-router.get('/users/:id', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  res.status(200).json(await User.findById(req.params.id))
-}))
-
-/*
- * Utente loggato
- * Utente admin
- */
-router.post('/users/search/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let query = req.body.query
-  let regex = query.split(' ').join('|')
-  // let regex = req.params.key.split(' ')
-  // regex = regex.join('|')
-
-  let users = await User.find({
-    $and: [{
-      $or: [{
-        firstname: {
-          $regex: regex,
-          $options: 'i'
-        }
-      }, {
-        lastname: {
-          $regex: regex,
-          $options: 'i'
-        }
-      }]
-    }, {
-      _id: {
-        $ne: req.user._id
+router.post('/users/',
+  authenticate,
+  authenticateAdmin,
+  body('email').custom((value) => User.findByEmail(value)
+    .then(user => {
+      if (user) {
+        return Promise.reject(new Error('L\'email inserita è già in uso.'))
       }
-    }, {
-      state: {
-        $ne: 'pending'
-      }
-    }]
-  }).limit(10)
+    })),
+  body('firstname')
+    .not().isEmpty().withMessage('Il nome è obbligatorio.')
+    .trim()
+    .escape(),
+  check('lastname')
+    .not().isEmpty().withMessage('Il cognome è obbligatorio.')
+    .trim()
+    .escape(),
+  checkErrors,
+  asyncMiddleware(postUser))
 
-  // let users = await User.find({
-  //   $text: {
-  //     $search: req.params.key
-  //   },
-  //   _id: {
-  //     $ne: req.user._id
-  //   },
-  //   state: {
-  //     $ne: 'pending'
-  //   }
-  // }, {
-  //   score: {
-  //     $meta: 'textScore'
-  //   }
-  // }).sort({
-  //   score: {
-  //     $meta: 'textScore'
-  //   }
-  // })
+router.patch('/users/:id',
+  authenticate,
+  authenticateAdmin,
+  body('email')
+    .isEmail()
+    .normalizeEmail(),
+  sanitizeParam('id')
+    .customSanitizer(value => {
+      return ObjectId(value)
+    }),
+  asyncMiddleware(patchUser))
 
-  if (users.length) {
-    res.status(200).json(users)
-  } else {
-    res.status(404).json({
-      messages: ['La ricerca non ha prodotto risultati.']
-    })
-  }
-}))
+router.patch('/users/:id/state/',
+  authenticate,
+  authenticateAdmin,
+  sanitizeParam('id')
+    .customSanitizer(value => {
+      return ObjectId(value)
+    }),
+  asyncMiddleware(toggleState))
 
-/*
- * Utente loggato
- * Utente admin
- */
-router.get('/requests/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let users = await User.find({state: 'pending'})
-  res.status(200).send(users)
-}))
+router.patch('/users/:id/password',
+  authenticate,
+  authenticateAdmin,
+  sanitizeParam('id')
+    .customSanitizer(value => {
+      return ObjectId(value)
+    }),
+  asyncMiddleware(resetPassword))
 
-/*
- * Utente loggato
- * Utente admin
- */
-router.post('/acceptRequestById/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  await User.findByIdAndUpdate(req.body._id, {
-    $set: {
-      state: 'active'
-    }
-  })
-  res.status(200).send({
-    messages: ['Richiesta d\'iscrizione accettata.']
-  })
-}))
+router.post('/mails/', authenticate, authenticateAdmin, asyncMiddleware(sendEmail))
+router.get('/requests/', authenticate, authenticateAdmin, asyncMiddleware(getRequests))
 
-/*
- * Utente loggato
- * Utente admin
- */
-router.post('/refuseRequestById', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let user = await User.findByIdAndRemove(req.body._id)
+router.patch('/requests/:id',
+  authenticate,
+  authenticateAdmin,
+  sanitizeParam('id')
+    .customSanitizer(value => {
+      return ObjectId(value)
+    }),
+  asyncMiddleware(acceptRequest))
 
-  if (!user) {
-    return res.status(400).send({
-      messages: ['L\'utente non esiste']
-    })
-  }
-
-  return res.status(200).send({
-    messages: ['Richiesta d\'iscrizione rifiutata.']
-  })
-}))
-
-/*
- * Utente loggato
- * Utente admin
- */
-router.post('/resetPassword', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let password = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7)
-
-  let salt = await bcrypt.genSalt(10)
-  let hash = await bcrypt.hash(password, salt)
-
-  await User.findByIdAndUpdate(req.body._id, {
-    password: hash
-  })
-  return res.status(200).send({
-    password: password
-  })
-}))
-
-router.post('/mails/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  const { subject, recipients, message } = req.body
-  const { data } = await axios.post(process.env.MAILER_URL, {
-    subject, recipients, message
-  })
-  res.status(200).json(data)
-}))
-
-/*
- * Utente loggato
- * Utente admin
- */
-router.post('/toggleState/', authenticate, authenticateAdmin, asyncMiddleware(async (req, res) => {
-  let body = _.pick(req.body, ['_id', 'state'])
-  let user = await User.findByIdAndUpdate(body._id, {
-    $set: {
-      state: body.state === 'active' ? 'disabled' : 'active'
-    }
-  })
-  res.status(200).json(user)
-}))
+router.delete('/requests/:id',
+  authenticate,
+  authenticateAdmin,
+  sanitizeParam('id')
+    .customSanitizer(value => {
+      return ObjectId(value)
+    }),
+  asyncMiddleware(refuseRequest))
 
 module.exports = router

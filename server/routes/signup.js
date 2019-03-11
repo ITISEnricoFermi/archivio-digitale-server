@@ -8,7 +8,7 @@ const mkdirp = require('mkdirp')
 // Middleware
 const {
   asyncMiddleware
-} = require('../middleware/async')
+} = require('../middlewares/async')
 
 // router.use(asyncMiddleware)
 

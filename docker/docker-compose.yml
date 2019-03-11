@@ -1,4 +1,4 @@
-version: "2"
+version: "3.1"
 
 services:
   archivio-server:
@@ -6,9 +6,11 @@ services:
       context: ../
       dockerfile: docker/Dockerfile
     image: itisenricofermi/archivio-digitale-server
+    secrets:
+      - jwt_secret_ex
     environment:
       - MONGODB_URI=mongodb://database:27017/archivio
-      - JWT_SECRET=3xWXqcDzt86YGKr2zP
+      - JWT_SECRET_FILE=/run/secrets/jwt_secret_ex
       - NODE_ENV=development
       - ES_HOST=elasticsearch
     volumes:
@@ -43,6 +45,10 @@ services:
       - "9200:9200"
     networks:
       api-network:
+
+secrets:
+  jwt_secret_ex:
+    file: secret-test.txt
 
 networks:
   api-network:

@@ -14,5 +14,5 @@ COPY . .
 
 EXPOSE 80
 
-CMD ["sh", "docker/startup.sh"]
+CMD ["/bin/bash", "./docker/startup.sh"]
 

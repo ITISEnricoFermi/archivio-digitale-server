@@ -1,22 +1,15 @@
 const express = require('express')
 const router = express.Router()
 
+const {
+  getGrades
+} = require('../../../../controllers/grades')
+
 // Middleware
 const {
   asyncMiddleware
-} = require('../../../../middleware/async')
+} = require('../../../../middlewares/async')
 
-// Model
-const {
-  Grade
-} = require('../../../../models/grade')
-
-/*
- * Utente non loggato
- */
-router.get('/', asyncMiddleware(async (req, res) => {
-  let classes = await Grade.getGrades()
-  res.status(200).send(classes)
-}))
+router.get('/', asyncMiddleware(getGrades))
 
 module.exports = router

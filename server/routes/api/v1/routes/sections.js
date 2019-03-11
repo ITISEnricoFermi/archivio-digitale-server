@@ -1,22 +1,15 @@
 const express = require('express')
 const router = express.Router()
 
+const {
+  getSections
+} = require('../../../../controllers/sections')
+
 // Middleware
 const {
   asyncMiddleware
-} = require('../../../../middleware/async')
+} = require('../../../../middlewares/async')
 
-// Model
-const {
-  Section
-} = require('../../../../models/section')
-
-/*
- * Utente non loggato
- */
-router.get('/', asyncMiddleware(async (req, res) => {
-  let sections = await Section.getSections()
-  res.status(200).send(sections)
-}))
+router.get('/', asyncMiddleware(getSections))
 
 module.exports = router

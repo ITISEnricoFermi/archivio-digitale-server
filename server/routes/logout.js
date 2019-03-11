@@ -4,11 +4,11 @@ const router = express.Router()
 // Middleware
 const {
   authenticate
-} = require('../middleware/authenticate')
+} = require('../middlewares/authenticate')
 
 const {
   asyncMiddleware
-} = require('../middleware/async')
+} = require('../middlewares/async')
 
 /*
  * Utente loggato
