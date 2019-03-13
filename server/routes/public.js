@@ -25,7 +25,7 @@ router.get('/documents/*', asyncMiddleware(async (req, res, next) => {
       messages: ['Il documento non esiste.']
     })
   }
-
+  // TODO: Accesso da parte di loggati e non
   if (document.visibility._id !== 'pubblico') {
     return res.status(401).send({
       messages: ['Non si detengono i privilegi necessari.']

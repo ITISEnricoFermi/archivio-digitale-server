@@ -116,6 +116,13 @@ var DocumentSchema = new mongoose.Schema({
   }
 })
 
+DocumentSchema.statics.isEditable = function (document, user) {
+  const isAdmin = user.privileges._id === 'admin'
+  const isAuthor = user._id === document.author._id
+  document.editable = !!(isAdmin || isAuthor)
+  return document
+}
+
 DocumentSchema.statics.searchDocuments = function (search, user) {
   const Document = this
 

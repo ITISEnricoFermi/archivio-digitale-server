@@ -19,6 +19,7 @@ const {
 const getDocument = async (req, res) => {
   const id = req.params.id
   let document = await Document.findById(id).lean()
+  document = Document.isEditable(document, req.user)
   const collection = await DocumentCollection.findOne({
     documents: id
   })
@@ -130,6 +131,7 @@ const searchDocument = async (req, res) => {
   }
 
   let documents = await Document.searchDocuments(body, req.user)
+  documents.map(document => Document.isEditable(document, req.user))
 
   if (documents.length) {
     res.status(200).send(documents)
@@ -169,14 +171,10 @@ const getRecentDocuments = async (req, res) => {
     })
     .lean()
 
-  if (documents.length) {
-    for (let i = 0; i < documents.length; i++) {
-      if (String(documents[i].author._id) === String(req.user._id) || req.user.privileges._id === 'admin') {
-        documents[i].own = true
-      }
-    }
+  documents.map(document => Document.isEditable(document, req.user))
 
-    res.status(200).send(documents)
+  if (documents.length) {
+    res.status(200).json(documents)
   } else {
     res.status(404).json({
       messages: ['Nessun documento presente.']

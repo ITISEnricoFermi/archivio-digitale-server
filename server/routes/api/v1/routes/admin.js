@@ -70,24 +70,39 @@ router.patch('/users/:id',
     .customSanitizer(value => {
       return ObjectId(value)
     }),
+  checkErrors,
   asyncMiddleware(patchUser))
 
 router.patch('/users/:id/state/',
   authenticate,
   authenticateAdmin,
+  body('id').custom((value) => User.findById(value)
+    .then(user => {
+      if (!user) {
+        return Promise.reject(new Error('L\'utente non esiste.'))
+      }
+    })),
   sanitizeParam('id')
     .customSanitizer(value => {
       return ObjectId(value)
     }),
+  checkErrors,
   asyncMiddleware(toggleState))
 
 router.patch('/users/:id/password',
   authenticate,
   authenticateAdmin,
+  body('id').custom((value) => User.findById(value)
+    .then(user => {
+      if (!user) {
+        return Promise.reject(new Error('L\'utente non esiste.'))
+      }
+    })),
   sanitizeParam('id')
     .customSanitizer(value => {
       return ObjectId(value)
     }),
+  checkErrors,
   asyncMiddleware(resetPassword))
 
 router.post('/mails/', authenticate, authenticateAdmin, asyncMiddleware(sendEmail))

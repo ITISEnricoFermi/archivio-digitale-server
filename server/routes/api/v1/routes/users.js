@@ -4,6 +4,12 @@ const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
 
+const {
+  check,
+  body,
+  param
+} = require('express-validator/check')
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let dir = path.join(process.env.root, 'public', 'pics', String(req.user._id))
@@ -36,6 +42,14 @@ const upload = multer({
   fileFilter
 })
 
+const {
+  User
+} = require('../../../../models/user')
+
+const {
+  DocumentVisibility
+} = require('../../../../models/document_visibility')
+
 // Middleware
 const {
   authenticate
@@ -44,6 +58,8 @@ const {
 const {
   asyncMiddleware
 } = require('../../../../middlewares/async')
+
+const checkErrors = require('../../../../middlewares/check')
 
 const {
   getUser,
@@ -55,11 +71,70 @@ const {
   patchPicOfUser
 } = require('../../../../controllers/users')
 
-router.get('/:id', authenticate, asyncMiddleware(getUser))
-router.patch('/:id', authenticate, asyncMiddleware(patchUser))
-router.delete('/:id', authenticate, asyncMiddleware(deleteUser))
-router.get('/search/partial/:query', authenticate, asyncMiddleware(searchUser))
-router.get('/:id/documents/:visibility', authenticate, asyncMiddleware(getDocumentsOnVisibility))
+router.get('/:id',
+  authenticate,
+  param('id')
+    .isMongoId().withMessage('ID non valido.')
+    .custom(value => User.findById(value)
+      .then(id => {
+        if (!id) {
+          return Promise.reject(new Error('Utente non presente.'))
+        }
+      })),
+  checkErrors,
+  asyncMiddleware(getUser))
+
+router.patch('/:id',
+  authenticate,
+  param('id')
+    .isMongoId().withMessage('ID non valido.')
+    .custom(value => User.findById(value)
+      .then(id => {
+        if (!id) {
+          return Promise.reject(new Error('Utente non presente.'))
+        }
+      })),
+  checkErrors,
+  asyncMiddleware(patchUser))
+
+router.delete('/:id',
+  authenticate,
+  param('id')
+    .isMongoId().withMessage('ID non valido.')
+    .custom(value => User.findById(value)
+      .then(id => {
+        if (!id) {
+          return Promise.reject(new Error('Utente non presente.'))
+        }
+      })),
+  checkErrors,
+  asyncMiddleware(deleteUser))
+
+router.get('/search/partial/:query',
+  authenticate,
+  param('query')
+    .trim()
+    .escape(),
+  checkErrors,
+  asyncMiddleware(searchUser))
+
+router.get('/:id/documents/:visibility', authenticate,
+  param('id')
+    .isMongoId().withMessage('ID non valido.')
+    .custom(value => User.findById(value)
+      .then(id => {
+        if (!id) {
+          return Promise.reject(new Error('Utente non presente.'))
+        }
+      })),
+  param('visibility')
+    .custom(value => DocumentVisibility.findById(value)
+      .then(id => {
+        if (!id) {
+          return Promise.reject(new Error('La visibilità non esiste.'))
+        }
+      })), asyncMiddleware(getDocumentsOnVisibility))
+
 router.get('/:id/documents/count/:visibility', authenticate, asyncMiddleware(countDocumentsOnVisibility))
 router.patch('/:id/pic/', authenticate, upload.single('picToUpload'), asyncMiddleware(patchPicOfUser))
 

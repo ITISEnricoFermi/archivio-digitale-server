@@ -124,14 +124,24 @@ const searchUser = async (req, res) => {
 
 const getDocumentsOnVisibility = async (req, res) => {
   const {id, visibility} = req.params
-  let documents = await Document.find({
+  const query = {
     author: id,
     visibility: visibility
-  })
+  }
+
+  if (req.user.privileges._id !== 'admin' && req.user._id !== id && visibility === 'materia') {
+    query.subject = {
+      $in: req.user.accesses
+    }
+  }
+
+  let documents = await Document.find(query)
     .sort({
       _id: 1
     })
     .lean()
+
+  documents.map(document => Document.isEditable(document, req.user))
 
   if (!documents.length) {
     return res.status(200).json({
