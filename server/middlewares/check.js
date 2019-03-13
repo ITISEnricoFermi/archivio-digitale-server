@@ -7,6 +7,14 @@ const {
   User
 } = require('../models/user')
 
+const {
+  Document
+} = require('../models/document')
+
+const {
+  DocumentCollection
+} = require('../models/document_collection')
+
 const checkErrors = (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
@@ -25,7 +33,45 @@ const checkUserById = param('id')
       }
     }))
 
+const checkDocumentById = param('id')
+  .isMongoId().withMessage('ID non valido.')
+  .custom(value => Document.findById(value)
+    .then(document => {
+      if (!document) {
+        return Promise.reject(new Error('Il documento non esiste.'))
+      }
+    }))
+
+const checkDocumentEditableById = param('id')
+  .custom((value, {req}) => Document.findById(value)
+    .then(document => {
+      if (!Document.isEditable(document, req.user)) {
+        return Promise.reject(new Error('Non si detengono i privilegi necessari.'))
+      }
+    }))
+
+const checkCollectionById = param('id')
+  .isMongoId().withMessage('ID non valido.')
+  .custom(value => DocumentCollection.findById(value)
+    .then(collection => {
+      if (!collection) {
+        return Promise.reject(new Error('La collezione non esiste.'))
+      }
+    }))
+
+const checkCollectionEditableById = param('id')
+  .custom((value, {req}) => DocumentCollection.findById(value)
+    .then(collection => {
+      if (!DocumentCollection.isEditable(collection, req.user)) {
+        return Promise.reject(new Error('Non si detengono i privilegi necessari.'))
+      }
+    }))
+
 module.exports = {
   checkErrors,
-  checkUserById
+  checkUserById,
+  checkDocumentById,
+  checkDocumentEditableById,
+  checkCollectionById,
+  checkCollectionEditableById
 }

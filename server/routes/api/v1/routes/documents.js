@@ -16,6 +16,7 @@ const {
 const {
   authenticate
 } = require('../../../../middlewares/authenticate')
+
 const upload = require('../../../../middlewares/file_upload')
 
 const {
@@ -23,14 +24,39 @@ const {
 } = require('../../../../middlewares/async')
 
 const {
-  editDocument
-} = require('../../../../middlewares/edit')
+  checkDocumentById,
+  checkDocumentEditableById,
+  checkErrors
+} = require('../../../../middlewares/check')
 
-router.get('/:id', authenticate, asyncMiddleware(getDocument))
+router.get('/:id',
+  authenticate,
+  checkDocumentById,
+  checkErrors,
+  asyncMiddleware(getDocument))
+
 router.post('/', authenticate, upload, asyncMiddleware(postDocument))
-router.patch('/:id', authenticate, editDocument, asyncMiddleware(patchDocument))
-router.get('/:id/collections', authenticate, asyncMiddleware(getCollectionsOnDocument))
-router.delete('/:id', authenticate, editDocument, asyncMiddleware(deleteDocument))
+
+router.patch('/:id',
+  authenticate,
+  checkDocumentById,
+  checkDocumentEditableById,
+  checkErrors,
+  asyncMiddleware(patchDocument))
+
+router.get('/:id/collections',
+  authenticate,
+  checkDocumentById,
+  checkErrors,
+  asyncMiddleware(getCollectionsOnDocument))
+
+router.delete('/:id',
+  authenticate,
+  checkDocumentById,
+  checkDocumentEditableById,
+  checkErrors,
+  asyncMiddleware(deleteDocument))
+
 router.post('/search/', authenticate, asyncMiddleware(searchDocument))
 router.get('/recent/:page/:number', authenticate, asyncMiddleware(getRecentDocuments))
 router.post('/search/partial/:query', authenticate, asyncMiddleware(partialSearchDocuments))

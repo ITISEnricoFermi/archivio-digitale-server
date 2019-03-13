@@ -5,7 +5,8 @@ const {
 } = require('../models/document_collection')
 
 const getCollection = async (req, res) => {
-  let collection = await DocumentCollection.findById(req.params.id)
+  let collection = await DocumentCollection.findById(req.params.id).lean()
+  collection = DocumentCollection.isEditable(collection, req.user)
   res.status(200).send(collection)
 }
 
@@ -86,6 +87,7 @@ const searchCollections = async (req, res) => {
   }
 
   let collections = await DocumentCollection.searchCollections(body, req.user)
+  collections = collections.map(collection => DocumentCollection.isEditable(collection, req.user))
 
   if (collections.length) {
     res.status(200).send(collections)

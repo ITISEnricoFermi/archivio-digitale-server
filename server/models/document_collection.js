@@ -62,11 +62,20 @@ let DocumentCollectionSchema = new mongoose.Schema({
     trim: true,
     ref: 'User',
     validate: [async (value) => {
-      let authorization = await User.findByid(value)
+      let authorization = await User.findById(value)
       if (!authorization) return false
     }, '\'{VALUE}\' non è un utente valido.']
   }]
 })
+
+DocumentCollectionSchema.statics.isEditable = function (collection, user) {
+  const isAdmin = user.privileges._id === 'admin'
+  const isAuthor = user._id === collection.author._id
+  const authorizations = collection.authorizations.map(el => String(el._id))
+  const isAuthorized = authorizations.includes(String(user._id))
+  collection.editable = !!(isAdmin || isAuthor || isAuthorized)
+  return collection
+}
 
 DocumentCollectionSchema.statics.searchCollections = function (search, user) {
   let DocumentCollection = this
@@ -100,14 +109,7 @@ DocumentCollectionSchema.statics.searchCollections = function (search, user) {
   })
     .limit(10)
     .lean()
-    .then((collections) => {
-      for (let i = 0; i < collections.length; i++) {
-        if (String(collections[i].author._id) === String(user._id) || user.privileges._id === 'admin') {
-          collections[i].own = true
-        }
-      }
-      return Promise.resolve(collections)
-    }, (e) => {
+    .catch(e => {
       return Promise.reject(e)
     })
 }

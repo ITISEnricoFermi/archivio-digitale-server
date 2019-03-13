@@ -19,13 +19,34 @@ const {
 } = require('../../../../middlewares/async')
 
 const {
-  editCollection
-} = require('../../../../middlewares/edit')
+  checkCollectionById,
+  checkCollectionEditableById,
+  checkErrors
+} = require('../../../../middlewares/check')
 
-router.get('/:id', authenticate, asyncMiddleware(getCollection))
-router.post('/', authenticate, asyncMiddleware(postCollection))
-router.patch('/:id', authenticate, editCollection, asyncMiddleware(patchCollection))
-router.delete('/:id', authenticate, editCollection, asyncMiddleware(deleteCollection))
+router.get('/:id',
+  authenticate,
+  checkCollectionById,
+  checkErrors,
+  asyncMiddleware(getCollection))
+
+router.post('/',
+  authenticate,
+  asyncMiddleware(postCollection))
+
+router.patch('/:id',
+  authenticate,
+  checkCollectionById,
+  checkCollectionEditableById,
+  checkErrors,
+  asyncMiddleware(patchCollection))
+
+router.delete('/:id',
+  authenticate,
+  checkCollectionById,
+  checkCollectionEditableById,
+  checkErrors,
+  asyncMiddleware(deleteCollection))
 router.post('/search/', authenticate, asyncMiddleware(searchCollections))
 
 module.exports = router
