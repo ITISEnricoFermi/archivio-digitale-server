@@ -59,7 +59,10 @@ const {
   asyncMiddleware
 } = require('../../../../middlewares/async')
 
-const checkErrors = require('../../../../middlewares/check')
+const {
+  checkErrors,
+  checkUserById
+} = require('../../../../middlewares/check')
 
 const {
   getUser,
@@ -73,40 +76,19 @@ const {
 
 router.get('/:id',
   authenticate,
-  param('id')
-    .isMongoId().withMessage('ID non valido.')
-    .custom(value => User.findById(value)
-      .then(id => {
-        if (!id) {
-          return Promise.reject(new Error('Utente non presente.'))
-        }
-      })),
+  checkUserById,
   checkErrors,
   asyncMiddleware(getUser))
 
 router.patch('/:id',
   authenticate,
-  param('id')
-    .isMongoId().withMessage('ID non valido.')
-    .custom(value => User.findById(value)
-      .then(id => {
-        if (!id) {
-          return Promise.reject(new Error('Utente non presente.'))
-        }
-      })),
+  checkUserById,
   checkErrors,
   asyncMiddleware(patchUser))
 
 router.delete('/:id',
   authenticate,
-  param('id')
-    .isMongoId().withMessage('ID non valido.')
-    .custom(value => User.findById(value)
-      .then(id => {
-        if (!id) {
-          return Promise.reject(new Error('Utente non presente.'))
-        }
-      })),
+  checkUserById,
   checkErrors,
   asyncMiddleware(deleteUser))
 
@@ -119,23 +101,28 @@ router.get('/search/partial/:query',
   asyncMiddleware(searchUser))
 
 router.get('/:id/documents/:visibility', authenticate,
-  param('id')
-    .isMongoId().withMessage('ID non valido.')
-    .custom(value => User.findById(value)
-      .then(id => {
-        if (!id) {
-          return Promise.reject(new Error('Utente non presente.'))
-        }
-      })),
+  checkUserById,
   param('visibility')
     .custom(value => DocumentVisibility.findById(value)
       .then(id => {
         if (!id) {
           return Promise.reject(new Error('La visibilità non esiste.'))
         }
-      })), asyncMiddleware(getDocumentsOnVisibility))
+      })),
+  checkErrors,
+  asyncMiddleware(getDocumentsOnVisibility))
 
-router.get('/:id/documents/count/:visibility', authenticate, asyncMiddleware(countDocumentsOnVisibility))
-router.patch('/:id/pic/', authenticate, upload.single('picToUpload'), asyncMiddleware(patchPicOfUser))
+router.get('/:id/documents/count/:visibility',
+  authenticate,
+  checkUserById,
+  checkErrors,
+  asyncMiddleware(countDocumentsOnVisibility))
+
+router.patch('/:id/pic/',
+  authenticate,
+  checkUserById,
+  checkErrors,
+  upload.single('picToUpload'),
+  asyncMiddleware(patchPicOfUser))
 
 module.exports = router

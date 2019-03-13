@@ -7,6 +7,7 @@ const {
 
 const {
   check,
+  param,
   body
 } = require('express-validator/check')
 
@@ -30,7 +31,10 @@ const {
   authenticateAdmin
 } = require('../../../../middlewares/authenticate')
 
-const checkErrors = require('../../../../middlewares/check')
+const {
+  checkErrors,
+  checkUserById
+} = require('../../../../middlewares/check')
 
 const {
   asyncMiddleware
@@ -63,45 +67,24 @@ router.post('/users/',
 router.patch('/users/:id',
   authenticate,
   authenticateAdmin,
+  checkUserById,
   body('email')
     .isEmail()
     .normalizeEmail(),
-  sanitizeParam('id')
-    .customSanitizer(value => {
-      return ObjectId(value)
-    }),
   checkErrors,
   asyncMiddleware(patchUser))
 
 router.patch('/users/:id/state/',
   authenticate,
   authenticateAdmin,
-  body('id').custom((value) => User.findById(value)
-    .then(user => {
-      if (!user) {
-        return Promise.reject(new Error('L\'utente non esiste.'))
-      }
-    })),
-  sanitizeParam('id')
-    .customSanitizer(value => {
-      return ObjectId(value)
-    }),
+  checkUserById,
   checkErrors,
   asyncMiddleware(toggleState))
 
 router.patch('/users/:id/password',
   authenticate,
   authenticateAdmin,
-  body('id').custom((value) => User.findById(value)
-    .then(user => {
-      if (!user) {
-        return Promise.reject(new Error('L\'utente non esiste.'))
-      }
-    })),
-  sanitizeParam('id')
-    .customSanitizer(value => {
-      return ObjectId(value)
-    }),
+  checkUserById,
   checkErrors,
   asyncMiddleware(resetPassword))
 
