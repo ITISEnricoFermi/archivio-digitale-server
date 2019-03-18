@@ -7,12 +7,12 @@ RUN npm install && mkdir -p /usr/app/node_modules && cp -a ./node_modules /usr/a
 WORKDIR /usr/app
 VOLUME /usr/app/server/public
 ENV DOCKER=true
-ENV NODE_ENV=production
-ENV PORT=80
+ENV NODE_ENV=development
+ENV PORT=3000
 
 COPY . .
 
-EXPOSE 80
+EXPOSE 3000
 VOLUME /usr/app/server/public
 CMD ["/bin/bash", "./docker/startup.sh"]
 
