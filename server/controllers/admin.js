@@ -67,6 +67,12 @@ const patchUser = async (req, res) => {
 
 const sendEmail = async (req, res) => {
   const { subject, recipients, message } = req.body
+  if (!process.env.MAILER_URL) {
+    return res.status(422).json({
+      messages: ["Mailer non disponibile."]
+    })
+  }
+  
   const { data } = await axios.post(process.env.MAILER_URL, {
     subject, recipients, message
   })
