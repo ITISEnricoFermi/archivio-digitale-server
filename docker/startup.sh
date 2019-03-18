@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /usr/app
+cd /app
 
 # from https://github.com/docker-library/postgres
 # usage: file_env VAR [DEFAULT]
