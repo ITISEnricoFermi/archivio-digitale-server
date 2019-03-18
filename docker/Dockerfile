@@ -13,6 +13,5 @@ ENV PORT=80
 COPY . .
 
 EXPOSE 80
-VOLUME /app/server/public
 CMD ["/bin/bash", "./docker/startup.sh"]
 
