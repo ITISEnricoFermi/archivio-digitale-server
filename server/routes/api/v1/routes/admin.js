@@ -27,8 +27,13 @@ const {
 } = require('../../../../controllers/admin')
 // Middleware
 const {
-  authenticate,
   authenticateAdmin
+} = require('../../../../middlewares/authenticate')
+
+const logged = require('../../../../middlewares/logged')
+
+const {
+  authenticate
 } = require('../../../../middlewares/authenticate')
 
 const {
@@ -46,6 +51,7 @@ const {
 
 router.post('/users/',
   authenticate,
+  logged,
   authenticateAdmin,
   body('email').custom((value) => User.findByEmail(value)
     .then(user => {
@@ -66,6 +72,7 @@ router.post('/users/',
 
 router.patch('/users/:id',
   authenticate,
+  logged,
   authenticateAdmin,
   checkUserById,
   body('email')
@@ -76,6 +83,7 @@ router.patch('/users/:id',
 
 router.patch('/users/:id/state/',
   authenticate,
+  logged,
   authenticateAdmin,
   checkUserById,
   checkErrors,
@@ -83,16 +91,27 @@ router.patch('/users/:id/state/',
 
 router.patch('/users/:id/password',
   authenticate,
+  logged,
   authenticateAdmin,
   checkUserById,
   checkErrors,
   asyncMiddleware(resetPassword))
 
-router.post('/mails/', authenticate, authenticateAdmin, asyncMiddleware(sendEmail))
-router.get('/requests/', authenticate, authenticateAdmin, asyncMiddleware(getRequests))
+router.post('/mails/',
+  authenticate,
+  logged,
+  authenticateAdmin,
+  asyncMiddleware(sendEmail))
+
+router.get('/requests/',
+  authenticate,
+  logged,
+  authenticateAdmin,
+  asyncMiddleware(getRequests))
 
 router.patch('/requests/:id',
   authenticate,
+  logged,
   authenticateAdmin,
   sanitizeParam('id')
     .customSanitizer(value => {
@@ -102,6 +121,7 @@ router.patch('/requests/:id',
 
 router.delete('/requests/:id',
   authenticate,
+  logged,
   authenticateAdmin,
   sanitizeParam('id')
     .customSanitizer(value => {

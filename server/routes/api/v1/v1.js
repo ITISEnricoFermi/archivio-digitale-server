@@ -14,6 +14,9 @@ const privileges = require('./routes/privileges')
 const documentVisibility = require('./routes/document_visibility')
 const documentTypes = require('./routes/document_types')
 const collectionPermissions = require('./routes/collection_permissions')
+const signup = require('./routes/signup')
+const login = require('./routes/login')
+const logout = require('./routes/logout')
 
 router.use('/admin', admin)
 router.use('/documents', documents)
@@ -27,5 +30,8 @@ router.use('/privileges', privileges)
 router.use('/document_visibility', documentVisibility)
 router.use('/document_types', documentTypes)
 router.use('/collection_permissions', collectionPermissions)
+router.use('/login', login)
+router.use('/signup', signup)
+router.use('/logout', logout)
 
 module.exports = router

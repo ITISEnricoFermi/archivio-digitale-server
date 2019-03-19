@@ -4,7 +4,7 @@ const passport = require('passport')
 const {
   bearer,
   login
-} = require('../config/passport')
+} = require('../lib/passport')
 
 passport.use('bearer', bearer)
 passport.use('login', login)
@@ -13,14 +13,22 @@ const authenticate = (req, res, next) => passport.authenticate('bearer', {
   session: false,
   failureFlash: true
 }, (err, user, info) => {
-  if (err) {
-    return res.status(500).json({
-      message: 'Si è verificato un errore durante la verifica dell\'utente.'
-    })
-  } else if (!user) {
-    return res.status(401).json({
-      message: info
-    })
+  if (err || !user) {
+    // const error = new Error('Si è verificato un errore durante la verifica dell\'utente.')
+    // error.code = 500
+    // throw error
+    // return res.status(500).json({
+    //   message: 'Si è verificato un errore durante la verifica dell\'utente.'
+    // })
+    req.user = false
+    next()
+  // } else if (!user) {
+  //   // const error = new Error(info)
+  //   // error.code = 401
+  //   // throw error
+  //   return res.status(401).json({
+  //     message: info
+  //   })
   } else {
     req.user = user
     return next()

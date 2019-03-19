@@ -21,7 +21,7 @@ const {
   DocumentVisibility
 } = require('../models/document_visibility')
 
-var DocumentSchema = new mongoose.Schema({
+let DocumentSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -117,39 +117,76 @@ var DocumentSchema = new mongoose.Schema({
 })
 
 DocumentSchema.statics.isEditable = function (document, user) {
-  const isAdmin = user.privileges._id === 'admin'
-  const isAuthor = user._id === document.author._id
-  document.editable = !!(isAdmin || isAuthor)
+  if (!user) {
+    document.editable = false
+  } else {
+    const isAdmin = user.privileges._id === 'admin'
+    const isAuthor = user._id === document.author._id
+    document.editable = !!(isAdmin || isAuthor)
+  }
   return document
+}
+
+DocumentSchema.statics.isReadable = function (document, user) {
+  if (!user) {
+    const isPublic = document.visibility._id === 'pubblico'
+    return isPublic
+  } else {
+    const isAdmin = user.privileges._id === 'admin'
+    const isAuthor = user._id === document.author._id
+    return !!(isAdmin || isAuthor)
+  }
+}
+
+DocumentSchema.statics.getVisibility = function (user, visibility) {
+  let query = []
+  if (!user) {
+    query.push({
+      visibility: 'pubblico'
+    })
+    return query
+  }
+  switch (user.privileges._id) {
+    case 'user':
+      query.push({
+        $or: [{
+          visibility: 'pubblico'
+        }, {
+          visibility: 'areariservata'
+        }, {
+          $and: [{
+            visibility: 'materia'
+          }, {
+            subject: {
+              $in: user.accesses
+            }
+          }]
+        }]
+      })
+      break
+    case 'admin':
+      if (visibility) {
+        query.push({
+          visibility
+        })
+      }
+      break
+    default:
+      query.push({
+        visibility: 'pubblico'
+      })
+      break
+  }
+  return query
 }
 
 DocumentSchema.statics.searchDocuments = function (search, user) {
   const Document = this
 
-  var andQuery = []
-
-  if (user.privileges === 'user') {
-    andQuery.push({
-      $or: [{
-        visibility: 'pubblico'
-      }, {
-        visibility: 'areariservata'
-      }, {
-        $and: [{
-          visibility: 'materia'
-        }, {
-          subject: {
-            $in: user.accesses
-          }
-        }]
-      }]
-    })
-  } else {
-    andQuery.push({})
-  }
+  const query = Document.getVisibility(user, search.visibility)
 
   if (search.fulltext) {
-    andQuery.push({
+    query.push({
       $text: {
         $search: search.fulltext
       }
@@ -157,43 +194,37 @@ DocumentSchema.statics.searchDocuments = function (search, user) {
   }
 
   if (search.type) {
-    andQuery.push({
+    query.push({
       type: search.type
     })
   }
 
   if (search.faculty) {
-    andQuery.push({
+    query.push({
       faculty: search.faculty
     })
   }
 
   if (search.subject) {
-    andQuery.push({
+    query.push({
       subject: search.subject
     })
   }
 
   if (search.grade) {
-    andQuery.push({
+    query.push({
       grade: search.grade
     })
   }
 
   if (search.section) {
-    andQuery.push({
+    query.push({
       section: search.section
     })
   }
 
-  if (search.visibility) {
-    andQuery.push({
-      visibility: search.visibility
-    })
-  }
-
   return Document.find({
-    $and: andQuery
+    $and: query
   }, {
     score: {
       $meta: 'textScore'
@@ -209,75 +240,31 @@ DocumentSchema.statics.searchDocuments = function (search, user) {
     })
 }
 
-DocumentSchema.statics.searchPublicDocuments = function (search, user) {
-  let Document = this
+DocumentSchema.statics.getRecentDocuments = async function (page, number, type, user) {
+  const Document = this
 
-  var andQuery = []
+  const visibility = Document.getVisibility(user, false)
+  const query = {}
 
-  if (search.fulltext) {
-    andQuery.push({
-      $text: {
-        $search: search.fulltext
-      }
-    })
+  if (visibility.length) {
+    query.$and = visibility
   }
 
-  if (search.type) {
-    andQuery.push({
-      type: search.type
-    })
+  if (type) {
+    query.type = type
   }
 
-  if (search.faculty) {
-    andQuery.push({
-      faculty: search.faculty
+  const documents = await Document.find(query)
+    .skip(Number(page) > 0 ? ((Number(page) - 1) * Number(number)) : 0)
+    .limit(Number(number))
+    .sort({
+      _id: -1
     })
-  }
+    .lean()
 
-  if (search.subject) {
-    andQuery.push({
-      subject: search.subject
-    })
-  }
+  documents.map(document => Document.isEditable(document, user))
 
-  if (search.grade) {
-    andQuery.push({
-      grade: search.grade
-    })
-  }
-
-  if (search.section) {
-    andQuery.push({
-      section: search.section
-    })
-  }
-
-  if (andQuery.length === 0) {
-    return Promise.reject(new Error('Nessuna query di ricerca.'))
-  }
-
-  andQuery.push({
-    visibility: 'pubblico'
-  })
-
-  return Document.find({
-    $and: andQuery
-  }, {
-    score: {
-      $meta: 'textScore'
-    }
-  }).sort({
-    score: {
-      $meta: 'textScore'
-    }
-  })
-    .limit(10)
-    .then((documents) => {
-      return Promise.resolve(documents)
-    })
-    .catch((e) => {
-      return Promise.reject(e)
-    })
+  return documents
 }
 
 DocumentSchema.pre('find', function (next) {

@@ -25,18 +25,17 @@ async (username, password, done) => {
 
 const bearer = new BearerStrategy(
   async (token, done) => {
-    let user
-
     try {
-      user = await User.findByToken(token)
+      const user = await User.findByToken(token)
+
+      if (!user) {
+        return done(null, false, 'Non è stato eseguito l\'accesso con un account valido.')
+      }
+
+      done(null, user)
     } catch (e) {
       return done(e)
     }
-
-    if (!user) {
-      return done(null, false, 'Non è stato eseguito l\'accesso con un account valido.')
-    }
-    done(null, user)
   }
 )
 

@@ -12,6 +12,7 @@ const {
 } = require('../../../../middlewares/async')
 
 router.get('/', asyncMiddleware(getSubjects))
+
 router.get('/search/partial/:query', asyncMiddleware(searchSubjects))
 
 module.exports = router

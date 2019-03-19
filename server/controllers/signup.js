@@ -1,26 +1,14 @@
-const express = require('express')
-const router = express.Router()
 const _ = require('lodash')
 const path = require('path')
 const sharp = require('sharp')
 const mkdirp = require('mkdirp')
 
-// Middleware
-const {
-  asyncMiddleware
-} = require('../middlewares/async')
-
-// router.use(asyncMiddleware)
-
 // Models
 const {
   User
-} = require('./../models/user')
+} = require('../models/user')
 
-/*
- * Utente non loggato
- */
-router.put('/', asyncMiddleware(async (req, res) => {
+const signup = async (req, res) => {
   const body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'accesses'])
   let user = await (new User(body)).save()
 
@@ -54,6 +42,8 @@ router.put('/', asyncMiddleware(async (req, res) => {
   }
 
   res.status(200).json(user)
-}))
+}
 
-module.exports = router
+module.exports = {
+  signup
+}

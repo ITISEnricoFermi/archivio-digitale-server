@@ -10,6 +10,8 @@ const {
 } = require('../../../../controllers/collections')
 
 // Middleware
+const logged = require('../../../../middlewares/logged')
+
 const {
   authenticate
 } = require('../../../../middlewares/authenticate')
@@ -26,16 +28,19 @@ const {
 
 router.get('/:id',
   authenticate,
+  logged,
   checkCollectionById,
   checkErrors,
   asyncMiddleware(getCollection))
 
 router.post('/',
   authenticate,
+  logged,
   asyncMiddleware(postCollection))
 
 router.patch('/:id',
   authenticate,
+  logged,
   checkCollectionById,
   checkCollectionEditableById,
   checkErrors,
@@ -43,10 +48,15 @@ router.patch('/:id',
 
 router.delete('/:id',
   authenticate,
+  logged,
   checkCollectionById,
   checkCollectionEditableById,
   checkErrors,
   asyncMiddleware(deleteCollection))
-router.post('/search/', authenticate, asyncMiddleware(searchCollections))
+
+router.post('/search/',
+  authenticate,
+  logged,
+  asyncMiddleware(searchCollections))
 
 module.exports = router

@@ -50,6 +50,14 @@ const checkDocumentEditableById = param('id')
       }
     }))
 
+const checkDocumentReadableById = param('id')
+  .custom((value, {req}) => Document.findById(value)
+    .then(document => {
+      if (!Document.isReadable(document, req.user)) {
+        return Promise.reject(new Error('Non si detengono i privilegi necessari.'))
+      }
+    }))
+
 const checkCollectionById = param('id')
   .isMongoId().withMessage('ID non valido.')
   .custom(value => DocumentCollection.findById(value)
@@ -73,5 +81,6 @@ module.exports = {
   checkDocumentById,
   checkDocumentEditableById,
   checkCollectionById,
-  checkCollectionEditableById
+  checkCollectionEditableById,
+  checkDocumentReadableById
 }

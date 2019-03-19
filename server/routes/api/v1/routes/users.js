@@ -43,14 +43,12 @@ const upload = multer({
 })
 
 const {
-  User
-} = require('../../../../models/user')
-
-const {
   DocumentVisibility
 } = require('../../../../models/document_visibility')
 
 // Middleware
+const logged = require('../../../../middlewares/logged')
+
 const {
   authenticate
 } = require('../../../../middlewares/authenticate')
@@ -71,36 +69,50 @@ const {
   searchUser,
   getDocumentsOnVisibility,
   countDocumentsOnVisibility,
-  patchPicOfUser
+  patchPicOfUser,
+  deleteDocumentsByUser
 } = require('../../../../controllers/users')
 
 router.get('/:id',
   authenticate,
+  logged,
   checkUserById,
   checkErrors,
   asyncMiddleware(getUser))
 
 router.patch('/:id',
   authenticate,
+  logged,
   checkUserById,
   checkErrors,
   asyncMiddleware(patchUser))
 
 router.delete('/:id',
   authenticate,
+  logged,
   checkUserById,
   checkErrors,
   asyncMiddleware(deleteUser))
 
+router.delete('/:id/documents',
+  authenticate,
+  logged,
+  checkUserById,
+  checkErrors,
+  asyncMiddleware(deleteDocumentsByUser))
+
 router.get('/search/partial/:query',
   authenticate,
+  logged,
   param('query')
     .trim()
     .escape(),
   checkErrors,
   asyncMiddleware(searchUser))
 
-router.get('/:id/documents/:visibility', authenticate,
+router.get('/:id/documents/:visibility',
+  authenticate,
+  logged,
   checkUserById,
   param('visibility')
     .custom(value => DocumentVisibility.findById(value)
@@ -114,12 +126,14 @@ router.get('/:id/documents/:visibility', authenticate,
 
 router.get('/:id/documents/count/:visibility',
   authenticate,
+  logged,
   checkUserById,
   checkErrors,
   asyncMiddleware(countDocumentsOnVisibility))
 
 router.patch('/:id/pic/',
   authenticate,
+  logged,
   checkUserById,
   checkErrors,
   upload.single('picToUpload'),

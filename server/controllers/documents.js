@@ -120,15 +120,6 @@ const getCollectionsOnDocument = async (req, res) => {
 
 const searchDocument = async (req, res) => {
   const body = _.pick(req.body, ['fulltext', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility'])
-  let empty = _.every(body, (el) => {
-    return !el
-  })
-
-  if (empty) {
-    return res.status(500).json({
-      messages: ['Nessuna query di ricerca.']
-    })
-  }
 
   let documents = await Document.searchDocuments(body, req.user)
   documents.map(document => Document.isEditable(document, req.user))
@@ -143,35 +134,9 @@ const searchDocument = async (req, res) => {
 }
 
 const getRecentDocuments = async (req, res) => {
-  const { page, number } = req.params
+  const { page, number, type } = req.params
 
-  if (req.user.privileges === 'user') {
-    var query = {
-      $or: [{
-        visibility: 'pubblico'
-      }, {
-        visibility: 'areariservata'
-      }, {
-        $and: [{
-          visibility: 'materia'
-        }, {
-          subject: {
-            $in: req.user.accesses
-          }
-        }]
-      }]
-    }
-  }
-
-  let documents = await Document.find(query || {})
-    .skip(Number(page) > 0 ? ((Number(page) - 1) * Number(number)) : 0)
-    .limit(Number(number))
-    .sort({
-      _id: -1
-    })
-    .lean()
-
-  documents.map(document => Document.isEditable(document, req.user))
+  const documents = await Document.getRecentDocuments(page, number, type, req.user)
 
   if (documents.length) {
     res.status(200).json(documents)
@@ -205,6 +170,27 @@ const partialSearchDocuments = async (req, res) => {
   res.status(200).json(documents)
 }
 
+const deleteDocumentsByUser = async (req, res) => {
+  const { id } = req.params
+
+  const isAdmin = req.user.privileges._id === 'admin'
+  const isAuthor = req.user._id === id
+
+  if (!isAdmin && !isAuthor) {
+    return res.status(401).json({
+      messages: ['Non si detengono i privilegi necessari.']
+    })
+  }
+
+  const counts = await Document.deleteMany({
+    author: id
+  })
+
+  res.status(200).json({
+    counts
+  })
+}
+
 module.exports = {
   getDocument,
   patchDocument,
@@ -213,5 +199,6 @@ module.exports = {
   searchDocument,
   getRecentDocuments,
   partialSearchDocuments,
-  getCollectionsOnDocument
+  getCollectionsOnDocument,
+  deleteDocumentsByUser
 }
