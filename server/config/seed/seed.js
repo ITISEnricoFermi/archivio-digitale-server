@@ -1,5 +1,5 @@
 const { yellow, green, red } = require('colors')
-const mongoose = require('../mongoose')
+const mongoose = require('../../lib/mongoose')
 
 mongoose.connection.once('open', async () => {
   mongoose.connection.db.listCollections().toArray(async (err, collections) => {
