@@ -1,16 +1,20 @@
 const multer = require('multer')
 const path = require('path')
+const crypto = require('crypto')
 
 const {
   asyncMiddleware
 } = require('./async')
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination (req, file, cb) {
     cb(null, path.join(__dirname, '..', 'public', 'public', 'documents'))
   },
-  filename: function (req, file, cb) {
-    cb(null, new Date().toISOString() + path.extname(file.originalname))
+  filename (req, file, cb) {
+    const hash = crypto.createHash('SHA1')
+    const date = new Date()
+    hash.update(date.toISOString())
+    cb(null, hash.digest('hex') + path.extname(file.originalname))
   }
 })
 

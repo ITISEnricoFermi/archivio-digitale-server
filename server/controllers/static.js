@@ -6,10 +6,10 @@ const {
 
 const getDocument = async (req, res, next) => {
   const url = req.url
-  const id = path.basename(url, path.extname(url))
-  const document = await Document.findById(id)
-
-  console.log(document)
+  const directory = path.basename(url)
+  const [document] = await Document.find({
+    directory
+  })
 
   if (!document) {
     return res.status(404).json({
