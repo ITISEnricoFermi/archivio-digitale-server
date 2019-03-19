@@ -1,4 +1,4 @@
-require('../../mongoose')
+require('../../lib/mongoose')
 
 const {
   DocumentVisibility
