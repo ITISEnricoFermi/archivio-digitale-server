@@ -32,8 +32,6 @@ const apollo = new ApolloServer({
   typeDefs: require('./models/gqlschema'),
   resolvers: require('./resolvers/resolvers'),
 });
-apollo.applyMiddleware({ app })
-apollo.installSubscriptionHandlers(server)
 const io = socketIO(server)
 
 if (env === 'development') {
@@ -66,6 +64,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/static', require('./routes/static'))
 app.use('/api', require('./routes/api/api'))
+apollo.applyMiddleware({ app, path: '/api/v2/graphql' })
 
 // Public directory
 app.use('/pics', express.static(path.join(__dirname, 'public', 'pics')))
@@ -119,4 +118,4 @@ io.on('connection', (socket) => {
 
 app.use(error())
 
-server.listen(port, () => console.log(`Server started on port ${port}.`))
+server.listen(port, () => console.log(`Server started on port ${port}.\nGraphql path ${apollo.graphqlPath}`))
