@@ -1,3 +1,4 @@
+require('make-promises-safe')
 require('./config/env/env')
 require('./lib/mongoose')
 
