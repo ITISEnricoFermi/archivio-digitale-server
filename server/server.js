@@ -15,7 +15,6 @@ const morgan = require('morgan')
 const cors = require('cors')
 const passport = require('passport')
 const socketIO = require('socket.io')
-const { ApolloServer } = require('apollo-server-express')
 
 // VARS
 const port = process.env.PORT || 3000
@@ -29,10 +28,6 @@ const error = require('./middlewares/error')
 // INIT
 const app = express()
 const server = http.createServer(app)
-const apollo = new ApolloServer({
-  typeDefs: require('./models/gqlschema'),
-  resolvers: require('./resolvers/resolvers')
-})
 
 const io = socketIO(server)
 
@@ -66,7 +61,6 @@ app.use((req, res, next) => {
 // Routes
 app.use('/static', require('./routes/static'))
 app.use('/api', require('./routes/api/api'))
-apollo.applyMiddleware({ app, path: '/api/v2/graphql' })
 
 // Public directory
 app.use('/pics', express.static(path.join(__dirname, 'public', 'pics')))
@@ -120,4 +114,6 @@ io.on('connection', (socket) => {
 
 app.use(error())
 
-server.listen(port, () => console.log(`Server started on port ${port}.\nGraphql path ${apollo.graphqlPath}`))
+server.listen(port, () => {
+  console.log(`🚀 Server started on port ${port}.`)
+})

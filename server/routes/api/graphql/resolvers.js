@@ -1,10 +1,10 @@
 const {
   User
-} = require('../models/user')
+} = require('../../../models/user')
 
 const {
   Document
-} = require('../models/document')
+} = require('../../../models/document')
 
 module.exports = {
   Query: {
