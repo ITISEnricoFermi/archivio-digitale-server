@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
 var SectionSchema = new mongoose.Schema({
   _id: {
@@ -7,10 +6,6 @@ var SectionSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 1
-    // validate: {
-    //   validator: validator.isAlpha,
-    //   message: '{VALUE} non è un ID valido.'
-    // }
   },
   section: {
     type: String,
@@ -18,15 +13,11 @@ var SectionSchema = new mongoose.Schema({
     unique: false,
     minlength: 1,
     trim: true
-    // validate: {
-    //   validator: validator.isAlpha,
-    //   message: '{VALUE} non è una sezione valida.'
-    // }
   }
 })
 
 SectionSchema.statics.getSections = function () {
-  var Section = this
+  const Section = this
 
   return Section.find()
     .sort({
@@ -39,7 +30,7 @@ SectionSchema.statics.getSections = function () {
     })
 }
 
-var Section = mongoose.model('Section', SectionSchema)
+const Section = mongoose.model('Section', SectionSchema)
 
 module.exports = {
   Section

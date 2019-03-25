@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
 var CollectionPermissionSchema = new mongoose.Schema({
   _id: {
@@ -7,25 +6,17 @@ var CollectionPermissionSchema = new mongoose.Schema({
     required: true,
     minlength: 1,
     trim: true
-    // validate: {
-    //   validator: validator.isAlpha,
-    //   message: '{VALUE} non è un ID valido.'
-    // }
   },
   permission: {
     type: String,
     required: true,
     unique: false,
     minlength: 1
-    // validate: {
-    //   validator: validator.isAlpha,
-    //   message: "{VALUE} non è un permesso valido."
-    // }
   }
 })
 
 CollectionPermissionSchema.statics.getPermissions = function () {
-  var CollectionPermission = this
+  const CollectionPermission = this
 
   return CollectionPermission.find()
     .then((results) => {
@@ -35,7 +26,7 @@ CollectionPermissionSchema.statics.getPermissions = function () {
     })
 }
 
-var CollectionPermission = mongoose.model('collection_permission', CollectionPermissionSchema)
+const CollectionPermission = mongoose.model('collection_permission', CollectionPermissionSchema)
 
 module.exports = {
   CollectionPermission

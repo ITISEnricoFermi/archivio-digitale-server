@@ -15,7 +15,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const passport = require('passport')
 const socketIO = require('socket.io')
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server-express')
 
 // VARS
 const port = process.env.PORT || 3000
@@ -31,8 +31,9 @@ const app = express()
 const server = http.createServer(app)
 const apollo = new ApolloServer({
   typeDefs: require('./models/gqlschema'),
-  resolvers: require('./resolvers/resolvers'),
-});
+  resolvers: require('./resolvers/resolvers')
+})
+
 const io = socketIO(server)
 
 if (env === 'development') {

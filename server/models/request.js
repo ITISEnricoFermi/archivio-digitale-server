@@ -9,7 +9,7 @@ const {
   ObjectId
 } = require('mongodb')
 
-var RequestSchema = new mongoose.Schema({
+const RequestSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.ObjectId,
     required: true,
@@ -21,7 +21,7 @@ var RequestSchema = new mongoose.Schema({
 })
 
 RequestSchema.statics.addRequest = function (id) {
-  var Request = this
+  const Request = this
 
   if (!ObjectId.isValid(id)) {
     return Promise.reject(new Error("L'ID fornito non è valido."))
@@ -47,7 +47,7 @@ RequestSchema.statics.addRequest = function (id) {
 }
 
 RequestSchema.statics.getRequests = function () {
-  var Request = this
+  const Request = this
 
   return Request.find()
     .populate('userId')
@@ -60,7 +60,7 @@ RequestSchema.statics.getRequests = function () {
 }
 
 RequestSchema.statics.acceptRequestById = function (id) {
-  var Request = this
+  const Request = this
 
   return Request.findById(id)
     .then((request) => {
@@ -82,7 +82,7 @@ RequestSchema.statics.acceptRequestById = function (id) {
     })
 }
 
-var Request = mongoose.model('Request', RequestSchema)
+const Request = mongoose.model('Request', RequestSchema)
 
 module.exports = {
   Request

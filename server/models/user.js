@@ -2,39 +2,25 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const _ = require('lodash')
-const validator = require('validator')
-
-const {
-  Privilege
-} = require('../models/privilege')
-
-const {
-  Subject
-} = require('../models/subject')
 
 var UserSchema = new mongoose.Schema({
-  firstname: { // OK
+  firstname: {
     type: String,
     required: true,
     minlength: 1
     // validate: new RegExp("[a-z]àáâäãåąçčćęèéêëėįìíîïłńñòóôöõøùúûüųūÿýżźñçčšžßŒÆ∂ð,\. '-", 'gi')
   },
-  lastname: { // OK
+  lastname: {
     type: String,
     required: true,
     minlength: 1
-    // validate: new RegExp("[a-z]àáâäãåąçčćęèéêëėįìíîïłńñòóôöõøùúûüųūÿýżźñçčšžßŒÆ∂ð,\. '-", 'gi')
   },
-  email: { // OK
+  email: {
     type: String,
     required: true,
     unique: true,
     trim: true,
-    minlength: 1,
-    validate: {
-      validator: validator.isEmail,
-      message: '{VALUE} non è un indirizzo email valido.'
-    }
+    minlength: 1
   },
   password: {
     type: String,
@@ -47,11 +33,7 @@ var UserSchema = new mongoose.Schema({
       type: String,
       trim: true,
       // unique: true,
-      ref: 'Subject',
-      validate: [async (value) => {
-        let subject = await Subject.findById(value)
-        if (!subject) return false
-      }, '\'{VALUE}\' non è un permesso valido.']
+      ref: 'Subject'
     }],
     required: true,
     minlength: 1
@@ -61,13 +43,7 @@ var UserSchema = new mongoose.Schema({
     trim: true,
     minlength: 1,
     default: 'user',
-    ref: 'Privilege',
-    validate: [async (value) => {
-      let privilege = await Privilege.findById(value)
-      if (!privilege) {
-        return false
-      }
-    }, 'Il privilegio inserito non è valido.']
+    ref: 'Privilege'
   },
   state: {
     type: String,
@@ -117,7 +93,7 @@ UserSchema.methods.generateAuthToken = async function () {
 }
 
 UserSchema.statics.findByToken = function (token) {
-  var User = this
+  const User = this
   try {
     let decoded = jwt.verify(token, process.env.JWT_SECRET)
     if (decoded) {
@@ -129,7 +105,7 @@ UserSchema.statics.findByToken = function (token) {
 }
 
 UserSchema.statics.findByEmail = function (email) {
-  var User = this
+  const User = this
 
   return User.findOne({
     email
@@ -143,7 +119,7 @@ UserSchema.statics.findByEmail = function (email) {
 }
 
 UserSchema.statics.findByCredentials = async function (email, password) {
-  var User = this
+  const User = this
 
   try {
     let user = await User.findOne({
@@ -179,7 +155,7 @@ UserSchema.statics.findByCredentials = async function (email, password) {
 }
 
 UserSchema.statics.getUsers = function () {
-  var User = this
+  const User = this
 
   return User.find({}, {
     accesses: false,
@@ -197,7 +173,7 @@ UserSchema.statics.getUsers = function () {
 }
 
 UserSchema.pre('save', function (next) {
-  var user = this
+  const user = this
 
   // nome
   user.firstname = _.startCase(_.lowerCase(user.firstname))
@@ -241,7 +217,7 @@ UserSchema.index({
   lastname: 'text'
 })
 
-var User = mongoose.model('User', UserSchema)
+const User = mongoose.model('User', UserSchema)
 
 module.exports = {
   User

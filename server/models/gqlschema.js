@@ -1,6 +1,7 @@
 const { gql } = require('apollo-server-express')
 
 module.exports = gql`
+
   type User {
     id: String
     firstname: String
@@ -22,7 +23,7 @@ module.exports = gql`
     grade: Int
   }
 
-  type Subject { 
+  type Subject {
     id: String
     subject: String
   }
@@ -80,6 +81,7 @@ module.exports = gql`
   }
 
   type Query {
-    user(name: String): User
+    user(id: String!): User
+    document(id: String!): Document
   }
 `
