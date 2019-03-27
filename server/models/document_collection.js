@@ -5,19 +5,6 @@ const {
   ObjectId
 } = mongoose.Schema
 
-// Models
-const {
-  CollectionPermission
-} = require('../models/collection_permission')
-
-const {
-  Document
-} = require('../models/document')
-
-const {
-  User
-} = require('../models/user')
-
 let DocumentCollectionSchema = new mongoose.Schema({
   documentCollection: {
     type: String,
@@ -37,34 +24,21 @@ let DocumentCollectionSchema = new mongoose.Schema({
       minlength: 1,
       required: true,
       trim: true,
-      ref: 'Document',
-      validate: [async (value) => {
-        let document = await Document.findById(value)
-        if (!document) return false
-      }, '\'{VALUE}\' non è un documento valido']
+      ref: 'Document'
     }]
   },
   permissions: {
     type: String,
     default: 'tutti',
     trim: true,
-    ref: 'collection_permission',
-    validate: [async (value) => {
-      console.log(value)
-      let permissions = await CollectionPermission.findById(value)
-      if (!permissions) return false
-    }, 'Uno dei permessi di modifica non è valido.']
+    ref: 'collection_permission'
   },
   authorizations: [{
     type: ObjectId,
     minlength: 1,
     required: true,
     trim: true,
-    ref: 'User',
-    validate: [async (value) => {
-      let authorization = await User.findById(value)
-      if (!authorization) return false
-    }, '\'{VALUE}\' non è un utente valido.']
+    ref: 'User'
   }]
 })
 

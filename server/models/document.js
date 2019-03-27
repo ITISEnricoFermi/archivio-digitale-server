@@ -4,23 +4,6 @@ const {
   ObjectId
 } = mongoose.Schema
 
-// Models
-const {
-  DocumentType
-} = require('../models/document_type')
-
-const {
-  Faculty
-} = require('../models/faculty')
-
-const {
-  Subject
-} = require('../models/subject')
-
-const {
-  DocumentVisibility
-} = require('../models/document_visibility')
-
 let DocumentSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -32,13 +15,7 @@ let DocumentSchema = new mongoose.Schema({
     required: true,
     minlength: 1,
     trim: true,
-    ref: 'document_type',
-    validate: [async (value) => {
-      let documentType = await DocumentType.findById(value)
-      if (!documentType) {
-        return false
-      }
-    }, '\'{VALUE}\' non è un tipo valido.']
+    ref: 'document_type'
   },
   author: {
     type: ObjectId,
@@ -52,26 +29,14 @@ let DocumentSchema = new mongoose.Schema({
     require: true,
     minlength: 1,
     trim: true,
-    ref: 'Faculty',
-    validate: [async (value) => {
-      let faculty = await Faculty.findById(value)
-      if (!faculty) {
-        return false
-      }
-    }, '\'{VALUE}\' non è una specializzazione valida.']
+    ref: 'Faculty'
   },
   subject: {
     type: String,
     required: true,
     trim: true,
     minlength: 1,
-    ref: 'Subject',
-    validate: [async (value) => {
-      let subject = await Subject.findById(value)
-      if (!subject) {
-        return false
-      }
-    }, '\'{VALUE}\' non è una materia valida.']
+    ref: 'Subject'
   },
   grade: {
     type: Number,
@@ -88,13 +53,7 @@ let DocumentSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 1,
-    ref: 'document_visibility',
-    validate: [async (value) => {
-      let documentVisibility = await DocumentVisibility.findById(value)
-      if (!documentVisibility) {
-        return false
-      }
-    }, '\'{VALUE}\' non è un criterio di visibilità valido.']
+    ref: 'document_visibility'
   },
   description: {
     type: String,
@@ -336,7 +295,7 @@ DocumentSchema.index({
   description: 'text'
 })
 
-var Document = mongoose.model('Document', DocumentSchema)
+const Document = mongoose.model('Document', DocumentSchema)
 
 module.exports = {
   Document

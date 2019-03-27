@@ -1,16 +1,11 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
-var PrivilegeSchema = new mongoose.Schema({
+const PrivilegeSchema = new mongoose.Schema({
   _id: {
     type: String,
     required: true,
     minlength: 1,
     trim: true
-    // validate: {
-    //   validator: validator.isAlpha,
-    //   message: '{VALUE} non è un ID valido.'
-    // }
   },
   privilege: {
     type: String,
@@ -18,15 +13,11 @@ var PrivilegeSchema = new mongoose.Schema({
     unique: false,
     minlength: 1,
     trim: true
-    // validate: {
-    //   validator: validator.isAlpha,
-    //   message: '{VALUE} non è un privilegio valido.'
-    // }
   }
 })
 
 PrivilegeSchema.statics.getPrivileges = function () {
-  var Privilege = this
+  const Privilege = this
 
   return Privilege.find()
     .then((privilege) => {
@@ -36,7 +27,7 @@ PrivilegeSchema.statics.getPrivileges = function () {
     })
 }
 
-var Privilege = mongoose.model('Privilege', PrivilegeSchema)
+const Privilege = mongoose.model('Privilege', PrivilegeSchema)
 
 module.exports = {
   Privilege

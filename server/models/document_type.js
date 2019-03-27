@@ -1,16 +1,11 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
-var DocumentTypeSchema = new mongoose.Schema({
+const DocumentTypeSchema = new mongoose.Schema({
   _id: {
     type: String,
     required: true,
     minlength: 1,
     trim: true
-    // validate: {
-    //   validator: validator.isAlpha,
-    //   message: '{VALUE} non è un ID valido.'
-    // }
   },
   type: {
     type: String,
@@ -21,7 +16,7 @@ var DocumentTypeSchema = new mongoose.Schema({
 })
 
 DocumentTypeSchema.statics.getDocumentTypes = function () {
-  var DocumentType = this
+  const DocumentType = this
 
   return DocumentType.find({}).then((results) => {
     return Promise.resolve(results)
@@ -30,7 +25,7 @@ DocumentTypeSchema.statics.getDocumentTypes = function () {
   })
 }
 
-var DocumentType = mongoose.model('document_type', DocumentTypeSchema)
+const DocumentType = mongoose.model('document_type', DocumentTypeSchema)
 
 module.exports = {
   DocumentType

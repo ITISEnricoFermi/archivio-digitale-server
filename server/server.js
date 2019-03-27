@@ -1,3 +1,4 @@
+require('make-promises-safe')
 require('./config/env/env')
 require('./lib/mongoose')
 
@@ -27,6 +28,7 @@ const error = require('./middlewares/error')
 // INIT
 const app = express()
 const server = http.createServer(app)
+
 const io = socketIO(server)
 
 if (env === 'development') {
@@ -112,4 +114,6 @@ io.on('connection', (socket) => {
 
 app.use(error())
 
-server.listen(port, () => console.log(`Server started on port ${port}.`))
+server.listen(port, () => {
+  console.log(`🚀 Server started on port ${port}.`)
+})
