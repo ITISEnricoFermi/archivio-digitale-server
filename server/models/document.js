@@ -101,13 +101,6 @@ let DocumentSchema = new mongoose.Schema({
     required: true,
     minlength: 1
   },
-  directory: {
-    type: String,
-    required: true,
-    unique: true,
-    minlength: 1,
-    trim: true
-  },
   mimetype: {
     type: String,
     required: true,
@@ -115,6 +108,8 @@ let DocumentSchema = new mongoose.Schema({
     trim: true
   }
 })
+
+// TODO: rimuovere mimetype dai campi di Document
 
 DocumentSchema.statics.isEditable = function (document, user) {
   if (!user) {

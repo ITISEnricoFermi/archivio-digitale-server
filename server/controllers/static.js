@@ -1,29 +1,15 @@
-const path = require('path')
+const client = require('../lib/minio')
 
-const {
-  Document
-} = require('../models/document')
+const getDocument = async (req, res) => {
+  const { id } = req.params
 
-const getDocument = async (req, res, next) => {
-  const url = req.url
-  const directory = path.basename(url)
-  const [document] = await Document.find({
-    directory
-  })
+  const requests = [client.statObject('documents', id), client.getObject('documents', id)]
+  const [stat, stream] = await Promise.all(requests)
 
-  if (!document) {
-    return res.status(404).json({
-      messages: ['Il documento non esiste.']
-    })
-  }
+  res.setHeader('Content-Type', stat.metaData['content-type'])
+  res.setHeader('Content-Length', stat.size)
 
-  if (!Document.isReadable(document, req.user)) {
-    return res.status(401).send({
-      messages: ['Non si detengono i privilegi necessari.']
-    })
-  }
-
-  next()
+  stream.pipe(res)
 }
 
 module.exports = {

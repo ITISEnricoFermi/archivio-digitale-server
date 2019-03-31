@@ -1,6 +1,6 @@
 {
   "name": "archivio-digitale-server",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Archivio Digitale",
   "main": "server/server.js",
   "scripts": {

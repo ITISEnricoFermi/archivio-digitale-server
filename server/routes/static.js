@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const path = require('path')
 
 const {
   getDocument
@@ -14,9 +13,15 @@ const {
   authenticate
 } = require('../middlewares/authenticate')
 
-router.use('/documents/',
+const {
+  checkDocumentById,
+  checkDocumentReadableById
+} = require('../middlewares/check')
+
+router.get('/documents/:id',
   authenticate,
-  asyncMiddleware(getDocument),
-  express.static(path.join(__dirname, '..', 'public', 'public', 'documents')))
+  checkDocumentById,
+  checkDocumentReadableById,
+  asyncMiddleware(getDocument))
 
 module.exports = router

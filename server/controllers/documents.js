@@ -1,11 +1,13 @@
-const mongoose = require('mongoose')
-const _ = require('lodash')
-const path = require('path')
 const fs = require('fs')
+const path = require('path')
+const _ = require('lodash')
+const mongoose = require('mongoose')
 
 const {
   ObjectId
 } = mongoose.Types
+
+const uploader = require('../lib/uploader')
 
 // Models
 const {
@@ -44,14 +46,15 @@ const postDocument = async (req, res) => {
   body.name = _.upperFirst(body.name)
   body.description = _.upperFirst(body.description)
   body.author = String(req.user._id)
-  body.directory = req.file.filename
   body.mimetype = req.file.mimetype
 
-  let document = new Document(body)
+  const document = new Document(body)
 
-  document = await document.save()
-  if (document) {
-    res.status(201).send(document)
+  const store = uploader(req, res)
+  await store.upload('documents', document.id)
+
+  if (await document.save()) {
+    res.status(201).json(document)
   }
 }
 
