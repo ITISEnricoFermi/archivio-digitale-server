@@ -15,13 +15,15 @@ const {
 
 const {
   checkDocumentById,
-  checkDocumentReadableById
+  checkDocumentReadableById,
+  checkErrors
 } = require('../middlewares/check')
 
 router.get('/documents/:id',
   authenticate,
   checkDocumentById,
   checkDocumentReadableById,
+  checkErrors,
   asyncMiddleware(getDocument))
 
 module.exports = router

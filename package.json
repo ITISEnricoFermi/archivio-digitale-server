@@ -8,6 +8,7 @@
     "populate": "node server/config/seed/seed.js",
     "config": "node server/config/install/install.js",
     "init": "npm i && npm run config",
+    "buckets": "node server/config/minio/minio",
     "lint": "eslint --fix ./server/**"
   },
   "repository": {
