@@ -62,7 +62,6 @@ app.use('/api', require('./routes/api/api'))
 
 // Public directory
 app.use('/pics', express.static(path.join(__dirname, 'public', 'pics')))
-app.use(express.static(path.join(__dirname, '/client')))
 
 app.get('/', (req, res) => {
   res.status(200).json({

@@ -1,10 +1,7 @@
 node_modules/
 server/config/env/env.json
 .DS_Store
-server/client/*
-archivio-fermi-client/
 
 server/public/pics/*
 
 !server/public/pics/.gitkeep
-!server/client/.gitkeep

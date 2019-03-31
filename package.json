@@ -6,7 +6,6 @@
   "scripts": {
     "start": "NODE_ENV=production node server/server.js",
     "populate": "node server/config/seed/seed.js",
-    "client": "./client.sh",
     "config": "node server/config/install/install.js",
     "init": "npm i && npm run config",
     "lint": "eslint --fix ./server/**"
