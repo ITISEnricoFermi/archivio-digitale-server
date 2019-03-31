@@ -1,0 +1,49 @@
+{
+  "audio": [
+    "audio/aac",
+    "audio/ogg",
+    "audio/midi",
+    "audio/x-wav",
+    "audio/webm"
+
+  ],
+  "video": [
+    "video/x-msvideo",
+    "video/mpeg",
+    "video/ogg",
+    "video/webm"
+  ],
+  "image": [
+    "image/gif",
+    "image/x-icon",
+    "image/jpeg",
+    "image/png",
+    "image/tiff",
+    "image/webp"
+  ],
+  "text": [
+    "text/csv",
+    "text/plain"
+  ],
+  "application": [
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/epub+zip",
+    "application/vnd.oasis.opendocument.presentation",
+    "application/vnd.oasis.opendocument.spreadsheet",
+    "application/vnd.oasis.opendocument.text",
+    "application/ogg",
+    "application/pdf",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/x-rar-compressed",
+    "application/rtf",
+    "application/x-tar",
+    "application/vnd.visio",
+    "application/vnd.ms-excel",
+    "application/octet-stream",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/zip",
+    "application/x-7z-compressed"
+  ]
+}
