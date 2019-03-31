@@ -189,7 +189,7 @@ const deleteDocumentsByUser = async (req, res) => {
     author: id
   })
 
-  res.status(200).json({
+  res.status(404).json({
     counts
   })
 }

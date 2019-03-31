@@ -31,16 +31,6 @@ const {
   checkErrors
 } = require('../../../../middlewares/check')
 
-const uploader = require('../../../../lib/uploader')
-
-router.post('/test/:id', upload, asyncMiddleware(async (req, res) => {
-  const store = uploader(req, res)
-  const etag = await store.upload('documents', req.file.filename)
-  res.status(200).json({
-    etag
-  })
-}))
-
 router.get('/:id',
   authenticate,
   checkDocumentById,
