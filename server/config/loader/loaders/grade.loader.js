@@ -1,4 +1,4 @@
-require('../../lib/mongoose')
+require('../../../lib/mongoose')
 
 const {
   Grade

@@ -1,4 +1,4 @@
-require('../../lib/mongoose')
+require('../../../lib/mongoose')
 
 const path = require('path')
 const fs = require('fs')
