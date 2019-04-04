@@ -27,4 +27,4 @@ file_env() {
 file_env "JWT_SECRET"
 
 echo Running database population and server
-npm run populate && && npm run buckets && node server/server.js
+npm run populate && npm run buckets && node server/server.js
