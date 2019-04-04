@@ -1,10 +1,9 @@
 const fs = require('fs')
 const client = require('./minio')
 const MimeChecker = require('./mime_checker')
-const mimetypes = require('../config/mimetypes/mimetypes')
 
 class Uploader {
-  constructor (req, res) {
+  constructor (req, res, mimetypes) {
     this.file = req.file
     this.res = res
     this.checker = new MimeChecker({
@@ -16,8 +15,8 @@ class Uploader {
     const read = fs.createReadStream(this.file.path)
 
     this.checker.on('error', e => {
-      return this.res.status(415).json({
-        messages: [e.message]
+      this.res.status(415).json({
+        messages: ['Impossibile caricare il file.']
       })
     })
 
@@ -31,4 +30,4 @@ class Uploader {
   }
 }
 
-module.exports = (req, res) => new Uploader(req, res)
+module.exports = (req, res, mimetypes) => new Uploader(req, res, mimetypes)

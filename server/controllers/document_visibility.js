@@ -2,11 +2,11 @@ const {
   DocumentVisibility
 } = require('../models/document_visibility')
 
-const getDocumentVisibility = async (req, res) => {
-  let visibilities = await DocumentVisibility.getDocumentVisibility()
+const getDocumentVisibilities = async (req, res) => {
+  const visibilities = await DocumentVisibility.getDocumentVisibilities()
   res.status(200).send(visibilities)
 }
 
 module.exports = {
-  getDocumentVisibility
+  getDocumentVisibilities
 }

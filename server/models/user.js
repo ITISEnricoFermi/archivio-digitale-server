@@ -12,7 +12,7 @@ const {
   Subject
 } = require('../models/subject')
 
-var UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   firstname: { // OK
     type: String,
     required: true,
@@ -25,20 +25,20 @@ var UserSchema = new mongoose.Schema({
     minlength: 1
     // validate: new RegExp("[a-z]àáâäãåąçčćęèéêëėįìíîïłńñòóôöõøùúûüųūÿýżźñçčšžßŒÆ∂ð,\. '-", 'gi')
   },
-  email: { // OK
+  email: {
     type: String,
-    required: true,
+    required: [true, 'Inserire l\'indirizzo email.'],
     unique: true,
     trim: true,
     minlength: 1,
     validate: {
       validator: validator.isEmail,
-      message: '{VALUE} non è un indirizzo email valido.'
+      message: 'L\'indirizzo email non è valido.'
     }
   },
   password: {
     type: String,
-    required: true,
+    required: [true, 'Inserire la password.'],
     trim: true,
     minlength: 6
   },
@@ -48,10 +48,13 @@ var UserSchema = new mongoose.Schema({
       trim: true,
       // unique: true,
       ref: 'Subject',
-      validate: [async (value) => {
-        let subject = await Subject.findById(value)
-        if (!subject) return false
-      }, '\'{VALUE}\' non è un permesso valido.']
+      validate: [{
+        async validator (value) {
+          const subject = await Subject.findById(value)
+          if (!subject) return false
+        },
+        message: 'Uno dei permessi non è valido.'
+      }]
     }],
     required: true,
     minlength: 1
@@ -62,12 +65,13 @@ var UserSchema = new mongoose.Schema({
     minlength: 1,
     default: 'user',
     ref: 'Privilege',
-    validate: [async (value) => {
-      let privilege = await Privilege.findById(value)
-      if (!privilege) {
-        return false
-      }
-    }, 'Il privilegio inserito non è valido.']
+    validate: [{
+      async validator (value) {
+        const privilege = await Privilege.findById(value)
+        if (!privilege) return false
+      },
+      message: 'Il privilegio non è valido.'
+    }]
   },
   state: {
     type: String,
@@ -117,7 +121,7 @@ UserSchema.methods.generateAuthToken = async function () {
 }
 
 UserSchema.statics.findByToken = function (token) {
-  var User = this
+  const User = this
   try {
     let decoded = jwt.verify(token, process.env.JWT_SECRET)
     if (decoded) {
@@ -129,7 +133,7 @@ UserSchema.statics.findByToken = function (token) {
 }
 
 UserSchema.statics.findByEmail = function (email) {
-  var User = this
+  const User = this
 
   return User.findOne({
     email
@@ -143,7 +147,7 @@ UserSchema.statics.findByEmail = function (email) {
 }
 
 UserSchema.statics.findByCredentials = async function (email, password) {
-  var User = this
+  const User = this
 
   try {
     let user = await User.findOne({
@@ -179,7 +183,7 @@ UserSchema.statics.findByCredentials = async function (email, password) {
 }
 
 UserSchema.statics.getUsers = function () {
-  var User = this
+  const User = this
 
   return User.find({}, {
     accesses: false,
@@ -197,7 +201,7 @@ UserSchema.statics.getUsers = function () {
 }
 
 UserSchema.pre('save', function (next) {
-  var user = this
+  const user = this
 
   // nome
   user.firstname = _.startCase(_.lowerCase(user.firstname))
@@ -210,12 +214,10 @@ UserSchema.pre('save', function (next) {
   }
 
   return bcrypt.genSalt(10)
-    .then((salt) => {
-      return bcrypt.hash(user.password, salt)
-        .then((hash) => {
-          user.password = hash
-          next()
-        })
+    .then(salt => bcrypt.hash(user.password, salt))
+    .then((hash) => {
+      user.password = hash
+      next()
     })
     .catch((e) => {
       return Promise.reject(e)
@@ -241,7 +243,7 @@ UserSchema.index({
   lastname: 'text'
 })
 
-var User = mongoose.model('User', UserSchema)
+const User = mongoose.model('User', UserSchema)
 
 module.exports = {
   User

@@ -49,7 +49,8 @@ const postDocument = async (req, res) => {
 
   const document = new Document(body)
 
-  const store = uploader(req, res)
+  const mimetypes = require('../config/mimetypes/mimetypes')
+  const store = uploader(req, res, mimetypes)
   await store.upload('documents', document.id)
 
   if (await document.save()) {
