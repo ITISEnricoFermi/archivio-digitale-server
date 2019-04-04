@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
-var PrivilegeSchema = new mongoose.Schema({
+const PrivilegeSchema = new mongoose.Schema({
   _id: {
     type: String,
     required: true,
@@ -26,17 +25,18 @@ var PrivilegeSchema = new mongoose.Schema({
 })
 
 PrivilegeSchema.statics.getPrivileges = function () {
-  var Privilege = this
+  const Privilege = this
 
   return Privilege.find()
-    .then((privilege) => {
-      return Promise.resolve(privilege)
-    }, (e) => {
+    .then(privileges => {
+      return Promise.resolve(privileges)
+    })
+    .catch(e => {
       return Promise.reject(e)
     })
 }
 
-var Privilege = mongoose.model('Privilege', PrivilegeSchema)
+const Privilege = mongoose.model('Privilege', PrivilegeSchema)
 
 module.exports = {
   Privilege

@@ -18,7 +18,7 @@ const {
   User
 } = require('../models/user')
 
-let DocumentCollectionSchema = new mongoose.Schema({
+const DocumentCollectionSchema = new mongoose.Schema({
   documentCollection: {
     type: String,
     required: true,
@@ -78,7 +78,7 @@ DocumentCollectionSchema.statics.isEditable = function (collection, user) {
 }
 
 DocumentCollectionSchema.statics.searchCollections = function (search, user) {
-  let DocumentCollection = this
+  const DocumentCollection = this
 
   let andQuery = []
 
@@ -115,7 +115,7 @@ DocumentCollectionSchema.statics.searchCollections = function (search, user) {
 }
 
 DocumentCollectionSchema.pre('save', function (next) {
-  let collection = this
+  const collection = this
   collection.documentCollection = _.upperFirst(collection.documentCollection)
   next()
 })

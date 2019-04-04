@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
-var SubjectSchema = new mongoose.Schema({
+const SubjectSchema = new mongoose.Schema({
   _id: {
     type: String,
     required: true,
@@ -18,17 +17,18 @@ var SubjectSchema = new mongoose.Schema({
 })
 
 SubjectSchema.statics.getSubjects = function () {
-  var Subject = this
+  const Subject = this
 
   return Subject.find({})
-    .then((results) => {
-      return Promise.resolve(results)
-    }, (e) => {
+    .then(subjects => {
+      return Promise.resolve(subjects)
+    })
+    .catch(e => {
       return Promise.reject(e)
     })
 }
 
-var Subject = mongoose.model('Subject', SubjectSchema)
+const Subject = mongoose.model('Subject', SubjectSchema)
 
 module.exports = {
   Subject

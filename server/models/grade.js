@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-var GradeSchema = new mongoose.Schema({
+const GradeSchema = new mongoose.Schema({
   _id: {
     type: Number,
     required: true,
@@ -17,20 +17,21 @@ var GradeSchema = new mongoose.Schema({
 })
 
 GradeSchema.statics.getGrades = function () {
-  var Grade = this
+  const Grade = this
 
   return Grade.find()
     .sort({
       grade: 1
     })
-    .then((classes) => {
-      return Promise.resolve(classes)
-    }, (e) => {
+    .then(grades => {
+      return Promise.resolve(grades)
+    })
+    .catch(e => {
       return Promise.reject(e)
     })
 }
 
-var Grade = mongoose.model('Grade', GradeSchema)
+const Grade = mongoose.model('Grade', GradeSchema)
 
 module.exports = {
   Grade

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
-var CollectionPermissionSchema = new mongoose.Schema({
+const CollectionPermissionSchema = new mongoose.Schema({
   _id: {
     type: String,
     required: true,
@@ -25,17 +24,18 @@ var CollectionPermissionSchema = new mongoose.Schema({
 })
 
 CollectionPermissionSchema.statics.getPermissions = function () {
-  var CollectionPermission = this
+  const CollectionPermission = this
 
   return CollectionPermission.find()
-    .then((results) => {
-      return Promise.resolve(results)
-    }, (e) => {
+    .then(permissions => {
+      return Promise.resolve(permissions)
+    })
+    .catch(e => {
       return Promise.reject(e)
     })
 }
 
-var CollectionPermission = mongoose.model('collection_permission', CollectionPermissionSchema)
+const CollectionPermission = mongoose.model('collection_permission', CollectionPermissionSchema)
 
 module.exports = {
   CollectionPermission

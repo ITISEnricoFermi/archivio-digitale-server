@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
-var SectionSchema = new mongoose.Schema({
+const SectionSchema = new mongoose.Schema({
   _id: {
     type: String,
     required: true,
@@ -26,20 +25,21 @@ var SectionSchema = new mongoose.Schema({
 })
 
 SectionSchema.statics.getSections = function () {
-  var Section = this
+  const Section = this
 
   return Section.find()
     .sort({
       section: 1
     })
-    .then((sections) => {
+    .then(sections => {
       return Promise.resolve(sections)
-    }, (e) => {
+    })
+    .catch(e => {
       return Promise.reject(e)
     })
 }
 
-var Section = mongoose.model('Section', SectionSchema)
+const Section = mongoose.model('Section', SectionSchema)
 
 module.exports = {
   Section

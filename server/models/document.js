@@ -21,7 +21,7 @@ const {
   DocumentVisibility
 } = require('../models/document_visibility')
 
-let DocumentSchema = new mongoose.Schema({
+const DocumentSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -33,12 +33,13 @@ let DocumentSchema = new mongoose.Schema({
     minlength: 1,
     trim: true,
     ref: 'document_type',
-    validate: [async (value) => {
-      let documentType = await DocumentType.findById(value)
-      if (!documentType) {
-        return false
-      }
-    }, '\'{VALUE}\' non è un tipo valido.']
+    validate: [{
+      async validator (value) {
+        const type = await DocumentType.findById(value)
+        if (!type) return false
+      },
+      message: 'Il tipo non è  valido.'
+    }]
   },
   author: {
     type: ObjectId,
@@ -53,12 +54,13 @@ let DocumentSchema = new mongoose.Schema({
     minlength: 1,
     trim: true,
     ref: 'Faculty',
-    validate: [async (value) => {
-      let faculty = await Faculty.findById(value)
-      if (!faculty) {
-        return false
-      }
-    }, '\'{VALUE}\' non è una specializzazione valida.']
+    validate: [{
+      async validator (value) {
+        const faculty = await Faculty.findById(value)
+        if (!faculty) return false
+      },
+      message: 'La specializzazione non è valida.'
+    }]
   },
   subject: {
     type: String,
@@ -66,12 +68,13 @@ let DocumentSchema = new mongoose.Schema({
     trim: true,
     minlength: 1,
     ref: 'Subject',
-    validate: [async (value) => {
-      let subject = await Subject.findById(value)
-      if (!subject) {
-        return false
-      }
-    }, '\'{VALUE}\' non è una materia valida.']
+    validate: [{
+      async validator (value) {
+        const subject = await Subject.findById(value)
+        if (!subject) return false
+      },
+      message: 'La materia non è valida.'
+    }]
   },
   grade: {
     type: Number,
@@ -89,12 +92,13 @@ let DocumentSchema = new mongoose.Schema({
     trim: true,
     minlength: 1,
     ref: 'document_visibility',
-    validate: [async (value) => {
-      let documentVisibility = await DocumentVisibility.findById(value)
-      if (!documentVisibility) {
-        return false
-      }
-    }, '\'{VALUE}\' non è un criterio di visibilità valido.']
+    validate: [{
+      async validator (value) {
+        const visibility = await DocumentVisibility.findById(value)
+        if (!visibility) return false
+      },
+      message: 'Il criterio di visibilità non è valido.'
+    }]
   },
   description: {
     type: String,
@@ -331,7 +335,7 @@ DocumentSchema.index({
   description: 'text'
 })
 
-var Document = mongoose.model('Document', DocumentSchema)
+const Document = mongoose.model('Document', DocumentSchema)
 
 module.exports = {
   Document

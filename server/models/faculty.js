@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
-var FacultySchema = new mongoose.Schema({
+const FacultySchema = new mongoose.Schema({
   _id: {
     type: String,
     required: true,
@@ -25,18 +24,19 @@ var FacultySchema = new mongoose.Schema({
 })
 
 FacultySchema.statics.getFaculties = function () {
-  var Faculty = this
+  const Faculty = this
 
   return Faculty.find({})
     .populate('subjects')
-    .then((results) => {
-      return Promise.resolve(results)
-    }, (e) => {
+    .then(faculties => {
+      return Promise.resolve(faculties)
+    })
+    .catch(e => {
       return Promise.reject(e)
     })
 }
 
-var Faculty = mongoose.model('Faculty', FacultySchema)
+const Faculty = mongoose.model('Faculty', FacultySchema)
 
 module.exports = {
   Faculty

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
-var DocumentVisibilitySchema = new mongoose.Schema({
+const DocumentVisibilitySchema = new mongoose.Schema({
   _id: {
     type: String,
     required: true,
@@ -21,18 +20,19 @@ var DocumentVisibilitySchema = new mongoose.Schema({
   }
 })
 
-DocumentVisibilitySchema.statics.getDocumentVisibility = function () {
-  var DocumentVisibility = this
+DocumentVisibilitySchema.statics.getDocumentVisibilities = function () {
+  const DocumentVisibility = this
 
   return DocumentVisibility.find()
-    .then((visibilities) => {
+    .then(visibilities => {
       return Promise.resolve(visibilities)
-    }, (e) => {
+    })
+    .catch(e => {
       return Promise.reject(e)
     })
 }
 
-var DocumentVisibility = mongoose.model('document_visibility', DocumentVisibilitySchema)
+const DocumentVisibility = mongoose.model('document_visibility', DocumentVisibilitySchema)
 
 module.exports = {
   DocumentVisibility
