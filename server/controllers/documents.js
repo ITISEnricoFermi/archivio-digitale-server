@@ -1,5 +1,3 @@
-const fs = require('fs')
-const path = require('path')
 const _ = require('lodash')
 const mongoose = require('mongoose')
 
@@ -8,6 +6,7 @@ const {
 } = mongoose.Types
 
 const uploader = require('../lib/uploader')
+const minioClient = require('../lib/minio')
 
 // Models
 const {
@@ -37,7 +36,7 @@ const postDocument = async (req, res) => {
 
   // Validazione
   if (!req.file) {
-    return res.status(500).json({
+    return res.status(400).json({
       messages: ['Nessun file caricato.']
     })
   }
@@ -90,25 +89,25 @@ const patchDocument = async (req, res) => {
 
 const deleteDocument = async (req, res) => {
   const { id } = req.params
-  let document = await Document.findByIdAndRemove(id)
-  await DocumentCollection.updateOne({
-    documents: ObjectId(id)
-  }, {
-    $pull: {
-      documents: ObjectId(id)
-    }
-  })
 
-  fs.unlink(path.join(process.env.root, 'public', 'public', 'documents', document.directory), (err) => {
-    if (err) {
-      return res.status(500).json({
-        messages: ['Impossibile eliminare il documento.']
-      })
-    }
+  try {
+    await Document.findByIdAndRemove(id)
+    await DocumentCollection.updateOne({
+      documents: ObjectId(id)
+    }, {
+      $pull: {
+        documents: ObjectId(id)
+      }
+    })
+
+    await minioClient.removeObject('documents', id)
+
     res.status(200).json({
       messages: ['Documento eliminato correttamente.']
     })
-  })
+  } catch (e) {
+    throw new Error('Impossibile eliminare il documento.')
+  }
 }
 
 const getCollectionsOnDocument = async (req, res) => {
