@@ -1,4 +1,4 @@
-FROM node:10.15.1-jessie-slim
+FROM node:10.15.2-jessie
 
 WORKDIR /tmp
 COPY package.json /tmp/package.json
