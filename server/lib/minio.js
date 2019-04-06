@@ -1,9 +1,9 @@
 const Minio = require('minio')
 
 module.exports = new Minio.Client({
-  endPoint: 'localhost',
-  port: 3013,
+  endPoint: process.env.MINIO_HOST || 'localhost',
+  port: process.env.MINIO_PORT || 3013,
   useSSL: false,
-  accessKey: 'accesskey',
-  secretKey: 'secretkey'
+  accessKey: process.env.ACCESS_KEY || 'accesskey',
+  secretKey: process.env.SECRET_KEY || 'secretkey'
 })
