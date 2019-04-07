@@ -7,3 +7,6 @@ Promise.all(buckets)
     if (!documents) client.makeBucket('documents')
     if (!pics) client.makeBucket('pics')
   })
+  .catch(e => {
+    console.log('Impossibile creare i Bucket di default.')
+  })
