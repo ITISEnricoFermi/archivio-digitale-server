@@ -47,6 +47,7 @@ const postDocument = async (req, res) => {
   body.description = _.upperFirst(body.description)
 
   const document = new Document(body)
+  await document.validate()
 
   const mimetypes = require('../config/mimetypes/mimetypes')
   const store = uploader(req, res, mimetypes)

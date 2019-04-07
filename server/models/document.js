@@ -79,12 +79,14 @@ const DocumentSchema = new mongoose.Schema({
   grade: {
     type: Number,
     trim: true,
-    ref: 'Grade'
+    ref: 'Grade',
+    default: null
   },
   section: {
     type: String,
     trim: true,
-    ref: 'Section'
+    ref: 'Section',
+    default: null
   },
   visibility: {
     type: String,
