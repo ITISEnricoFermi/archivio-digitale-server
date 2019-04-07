@@ -1,7 +1,9 @@
 const client = require('../../lib/minio')
 
-const documents = client.bucketExists('documents')
-const pics = client.bucketExists('pics')
+const buckets = [client.bucketExists('documents'), client.bucketExists('pics')]
 
-if (!documents) client.makeBucket('documents')
-if (!pics) client.makeBucket('pics')
+Promise.all(buckets)
+  .then(([documents, pics]) => {
+    if (!documents) client.makeBucket('documents')
+    if (!pics) client.makeBucket('pics')
+  })
