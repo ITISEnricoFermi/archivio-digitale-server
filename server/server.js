@@ -8,7 +8,6 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 
 const helmet = require('helmet')
-const history = require('connect-history-api-fallback')
 const compression = require('compression')
 const morgan = require('morgan')
 const cors = require('cors')
@@ -31,8 +30,6 @@ const io = socketIO(server)
 
 if (env === 'development') {
   app.use(morgan('dev'))
-} else {
-  app.use(history())
 }
 
 app.use(bodyParser.json())
