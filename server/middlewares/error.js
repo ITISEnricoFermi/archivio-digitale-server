@@ -4,13 +4,14 @@ const error = (err, req, res, next) => {
     case 'ValidationError':
       for (let field in err.errors) {
         let e = err.errors[field]
-        switch (e.properties.type) {
-          case 'required':
-            message = `Il campo '${e.properties.path}' è obbligatorio.`
-            break
-          default:
-            message = e.message
-        }
+        message = e.message
+        // switch (e.properties.type) {
+        //   case 'required':
+        //     message = `Il campo '${e.properties.path}' è obbligatorio.`
+        //     break
+        //   default:
+        //     message = e.message
+        // }
       }
       break
     case 'MongoError':
@@ -19,7 +20,8 @@ const error = (err, req, res, next) => {
     default:
       message = err.message
   }
-  res.status(err.code || 500).send({
+  console.log(err)
+  res.status(500).send({
     messages: [message]
   })
   next(err)

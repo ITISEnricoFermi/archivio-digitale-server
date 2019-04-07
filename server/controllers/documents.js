@@ -41,11 +41,10 @@ const postDocument = async (req, res) => {
     })
   }
 
-  // Formattazione
-  body.name = _.upperFirst(body.name)
-  body.description = _.upperFirst(body.description)
   body.author = String(req.user._id)
   body.mimetype = req.file.mimetype
+  body.name = _.upperFirst(body.name)
+  body.description = _.upperFirst(body.description)
 
   const document = new Document(body)
 

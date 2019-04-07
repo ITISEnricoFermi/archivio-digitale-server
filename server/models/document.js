@@ -24,12 +24,12 @@ const {
 const DocumentSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'Il titolo è obbligatorio.'],
     minlength: 1
   },
   type: {
     type: String,
-    required: true,
+    required: [true, 'Il tipo di documento è obbligatorio.'],
     minlength: 1,
     trim: true,
     ref: 'document_type',
@@ -43,14 +43,14 @@ const DocumentSchema = new mongoose.Schema({
   },
   author: {
     type: ObjectId,
-    required: true,
+    required: [true, 'L\'autore è obbligatorio.'],
     minlength: 1,
     trim: true,
     ref: 'User'
   },
   faculty: {
     type: String,
-    require: true,
+    required: [true, 'La specializzazione è obbligatoria.'],
     minlength: 1,
     trim: true,
     ref: 'Faculty',
@@ -64,7 +64,7 @@ const DocumentSchema = new mongoose.Schema({
   },
   subject: {
     type: String,
-    required: true,
+    required: [true, 'La materia è obbligatoria.'],
     trim: true,
     minlength: 1,
     ref: 'Subject',
@@ -102,7 +102,7 @@ const DocumentSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
+    required: [true, 'La descrizione è obbligatoria.'],
     minlength: 1
   },
   mimetype: {
