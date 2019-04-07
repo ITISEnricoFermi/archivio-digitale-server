@@ -13,17 +13,27 @@ const {
 } = require('../models/subject')
 
 const UserSchema = new mongoose.Schema({
-  firstname: { // OK
+  firstname: {
     type: String,
-    required: true,
-    minlength: 1
-    // validate: new RegExp("[a-z]àáâäãåąçčćęèéêëėįìíîïłńñòóôöõøùúûüųūÿýżźñçčšžßŒÆ∂ð,\. '-", 'gi')
+    required: [true, 'Inserire il nome.'],
+    minlength: 1,
+    validate: {
+      validator (value) {
+        return validator.matches(value, new RegExp("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$", 'gi'))
+      },
+      message: 'Il nome non è valido.'
+    }
   },
-  lastname: { // OK
+  lastname: {
     type: String,
-    required: true,
-    minlength: 1
-    // validate: new RegExp("[a-z]àáâäãåąçčćęèéêëėįìíîïłńñòóôöõøùúûüųūÿýżźñçčšžßŒÆ∂ð,\. '-", 'gi')
+    required: [true, 'Inserire il cognome.'],
+    minlength: 1,
+    validate: {
+      validator (value) {
+        return validator.matches(value, new RegExp("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$", 'gi'))
+      },
+      message: 'Il cognome non è valido.'
+    }
   },
   email: {
     type: String,
