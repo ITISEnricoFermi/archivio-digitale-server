@@ -35,60 +35,9 @@ $ cd archivio-digitale-server/
 $ npm install
 ```
 
-3. Avviare il database (MongoDB)
-
-```shell
-$ sudo mongod
-```
-
-4. Popolare il database
-
-```shell
-$ cd server/public/db/
-$ node seed.js
-```
-
-5. Creare il file di configurazione 
-
-Utilizzare il template: [config.json.example](https://github.com/ITISEnricoFermi/archivio-digitale-server/blob/master/server/db/config/config.json.example).
-
-```shell
-$ cd config/
-$ mv config.json.example config.json
-```
-
-6. Modificare il file con le proprie impostazioni
-
-```json
-{
-  "development": {
-    "port": 3000,
-    "MONGODB_URI": "mongodb://localhost:27017/archivio",
-    "JWT_SECRET": "jwtSecret"
-  }
-}
-```
-
-*JWT_SECRET* sarà la chiave utilizzata nei token. Si consiglia di utilizzare una stringa molto complessa.
-
-### Avvio del server
-
-1. Avviare il database (MongoDB)
-
-```shell
-$ sudo mongod
-```
-
-2. Avviare il server
-
-```shell
-$ cd archivio-digitale-server/server/
-$ node server.js
-```
-
 ### Primo accesso
 
-Subito dopo l'installazione del server è possibile entrare nella piattaforma utilizzando le credenziali dell'utente test.
+Subito dopo l'installazione dell'Archivio è possibile entrare nella piattaforma utilizzando le credenziali dell'utente test.
 
 * **Email:** alan.turing@test.com
 * **Password:** alanturing
