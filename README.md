@@ -6,9 +6,19 @@
   Progetto Archivio Digitale sviluppato per l'ITIS Enrico Fermi.
 </p>
 
-## Getting Started
+## Progetto
 
-L'Archivio Digitale è suddiviso in due repository: [archivio-digitale-server](https://github.com/ITISEnricoFermi/archivio-digitale-server) e [archivio-digitale-client](https://github.com/ITISEnricoFermi/archivio-digitale-client).
+L'Archivio Digitale è suddiviso in cinque repository: 
+
+* API Server ([archivio-digitale-server](https://github.com/ITISEnricoFermi/archivio-digitale-server)).
+* Web Client ([archivio-digitale-client](https://github.com/ITISEnricoFermi/archivio-digitale-client)).
+* ReverseProxy ([archivio-digitale-nginx](https://github.com/ITISEnricoFermi/archivio-digitale-nginx)).
+* Mailer ([archivio-digitale-mailer](https://github.com/ITISEnricoFermi/archivio-digitale-mailer)).
+* Template Mail ([archivio-digitale-mail](https://github.com/ITISEnricoFermi/archivio-digitale-mail)).
+
+<h1 align="center">
+  <img src="https://github.com/ITISEnricoFermi/archivio-digitale-nginx/blob/master/project/Application%20Logic.svg" alt="Application Logic"/>
+</h1>
 
 ### Installazione
 
