@@ -25,6 +25,8 @@ file_env() {
 }
 
 file_env "JWT_SECRET"
+file_env "MINIO_ACCESS_KEY"
+file_env "MINIO_SECRET_KEY"
 
 echo Running database population and server
 npm run populate && npm run buckets && node server/server.js
