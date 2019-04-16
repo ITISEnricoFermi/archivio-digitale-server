@@ -50,7 +50,6 @@ const DocumentCollectionSchema = new mongoose.Schema({
     trim: true,
     ref: 'collection_permission',
     validate: [async (value) => {
-      console.log(value)
       let permissions = await CollectionPermission.findById(value)
       if (!permissions) return false
     }, 'Uno dei permessi di modifica non è valido.']

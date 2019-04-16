@@ -1,5 +1,6 @@
 const _ = require('lodash')
 const mongoose = require('mongoose')
+const fs = require('fs')
 
 const {
   ObjectId
@@ -51,7 +52,8 @@ const postDocument = async (req, res) => {
 
   const mimetypes = require('../config/mimetypes/mimetypes')
   const store = uploader(req, res, mimetypes)
-  await store.upload('documents', document.id)
+  const master = fs.createReadStream(req.file.path)
+  await store.upload('documents', document.id, master)
 
   if (await document.save()) {
     res.status(201).json(document)

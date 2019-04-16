@@ -1,46 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const multer = require('multer')
-const path = require('path')
-const fs = require('fs')
 
 const {
-  check,
-  body,
   param
 } = require('express-validator/check')
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    let dir = path.join(process.env.root, 'public', 'pics', String(req.user._id))
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir)
-    }
-    cb(null, dir)
-  },
-  filename: function (req, file, cb) {
-    console.log(file)
-    cb(null, String(req.user._id) + '.jpeg')
-  }
-})
-
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/gif') {
-    cb(null, true)
-  } else {
-    cb(null, false)
-  }
-}
-
-const limits = {
-  fileSize: 1024 * 1024 * 2 // 2 MB
-}
-
-const upload = multer({
-  storage,
-  limits,
-  fileFilter
-})
 
 const {
   DocumentVisibility
@@ -48,6 +11,7 @@ const {
 
 // Middleware
 const logged = require('../../../../middlewares/logged')
+const upload = require('../../../../middlewares/file_upload')
 
 const {
   authenticate
@@ -136,7 +100,7 @@ router.patch('/:id/pic/',
   logged,
   checkUserById,
   checkErrors,
-  upload.single('picToUpload'),
+  upload,
   asyncMiddleware(patchPicOfUser))
 
 module.exports = router

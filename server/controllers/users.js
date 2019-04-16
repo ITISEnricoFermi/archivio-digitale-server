@@ -1,8 +1,7 @@
-const path = require('path')
 const bcrypt = require('bcryptjs')
 const fs = require('fs')
-const fsPromises = fs.promises
 const sharp = require('sharp')
+const tee = require('tee-1')
 
 // Models
 const {
@@ -12,6 +11,8 @@ const {
 const {
   Document
 } = require('../models/document')
+
+const uploader = require('../lib/uploader')
 
 const getUser = async (req, res) => {
   const id = req.params.id
@@ -168,11 +169,10 @@ const countDocumentsOnVisibility = async (req, res) => {
 }
 
 const patchPicOfUser = async (req, res) => {
-  const id = req.params.id
-  let file = req.file
+  const { id } = req.params
 
-  if (!file) {
-    return res.status(400).send({
+  if (!req.file) {
+    return res.status(400).json({
       messages: ['Nessun file caricato.']
     })
   }
@@ -194,18 +194,29 @@ const patchPicOfUser = async (req, res) => {
     xy: 100
   }]
 
+  const avatars = (xy) => sharp()
+    .resize(xy, xy)
+    .jpeg()
+
+  const master = fs.createReadStream(req.file.path)
+
+  const mimetypes = ['image/jpeg', 'image/png', 'image/gif']
+  const store = uploader(req, res, mimetypes)
   const pics = []
 
   for (let i = 0; i < sizes.length; i++) {
-    pics.push(sharp(file.path)
-      .resize(sizes[i].xy, sizes[i].xy)
-      .toFormat('jpeg')
-      .toFile(path.join(file.destination, sizes[i].path + '.jpeg')))
+    pics.push(avatars(sizes[i].xy))
   }
 
-  await Promise.all(pics)
+  master.pipe(tee(...pics))
 
-  await fsPromises.unlink(path.join(process.env.root, 'public', 'pics', String(id), String(id) + '.jpeg'))
+  const uploads = []
+
+  for (let i = 0; i < sizes.length; i++) {
+    uploads.push(store.upload('pics', id + '/' + sizes[i].path, pics[i]))
+  }
+
+  await Promise.all(uploads)
 
   res.status(200).send({
     messages: ['Immagine di profilo aggiornata con successo.']

@@ -116,18 +116,12 @@ UserSchema.methods.toJSON = function () {
 }
 
 UserSchema.methods.generateAuthToken = async function () {
-  try {
-    let user = this
-    let access = 'auth'
-    let token = jwt.sign({
-      _id: user._id.toHexString(),
-      access
-    }, process.env.JWT_SECRET, { expiresIn: '1d' }).toString()
-
-    return Promise.resolve(token)
-  } catch (e) {
-    return Promise.reject(e)
-  }
+  const user = this
+  const access = 'auth'
+  return jwt.sign({
+    _id: user._id.toHexString(),
+    access
+  }, process.env.JWT_SECRET, { expiresIn: '1d' }).toString()
 }
 
 UserSchema.statics.findByToken = function (token) {
