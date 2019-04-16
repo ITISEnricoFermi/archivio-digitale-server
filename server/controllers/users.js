@@ -1,7 +1,5 @@
 const bcrypt = require('bcryptjs')
 const fs = require('fs')
-const sharp = require('sharp')
-const tee = require('tee-1')
 
 // Models
 const {
