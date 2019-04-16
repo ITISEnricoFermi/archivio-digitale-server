@@ -57,9 +57,6 @@ app.use((req, res, next) => {
 app.use('/static', require('./routes/static'))
 app.use('/api', require('./routes/api/api'))
 
-// Public directory
-app.use('/pics', express.static(path.join(__dirname, 'public', 'pics')))
-
 app.get('/', (req, res) => {
   res.status(200).json({
     title: 'Archivio Digitale - ITIS Enrico Fermi',

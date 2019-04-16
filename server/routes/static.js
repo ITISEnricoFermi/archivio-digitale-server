@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 
 const {
-  getDocument
+  getDocument,
+  getPic
 } = require('../controllers/static')
 
 const {
@@ -25,5 +26,10 @@ router.get('/documents/:id',
   checkDocumentReadableById,
   checkErrors,
   asyncMiddleware(getDocument))
+
+router.get('/pics/:id/:pic',
+  authenticate,
+  checkErrors,
+  asyncMiddleware(getPic))
 
 module.exports = router

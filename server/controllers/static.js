@@ -18,6 +18,25 @@ const getDocument = async (req, res) => {
   }
 }
 
+const getPic = async (req, res) => {
+  const { id, pic } = req.params
+
+  try {
+    const requests = [client.statObject('pics', id + '/' + pic), client.getObject('pics', id + '/' + pic)]
+    const [stat, stream] = await Promise.all(requests)
+
+    res.setHeader('Content-Type', stat.metaData['content-type'])
+    res.setHeader('Content-Length', stat.size)
+
+    stream.pipe(res)
+  } catch (e) {
+    return res.status(404).json({
+      messages: ['La foto non esiste.']
+    })
+  }
+}
+
 module.exports = {
-  getDocument
+  getDocument,
+  getPic
 }
