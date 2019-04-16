@@ -11,7 +11,6 @@ COPY package.json /tmp/package.json
 RUN npm install && mkdir -p /app/node_modules && cp -a ./node_modules /app/
 
 WORKDIR /app
-VOLUME /app/server/public
 ENV DOCKER=true
 ENV NODE_ENV=production
 ENV PORT=80
