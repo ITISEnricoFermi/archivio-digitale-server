@@ -51,7 +51,7 @@ const postDocument = async (req, res) => {
   await document.validate()
 
   const mimetypes = require('../config/mimetypes/mimetypes')
-  const store = uploader(req, res, mimetypes)
+  const store = uploader(req.file.mimetype, mimetypes)
   const master = fs.createReadStream(req.file.path)
   await store.upload('documents', document.id, master)
 

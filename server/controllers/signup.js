@@ -1,7 +1,8 @@
+const fs = require('fs')
 const _ = require('lodash')
 const path = require('path')
-const sharp = require('sharp')
-const mkdirp = require('mkdirp')
+
+const uploader = require('../lib/uploader')
 
 // Models
 const {
@@ -10,38 +11,20 @@ const {
 
 const signup = async (req, res) => {
   const body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'accesses'])
-  let user = await (new User(body)).save()
 
-  const sizes = [{
-    path: 'xlg',
-    xy: 1200
-  }, {
-    path: 'lg',
-    xy: 800
-  }, {
-    path: 'md',
-    xy: 500
-  }, {
-    path: 'sm',
-    xy: 300
-  }, {
-    path: 'xs',
-    xy: 100
-  }]
+  const user = new User(body)
+  const master = fs.createReadStream(path.join(__dirname, '..', 'public', 'images', 'profile.svg'))
+  const mimetypes = ['image/jpeg', 'image/png', 'image/gif']
+  const store = uploader(req, mimetypes)
 
-  let dir = path.join(__dirname, '..', 'public', 'pics', String(user._id))
-
-  mkdirp(dir)
-
-  for (let i = 0; i < sizes.length; i++) {
-    try {
-      await sharp(path.join(__dirname, '..', 'public', 'images', 'profile.svg')).resize(sizes[i].xy, sizes[i].xy).toFormat('jpeg').toFile(path.join(__dirname, '..', 'public', 'pics', String(user._id), sizes[i].path + '.jpeg'))
-    } catch (e) {
-      throw new Error('Si è verificato un errore durante la creazione dell\'utente.')
-    }
+  try {
+    await store.pics(master, user.id)
+    await user.save()
+    res.status(200).json(user)
+  } catch (e) {
+    console.log(e)
+    throw new Error('Si è verificato un errore durante la creazione dell\'utente.')
   }
-
-  res.status(200).json(user)
 }
 
 module.exports = {

@@ -177,50 +177,18 @@ const patchPicOfUser = async (req, res) => {
     })
   }
 
-  const sizes = [{
-    path: 'xlg',
-    xy: 1200
-  }, {
-    path: 'lg',
-    xy: 800
-  }, {
-    path: 'md',
-    xy: 500
-  }, {
-    path: 'sm',
-    xy: 300
-  }, {
-    path: 'xs',
-    xy: 100
-  }]
-
-  const avatars = (xy) => sharp()
-    .resize(xy, xy)
-    .jpeg()
-
   const master = fs.createReadStream(req.file.path)
-
   const mimetypes = ['image/jpeg', 'image/png', 'image/gif']
-  const store = uploader(req, res, mimetypes)
-  const pics = []
+  const store = uploader(req.file.mimetype, mimetypes)
 
-  for (let i = 0; i < sizes.length; i++) {
-    pics.push(avatars(sizes[i].xy))
+  try {
+    await store.pics(master, id)
+    res.status(200).send({
+      messages: ['Immagine di profilo aggiornata con successo.']
+    })
+  } catch (e) {
+    throw new Error('Si è verificato un errore durante la creazione dell\'utente.')
   }
-
-  master.pipe(tee(...pics))
-
-  const uploads = []
-
-  for (let i = 0; i < sizes.length; i++) {
-    uploads.push(store.upload('pics', id + '/' + sizes[i].path, pics[i]))
-  }
-
-  await Promise.all(uploads)
-
-  res.status(200).send({
-    messages: ['Immagine di profilo aggiornata con successo.']
-  })
 }
 
 module.exports = {

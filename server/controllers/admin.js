@@ -1,9 +1,10 @@
+const fs = require('fs')
 const _ = require('lodash')
 const bcrypt = require('bcryptjs')
 const path = require('path')
-const sharp = require('sharp')
-const mkdirp = require('mkdirp')
 const axios = require('axios')
+
+const uploader = require('../lib/uploader')
 
 const {
   User
@@ -13,44 +14,20 @@ const postUser = async (req, res) => {
   let body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
 
   body.state = 'active'
-  const prototype = new User(body)
-  const user = await prototype.save()
+  const user = new User(body)
+  const master = fs.createReadStream(path.join(__dirname, '..', 'public', 'images', 'profile.svg'))
+  const mimetypes = ['image/jpeg', 'image/png', 'image/gif']
+  const store = uploader('image/jpeg', mimetypes)
 
-  const sizes = [{
-    path: 'xlg',
-    xy: 1200
-  }, {
-    path: 'lg',
-    xy: 800
-  }, {
-    path: 'md',
-    xy: 500
-  }, {
-    path: 'sm',
-    xy: 300
-  }, {
-    path: 'xs',
-    xy: 100
-  }]
-
-  const dir = {
-    folder: path.join(__dirname, '..', 'public', 'pics', String(user._id)),
-    default: path.join(__dirname, '..', 'public', 'images', 'profile.svg')
+  try {
+    await store.pics(master, user.id)
+    await user.save()
+    res.status(200).send({
+      messages: ['Immagine di profilo aggiornata con successo.']
+    })
+  } catch (e) {
+    throw new Error('Si è verificato un errore durante la creazione dell\'utente.')
   }
-
-  mkdirp(dir.folder)
-
-  const pics = []
-
-  for (let i = 0; i < sizes.length; i++) {
-    pics.push(sharp(dir.default)
-      .resize(sizes[i].xy, sizes[i].xy)
-      .toFormat('jpeg')
-      .toFile(path.join(dir.folder, sizes[i].path + '.jpeg'))
-    )
-  }
-
-  await Promise.all(pics)
 
   res.status(200).json(user)
 }
@@ -69,10 +46,10 @@ const sendEmail = async (req, res) => {
   const { subject, recipients, message } = req.body
   if (!process.env.MAILER_URL) {
     return res.status(422).json({
-      messages: ["Mailer non disponibile."]
+      messages: ['Mailer non disponibile.']
     })
   }
-  
+
   const { data } = await axios.post(process.env.MAILER_URL, {
     subject, recipients, message
   })
