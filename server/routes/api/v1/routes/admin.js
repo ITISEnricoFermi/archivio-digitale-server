@@ -1,13 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+
 const {
   sanitizeParam
 } = require('express-validator/filter')
 
 const {
-  check,
-  param,
   body
 } = require('express-validator/check')
 
@@ -25,11 +24,8 @@ const {
   toggleState,
   resetPassword
 } = require('../../../../controllers/admin')
-// Middleware
-const {
-  authenticateAdmin
-} = require('../../../../middlewares/authenticate')
 
+// Middleware
 const logged = require('../../../../middlewares/logged')
 
 const {
@@ -38,7 +34,8 @@ const {
 
 const {
   checkErrors,
-  checkUserById
+  checkUserById,
+  checkAdminById
 } = require('../../../../middlewares/check')
 
 const {
@@ -52,7 +49,7 @@ const {
 router.post('/users/',
   authenticate,
   logged,
-  authenticateAdmin,
+  checkAdminById,
   body('email').custom((value) => User.findByEmail(value)
     .then(user => {
       if (user) {
@@ -63,7 +60,7 @@ router.post('/users/',
     .not().isEmpty().withMessage('Il nome è obbligatorio.')
     .trim()
     .escape(),
-  check('lastname')
+  body('lastname')
     .not().isEmpty().withMessage('Il cognome è obbligatorio.')
     .trim()
     .escape(),
@@ -73,7 +70,7 @@ router.post('/users/',
 router.patch('/users/:id',
   authenticate,
   logged,
-  authenticateAdmin,
+  checkAdminById,
   checkUserById,
   body('email')
     .isEmail()
@@ -84,7 +81,7 @@ router.patch('/users/:id',
 router.patch('/users/:id/state/',
   authenticate,
   logged,
-  authenticateAdmin,
+  checkAdminById,
   checkUserById,
   checkErrors,
   asyncMiddleware(toggleState))
@@ -92,7 +89,7 @@ router.patch('/users/:id/state/',
 router.patch('/users/:id/password',
   authenticate,
   logged,
-  authenticateAdmin,
+  checkAdminById,
   checkUserById,
   checkErrors,
   asyncMiddleware(resetPassword))
@@ -100,33 +97,37 @@ router.patch('/users/:id/password',
 router.post('/mails/',
   authenticate,
   logged,
-  authenticateAdmin,
+  checkAdminById,
+  checkErrors,
   asyncMiddleware(sendEmail))
 
 router.get('/requests/',
   authenticate,
   logged,
-  authenticateAdmin,
+  checkAdminById,
+  checkErrors,
   asyncMiddleware(getRequests))
 
 router.patch('/requests/:id',
   authenticate,
   logged,
-  authenticateAdmin,
+  checkAdminById,
   sanitizeParam('id')
     .customSanitizer(value => {
       return ObjectId(value)
     }),
+  checkErrors,
   asyncMiddleware(acceptRequest))
 
 router.delete('/requests/:id',
   authenticate,
   logged,
-  authenticateAdmin,
+  checkAdminById,
   sanitizeParam('id')
     .customSanitizer(value => {
       return ObjectId(value)
     }),
+  checkErrors,
   asyncMiddleware(refuseRequest))
 
 module.exports = router

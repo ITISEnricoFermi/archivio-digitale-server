@@ -185,7 +185,7 @@ const patchPicOfUser = async (req, res) => {
       messages: ['Immagine di profilo aggiornata con successo.']
     })
   } catch (e) {
-    throw new Error('Si è verificato un errore durante la creazione dell\'utente.')
+    throw new Error('Si è verificato un errore durante l\'aggiornamento dell\'immaggine.')
   }
 }
 

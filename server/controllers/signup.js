@@ -13,7 +13,7 @@ const signup = async (req, res) => {
   const body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'accesses'])
 
   const user = new User(body)
-  const master = fs.createReadStream(path.join(__dirname, '..', 'public', 'images', 'profile.svg'))
+  const master = fs.createReadStream(path.join(__dirname, '..', 'assets', 'profile.svg'))
   const mimetypes = ['image/jpeg', 'image/png', 'image/gif']
   const store = uploader(req, mimetypes)
 

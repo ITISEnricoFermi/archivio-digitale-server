@@ -1,18 +1,16 @@
 require('./config/env/env')
 require('./lib/mongoose')
 
-const path = require('path')
 const http = require('http')
-const express = require('express')
-const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser')
-
-const helmet = require('helmet')
-const compression = require('compression')
-const morgan = require('morgan')
 const cors = require('cors')
+const helmet = require('helmet')
+const morgan = require('morgan')
+const express = require('express')
 const passport = require('passport')
 const socketIO = require('socket.io')
+const bodyParser = require('body-parser')
+const compression = require('compression')
+const cookieParser = require('cookie-parser')
 
 // VARS
 const port = process.env.PORT || 3000
@@ -105,4 +103,6 @@ io.on('connection', (socket) => {
 
 app.use(error())
 
-server.listen(port, () => console.log(`Server started on port ${port}.`))
+server.listen(port, () => {
+  console.log(`🚀 Server started on port ${port}.`)
+})

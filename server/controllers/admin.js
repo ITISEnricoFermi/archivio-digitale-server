@@ -15,7 +15,7 @@ const postUser = async (req, res) => {
 
   body.state = 'active'
   const user = new User(body)
-  const master = fs.createReadStream(path.join(__dirname, '..', 'public', 'images', 'profile.svg'))
+  const master = fs.createReadStream(path.join(__dirname, '..', 'assets', 'profile.svg'))
   const mimetypes = ['image/jpeg', 'image/png', 'image/gif']
   const store = uploader('image/jpeg', mimetypes)
 

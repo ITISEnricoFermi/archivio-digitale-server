@@ -75,6 +75,13 @@ const checkCollectionEditableById = param('id')
       }
     }))
 
+const checkAdminById = param('id')
+  .custom((value, {req}) => {
+    if (req.user.privileges._id !== 'admin') {
+      return Promise.reject(new Error('Non si detengono i privilegi necessari.'))
+    }
+  })
+
 module.exports = {
   checkErrors,
   checkUserById,
@@ -82,5 +89,6 @@ module.exports = {
   checkDocumentEditableById,
   checkCollectionById,
   checkCollectionEditableById,
-  checkDocumentReadableById
+  checkDocumentReadableById,
+  checkAdminById
 }

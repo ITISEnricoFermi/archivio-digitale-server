@@ -68,20 +68,10 @@ const signin = (req, res, next) => passport.authenticate('login', {
   }
 })(req, res, next)
 
-const authenticateAdmin = (req, res, next) => {
-  if (req.user.privileges._id !== 'admin') {
-    return res.status(401).json({
-      messages: ['Non si detengono i privilegi necessari.']
-    })
-  }
-
-  next()
-}
-
 // Verifica che l'id sui cui si tenta di operare sia uguale all'id dell'utente loggato
-var authenticateUser = (req, res, next) => {
-  var _id = req.user._id
-  var id = req.body.id || req.params.id
+const authenticateUser = (req, res, next) => {
+  const _id = req.user._id
+  const id = req.body.id || req.params.id
 
   if (id !== _id) {
     return res.statu(401).json({
@@ -92,7 +82,7 @@ var authenticateUser = (req, res, next) => {
   next()
 }
 
-var authenticateAccesses = (req, res, next) => {
+const authenticateAccesses = (req, res, next) => {
   let query
 
   if (req.user.privileges === 'admin') {
@@ -114,6 +104,5 @@ module.exports = {
   authenticate,
   signin,
   authenticateUser,
-  authenticateAdmin,
   authenticateAccesses
 }

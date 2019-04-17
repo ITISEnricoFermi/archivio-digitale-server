@@ -74,9 +74,9 @@ const deleteCollection = async (req, res) => {
 }
 
 const searchCollections = async (req, res) => {
-  var body = _.pick(req.body, ['fulltext', 'permissions'])
+  const body = _.pick(req.body, ['fulltext', 'permissions'])
 
-  var empty = _.every(body, (el) => {
+  const empty = _.every(body, (el) => {
     return !el
   })
 
