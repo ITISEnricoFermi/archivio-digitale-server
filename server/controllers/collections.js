@@ -76,9 +76,7 @@ const deleteCollection = async (req, res) => {
 const searchCollections = async (req, res) => {
   const body = _.pick(req.body, ['fulltext', 'permissions'])
 
-  const empty = _.every(body, (el) => {
-    return !el
-  })
+  const empty = Object.values(body).every(el => !el)
 
   if (empty) {
     return res.status(500).send({
@@ -90,7 +88,7 @@ const searchCollections = async (req, res) => {
   collections = collections.map(collection => DocumentCollection.isEditable(collection, req.user))
 
   if (collections.length) {
-    res.status(200).send(collections)
+    res.status(200).json(collections)
   } else {
     res.status(404).json({
       messages: ['La ricerca non ha prodotto risultati.']

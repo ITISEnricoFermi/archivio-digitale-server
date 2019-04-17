@@ -126,6 +126,14 @@ const getCollectionsOnDocument = async (req, res) => {
 const searchDocument = async (req, res) => {
   const body = _.pick(req.body, ['fulltext', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility'])
 
+  const empty = Object.values(body).every(el => !el)
+
+  if (empty) {
+    return res.status(500).send({
+      messages: ['Nessuna query di ricerca.']
+    })
+  }
+
   let documents = await Document.searchDocuments(body, req.user)
   documents.map(document => Document.isEditable(document, req.user))
 
