@@ -35,11 +35,12 @@ La piattaforma potrà essere inoltre un pratico strumento per i nuovi studenti, 
 
 L'Archivio Digitale è suddiviso in cinque repository: 
 
-* Stack ([archivio-digitale-stack](https://github.com/ITISEnricoFermi/archivio-digitale-stack)).
-* API Server ([archivio-digitale-server](https://github.com/ITISEnricoFermi/archivio-digitale-server)).
-* Web Client ([archivio-digitale-client](https://github.com/ITISEnricoFermi/archivio-digitale-client)).
-* Mailer ([archivio-digitale-mailer](https://github.com/ITISEnricoFermi/archivio-digitale-mailer)).
-* Template Mail ([archivio-digitale-mail](https://github.com/ITISEnricoFermi/archivio-digitale-mail)).
+* 🥞 Stack ([archivio-digitale-stack](https://github.com/ITISEnricoFermi/archivio-digitale-stack)).
+* 📚 API Server ([archivio-digitale-server](https://github.com/ITISEnricoFermi/archivio-digitale-server)).
+* 🖥️ Web Client ([archivio-digitale-client](https://github.com/ITISEnricoFermi/archivio-digitale-client)).
+* 📦 Updater ([archivio-digitale-updater](https://github.com/ITISEnricoFermi/archivio-digitale-updater)).
+* 📬 Mailer ([archivio-digitale-mailer](https://github.com/ITISEnricoFermi/archivio-digitale-mailer)).
+* 📧 Template Mail ([archivio-digitale-mail](https://github.com/ITISEnricoFermi/archivio-digitale-mail)).
 
 <h1 align="center">
   <img src="https://github.com/ITISEnricoFermi/archivio-digitale-nginx/blob/master/project/Application%20Logic.svg" alt="Application Logic"/>
