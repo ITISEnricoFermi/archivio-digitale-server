@@ -22,7 +22,8 @@ const {
   acceptRequest,
   refuseRequest,
   toggleState,
-  resetPassword
+  resetPassword,
+  update
 } = require('../../../../controllers/admin')
 
 // Middleware
@@ -129,5 +130,24 @@ router.delete('/requests/:id',
     }),
   checkErrors,
   asyncMiddleware(refuseRequest))
+
+router.post('/update',
+  authenticate,
+  logged,
+  // checkAdminById,
+  body('project', 'Devi specificare il nome del progetto.')
+    .isLength({ min: 3 })
+    .toString(),
+  body('service', 'Devi specificare il nome del servizio')
+    .isLength({ min: 3 })
+    .toString(),
+  body('image', 'Devi specificare il nome dell\'immagine.')
+    .isLength({ min: 3 })
+    .toString(),
+  body('tag', 'Devi specificare il nome del tag.')
+    .isLength({ min: 1 })
+    .toString(),
+  checkErrors,
+  asyncMiddleware(update))
 
 module.exports = router

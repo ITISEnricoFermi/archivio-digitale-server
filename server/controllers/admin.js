@@ -116,6 +116,25 @@ const resetPassword = async (req, res) => {
   })
 }
 
+const update = async (req, res) => {
+  const { project, service, image, tag } = req.body
+
+  if (!process.env.UPDATER_URL) {
+    return res.status(422).json({
+      messages: ['Updater non disponibile.']
+    })
+  }
+
+  const { data } = await axios.post(process.env.UPDATER_URL, {
+    project,
+    service,
+    image,
+    tag
+  })
+
+  res.status(200).json(data)
+}
+
 module.exports = {
   postUser,
   patchUser,
@@ -124,5 +143,6 @@ module.exports = {
   acceptRequest,
   refuseRequest,
   toggleState,
-  resetPassword
+  resetPassword,
+  update
 }
