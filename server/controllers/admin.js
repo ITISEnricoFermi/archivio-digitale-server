@@ -117,7 +117,7 @@ const resetPassword = async (req, res) => {
 }
 
 const update = async (req, res) => {
-  const { project, service, image, tag } = req.body
+  const { service, tag } = req.body
 
   if (!process.env.UPDATER_URL) {
     return res.status(422).json({
@@ -126,9 +126,7 @@ const update = async (req, res) => {
   }
 
   const { data } = await axios.post(process.env.UPDATER_URL, {
-    project,
     service,
-    image,
     tag
   })
 
