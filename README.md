@@ -77,4 +77,4 @@ L'utente detiene i privilegi di admin. Si consiglia di modificare la password de
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
