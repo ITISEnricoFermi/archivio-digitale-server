@@ -1,6 +1,7 @@
 const {
   validationResult,
-  param
+  param,
+  check
 } = require('express-validator/check')
 
 const {
@@ -75,12 +76,24 @@ const checkCollectionEditableById = param('id')
       }
     }))
 
-const checkAdminById = param('id')
-  .custom((value, {req}) => {
-    if (req.user.privileges._id !== 'admin') {
-      return Promise.reject(new Error('Non si detengono i privilegi necessari.'))
-    }
-  })
+// TODO: User non è nel body
+// const checkAdminById = check('user')
+//   .custom(value => {
+//     console.log(value)
+//     if (value.privileges._id !== 'admin') {
+//       return Promise.reject(new Error('Non si detengono i privilegi necessari.'))
+//     }
+//   })
+
+const checkAdminById = (req, res, next) => {
+  if (req.user.privileges._id !== 'admin') {
+    return res.status(401).json({
+      messages: ['Non si detengono i privilegi necessari.']
+    })
+  }
+
+  next()
+}
 
 module.exports = {
   checkErrors,
