@@ -9,7 +9,8 @@
 # Storia
 
 ### 1. Quando è iniziato il progetto?
-Lo sviluppo dell’Archivio Digitale ha inizio nel 2016, ma nel corso del tempo ha subito numerose revisioni. Entro la fine del 2019 la piattaforma diverrà operativa e usufruibile da docenti e studenti.
+Lo sviluppo dell’Archivio Digitale ha inizio nel 2016, ma nel corso del tempo ha subito numerose revisioni. A Maggio 2019 la piattaforma è stata resa operativa e usufruibile da docenti e studenti.
+L'Archivio è raggiungibile al seguente link: [archivio.itisfermi.edu.it](https://archivio.itisfermi.edu.it).
 
 ### 2. Qual è lo scopo del progetto?
 L’Archivio Digitale ha lo scopo di conservare, e quindi valorizzare, ogni tipologia di materiale didattico prodotto dagli studenti del nostro istituto nel corso degli anni.
