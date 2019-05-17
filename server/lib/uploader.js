@@ -3,7 +3,15 @@ const client = require('./minio')
 const sharp = require('sharp')
 const MimeChecker = require('./mime_checker')
 
+/**
+ * Interfaccia per l'upload dei file sull'object storage.
+ */
 class Uploader {
+  /**
+   * Imposta il mimetype e i mimetypes.
+   * @param {String} mimetype  Il mimetype con cui salvare il file.
+   * @param {Array} mimetypes La lista dei mimetype consentiti.
+   */
   constructor (mimetype, mimetypes) {
     this.mimetype = mimetype
     this.mimetypes = mimetypes
@@ -15,6 +23,13 @@ class Uploader {
     // })
   }
 
+  /**
+   * Carica un file nello store.
+   * @param  {String}  bucket   Il nome del bucket in cui salvare il file.
+   * @param  {String}  filename Il nome del file da salvare nello store.
+   * @param  {WritableStream}  master   Lo stream del file da salvare nello store.
+   * @return {Promise}          [description]
+   */
   async upload (bucket, filename, master) {
     try {
       return client.putObject(bucket, filename, master.pipe(new MimeChecker({
@@ -28,6 +43,12 @@ class Uploader {
     }
   }
 
+  /**
+   * [pics description]
+   * @param  {WritableStream}  master Lo stream dell'immagine da salvare nello store.
+   * @param  {String}  id     L'ID dello user a cui associare l'immagine.
+   * @return {Promise}        [description]
+   */
   async pics (master, id) {
     const sizes = [{
       path: 'xlg',
@@ -68,4 +89,4 @@ class Uploader {
   }
 }
 
-module.exports = (req, mimetypes) => new Uploader(req, mimetypes)
+module.exports = (mimetype, mimetypes) => new Uploader(mimetype, mimetypes)
