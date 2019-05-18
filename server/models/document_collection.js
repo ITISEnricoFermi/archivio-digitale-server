@@ -21,12 +21,12 @@ const {
 const DocumentCollectionSchema = new mongoose.Schema({
   documentCollection: {
     type: String,
-    required: true,
+    required: [true, 'Il nome della collezione è obbligatorio.'],
     minlength: 1
   },
   author: {
     type: ObjectId,
-    required: true,
+    required: [true, 'L\'autore è della collezione è obbligatorio.'],
     minlength: 1,
     trim: true,
     ref: 'User'
@@ -57,7 +57,7 @@ const DocumentCollectionSchema = new mongoose.Schema({
   authorizations: [{
     type: ObjectId,
     minlength: 1,
-    required: true,
+    required: [true, 'È necessario specificare i permessi.'],
     trim: true,
     ref: 'User',
     validate: [async (value) => {

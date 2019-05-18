@@ -18,10 +18,9 @@ const {
   DocumentCollection
 } = require('../models/document_collection')
 
-const getDocument = async (req, res) => {
-  const id = req.params.id
+const getDocument = async ({ params: { id }, user }, res) => {
   let document = await Document.findById(id).lean()
-  document = Document.isEditable(document, req.user)
+  document = Document.isEditable(document, user)
   const collection = await DocumentCollection.findOne({
     documents: id
   })

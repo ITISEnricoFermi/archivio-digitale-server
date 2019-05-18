@@ -1,5 +1,4 @@
-const login = async (req, res) => {
-  const { user } = req
+const login = async ({ user }, res) => {
   const token = await user.generateAuthToken()
   res.status(200).json({
     token

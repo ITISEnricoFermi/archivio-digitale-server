@@ -1,10 +1,12 @@
 const error = (err, req, res, next) => {
   let message
+  let code
   switch (err.name) {
     case 'ValidationError':
       for (let field in err.errors) {
         let e = err.errors[field]
         message = e.message
+        code = 400
         // switch (e.properties.type) {
         //   case 'required':
         //     message = `Il campo '${e.properties.path}' è obbligatorio.`
@@ -20,7 +22,8 @@ const error = (err, req, res, next) => {
     default:
       message = err.message
   }
-  res.status(500).send({
+
+  res.status(code || 500).send({
     messages: [message]
   })
   next(err)

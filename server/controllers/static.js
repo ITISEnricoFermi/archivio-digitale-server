@@ -1,8 +1,6 @@
 const client = require('../lib/minio')
 
-const getDocument = async (req, res) => {
-  const { id } = req.params
-
+const getDocument = async ({ params: { id } }, res) => {
   try {
     const requests = [client.statObject('documents', id), client.getObject('documents', id)]
     const [stat, stream] = await Promise.all(requests)
@@ -18,9 +16,7 @@ const getDocument = async (req, res) => {
   }
 }
 
-const getPic = async (req, res) => {
-  const { id, pic } = req.params
-
+const getPic = async ({ params: { id, pic } }, res) => {
   try {
     const requests = [client.statObject('pics', id + '/' + pic), client.getObject('pics', id + '/' + pic)]
     const [stat, stream] = await Promise.all(requests)

@@ -62,9 +62,8 @@ const patchCollection = async (req, res) => {
   }
 }
 
-const deleteCollection = async (req, res) => {
-  const id = req.params.id
-  let collection = await DocumentCollection.findByIdAndRemove(id)
+const deleteCollection = async ({ params: { id } }, res) => {
+  const collection = await DocumentCollection.findByIdAndRemove(id)
 
   if (collection) {
     return res.status(200).json({

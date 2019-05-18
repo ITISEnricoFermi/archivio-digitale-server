@@ -3,7 +3,7 @@ const {
 } = require('../models/faculty')
 
 const getFaculties = async (req, res) => {
-  let faculties = await Faculty.getFaculties()
+  const faculties = await Faculty.getFaculties()
   res.status(200).send(faculties)
 }
 

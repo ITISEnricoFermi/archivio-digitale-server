@@ -37,8 +37,7 @@ const getUser = async (req, res) => {
 }
 
 const patchUser = async (req, res) => {
-  const id = req.params.id
-  const body = req.body
+  const { params: { id }, body } = req
 
   if (id !== req.user._id && req.user.privileges._id !== 'admin') {
     return res.status(401).json({
@@ -86,11 +85,10 @@ const deleteUser = async (req, res) => {
   })
 }
 
-const searchUser = async (req, res) => {
-  let query = req.params.query
-  let regex = query.split(' ').join('|')
+const searchUser = async ({ params: { query }, user }, res) => {
+  const regex = query.split(' ').join('|')
 
-  let users = await User.find({
+  const users = await User.find({
     $and: [{
       $or: [{
         firstname: {
@@ -105,7 +103,7 @@ const searchUser = async (req, res) => {
       }]
     }, {
       _id: {
-        $ne: req.user._id
+        $ne: user._id
       }
     }, {
       state: {
@@ -121,16 +119,15 @@ const searchUser = async (req, res) => {
   res.status(200).json(users)
 }
 
-const getDocumentsOnVisibility = async (req, res) => {
-  const {id, visibility} = req.params
+const getDocumentsOnVisibility = async ({ params: { id, visibility }, user }, res) => {
   const query = {
     author: id,
-    visibility: visibility
+    visibility
   }
 
-  if (req.user.privileges._id !== 'admin' && req.user._id !== id && visibility === 'materia') {
+  if (user.privileges._id !== 'admin' && user._id !== id && visibility === 'materia') {
     query.subject = {
-      $in: req.user.accesses
+      $in: user.accesses
     }
   }
 
@@ -140,7 +137,7 @@ const getDocumentsOnVisibility = async (req, res) => {
     })
     .lean()
 
-  documents.map(document => Document.isEditable(document, req.user))
+  documents.map(document => Document.isEditable(document, user))
 
   if (!documents.length) {
     return res.status(200).json({
@@ -157,27 +154,24 @@ const getDocumentsOnVisibility = async (req, res) => {
   res.status(200).json(documents)
 }
 
-const countDocumentsOnVisibility = async (req, res) => {
-  const {id, visibility} = req.params
+const countDocumentsOnVisibility = async ({ id, visibility }, res) => {
   const documents = await Document.countDocuments({
     author: id,
-    visibility: visibility
+    visibility
   })
   res.status(200).send(documents.toString())
 }
 
-const patchPicOfUser = async (req, res) => {
-  const { id } = req.params
-
-  if (!req.file) {
+const patchPicOfUser = async ({ params: { id }, file }, res) => {
+  if (!file) {
     return res.status(400).json({
       messages: ['Nessun file caricato.']
     })
   }
 
-  const master = fs.createReadStream(req.file.path)
+  const master = fs.createReadStream(file.path)
   const mimetypes = ['image/jpeg', 'image/png', 'image/gif']
-  const store = uploader(req.file.mimetype, mimetypes)
+  const store = uploader(file.mimetype, mimetypes)
 
   try {
     await store.pics(master, id)
