@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const {
+  getPrivilege,
   getPrivileges
 } = require('../../../../controllers/privileges')
 
@@ -9,6 +10,8 @@ const {
 const {
   asyncMiddleware
 } = require('../../../../middlewares/async')
+
+router.get('/:id', asyncMiddleware(getPrivilege))
 
 router.get('/', asyncMiddleware(getPrivileges))
 

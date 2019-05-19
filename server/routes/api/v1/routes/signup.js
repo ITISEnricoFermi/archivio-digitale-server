@@ -36,12 +36,17 @@ router.post('/',
     .not().isEmpty().withMessage('Il cognome è obbligatorio.')
     .trim()
     .escape(),
-  body('email').custom(value => User.findByEmail(value)
-    .then(user => {
-      if (user) {
-        return Promise.reject(new Error('L\'email inserita è già in uso.'))
-      }
-    })),
+  body('email')
+    .not().isEmpty().withMessage('L\'indirizzo email è obbligatorio.')
+    .isEmail().withMessage('L\'indirizzo email non è valido.')
+    .custom(value => User.findByEmail(value)
+      .then(user => {
+        if (user) {
+          return Promise.reject(new Error('L\'email inserita è già in uso.'))
+        }
+      }))
+    .trim()
+    .escape(),
   body('accesses')
     .not().isEmpty().withMessage('Le autorizzazioni sono obbligatorie.')
     .custom(value => Subject.count({
