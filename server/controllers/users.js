@@ -12,9 +12,7 @@ const {
 
 const uploader = require('../lib/uploader')
 
-const getUser = async (req, res) => {
-  const id = req.params.id
-
+const getUser = async ({ params: { id } }, res) => {
   const {
     _id,
     firstname,
@@ -73,8 +71,7 @@ const patchUser = async ({ params: { id }, body: { email, passwords }, user }, r
   res.status(200).json(newUser)
 }
 
-const deleteUser = async (req, res) => {
-  const id = req.params.id
+const deleteUser = async ({ params: { id } }, res) => {
   const user = await User.findById(id)
   user.state = 'disabled'
   await user.save()
@@ -152,7 +149,7 @@ const getDocumentsOnVisibility = async ({ params: { id, visibility }, user }, re
   res.status(200).json(documents)
 }
 
-const countDocumentsOnVisibility = async ({ id, visibility }, res) => {
+const countDocumentsOnVisibility = async ({ params: { id, visibility } }, res) => {
   const documents = await Document.countDocuments({
     author: id,
     visibility
