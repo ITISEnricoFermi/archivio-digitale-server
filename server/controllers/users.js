@@ -36,10 +36,8 @@ const getUser = async (req, res) => {
   })
 }
 
-const patchUser = async (req, res) => {
-  const { params: { id }, body } = req
-
-  if (id !== req.user._id && req.user.privileges._id !== 'admin') {
+const patchUser = async ({ params: { id }, body: { email, passwords }, user }, res) => {
+  if (id !== user._id && user.privileges._id !== 'admin') {
     return res.status(401).json({
       messages: ['Non si detengono i privilegi necessari.']
     })
@@ -57,22 +55,22 @@ const patchUser = async (req, res) => {
   //   delete user.passwords
   // }
 
-  if (body.password) {
-    let salt = await bcrypt.genSalt(10)
-    let hash = await bcrypt.hash(body.password, salt)
-    body.password = hash
+  if (passwords.new) {
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(passwords.new, salt)
+    passwords.new = hash
   }
 
-  let user = await User.findOneAndUpdate({
+  const newUser = await User.findOneAndUpdate({
     _id: id
   }, {
     $set: {
-      email: body.email,
-      password: body.password
+      email: email,
+      password: passwords.new
     }
   })
 
-  res.status(200).json(user)
+  res.status(200).json(newUser)
 }
 
 const deleteUser = async (req, res) => {

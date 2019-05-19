@@ -7,13 +7,6 @@ const error = (err, req, res, next) => {
         let e = err.errors[field]
         message = e.message
         code = 400
-        // switch (e.properties.type) {
-        //   case 'required':
-        //     message = `Il campo '${e.properties.path}' è obbligatorio.`
-        //     break
-        //   default:
-        //     message = e.message
-        // }
       }
       break
     case 'MongoError':

@@ -31,18 +31,18 @@ const getDocument = async ({ params: { id }, user }, res) => {
   })
 }
 
-const postDocument = async (req, res) => {
-  let body = _.pick(req.body, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
+const postDocument = async ({ file, user, body }, res) => {
+  body = _.pick(body, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
 
   // Validazione
-  if (!req.file) {
+  if (!file) {
     return res.status(400).json({
       messages: ['Nessun file caricato.']
     })
   }
 
-  body.author = String(req.user._id)
-  body.mimetype = req.file.mimetype
+  body.author = String(user._id)
+  body.mimetype = file.mimetype
   body.name = _.upperFirst(body.name)
   body.description = _.upperFirst(body.description)
 
@@ -50,8 +50,8 @@ const postDocument = async (req, res) => {
   await document.validate()
 
   const mimetypes = require('../config/mimetypes/mimetypes')
-  const store = uploader(req.file.mimetype, mimetypes)
-  const master = fs.createReadStream(req.file.path)
+  const store = uploader(file.mimetype, mimetypes)
+  const master = fs.createReadStream(file.path)
   await store.upload('documents', document.id, master)
 
   if (await document.save()) {
@@ -59,26 +59,17 @@ const postDocument = async (req, res) => {
   }
 }
 
-const patchDocument = async (req, res) => {
-  const id = req.params.id
+const patchDocument = async ({ params: { id }, body }, res) => {
+  // NEW
+  // let { name, type, faculty, subject, grade, section, visibility, description } = req.body
 
-  //
-  // // NEW
-  // let { name, type, faculty, subject, grade, section, visibility, description } = req.body.document
-  //
-  // // Formattazione
-  // name = _.upperFirst(name)
-  // description = _.upperFirst(description)
-
-  // OLD
-
-  let body = _.pick(req.body, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
+  body = _.pick(body, ['name', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility', 'description'])
 
   // Formattazione
   body.name = _.upperFirst(body.name)
   body.description = _.upperFirst(body.description)
 
-  let document = await Document.findByIdAndUpdate(id, {
+  const document = await Document.findByIdAndUpdate(id, {
     $set: body
   })
 
@@ -89,9 +80,7 @@ const patchDocument = async (req, res) => {
   }
 }
 
-const deleteDocument = async (req, res) => {
-  const { id } = req.params
-
+const deleteDocument = async ({ params: id }, res) => {
   try {
     await Document.findByIdAndRemove(id)
     await DocumentCollection.updateOne({
@@ -145,10 +134,8 @@ const searchDocument = async (req, res) => {
   }
 }
 
-const getRecentDocuments = async (req, res) => {
-  const { page, number, type } = req.params
-
-  const documents = await Document.getRecentDocuments(page, number, type, req.user)
+const getRecentDocuments = async ({ params: { page, number, type }, user }, res) => {
+  const documents = await Document.getRecentDocuments(page, number, type, user)
 
   if (documents.length) {
     res.status(200).json(documents)
@@ -159,11 +146,10 @@ const getRecentDocuments = async (req, res) => {
   }
 }
 
-const partialSearchDocuments = async (req, res) => {
-  let query = req.body.query
-  let regex = query.split(' ').join('|')
+const partialSearchDocuments = async ({ body: { query } }, res) => {
+  const regex = query.split(' ').join('|')
 
-  let documents = await Document.find({
+  const documents = await Document.find({
     name: {
       $regex: regex,
       $options: 'i'
@@ -182,11 +168,9 @@ const partialSearchDocuments = async (req, res) => {
   res.status(200).json(documents)
 }
 
-const deleteDocumentsByUser = async (req, res) => {
-  const { id } = req.params
-
-  const isAdmin = req.user.privileges._id === 'admin'
-  const isAuthor = req.user._id === id
+const deleteDocumentsByUser = async ({ params: { id }, user }, res) => {
+  const isAdmin = user.privileges._id === 'admin'
+  const isAuthor = user._id === id
 
   if (!isAdmin && !isAuthor) {
     return res.status(401).json({

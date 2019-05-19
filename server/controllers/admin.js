@@ -10,8 +10,8 @@ const {
   User
 } = require('../models/user')
 
-const postUser = async (req, res) => {
-  let body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
+const postUser = async ({ body }, res) => {
+  body = _.pick(body, ['firstname', 'lastname', 'email', 'password', 'privileges', 'accesses'])
 
   body.state = 'active'
   const user = new User(body)
@@ -32,18 +32,17 @@ const postUser = async (req, res) => {
   res.status(200).json(user)
 }
 
-const patchUser = async (req, res) => {
-  const body = _.pick(req.body, ['firstname', 'lastname', 'state', 'email', 'privileges', 'accesses'])
+const patchUser = async ({ body, params: { id } }, res) => {
+  body = _.pick(body, ['firstname', 'lastname', 'state', 'email', 'privileges', 'accesses'])
 
-  let user = await User.findByIdAndUpdate(req.params.id, {
+  const user = await User.findByIdAndUpdate(id, {
     $set: body
   })
 
   res.status(200).json(user)
 }
 
-const sendEmail = async (req, res) => {
-  const { subject, recipients, message } = req.body
+const sendEmail = async ({ subject, recipients, message }, res) => {
   if (!process.env.MAILER_URL) {
     return res.status(422).json({
       messages: ['Mailer non disponibile.']
@@ -57,12 +56,13 @@ const sendEmail = async (req, res) => {
 }
 
 const getRequests = async (req, res) => {
-  const users = await User.find({state: 'pending'})
+  const users = await User.find({
+    state: 'pending'
+  })
   res.status(200).json(users)
 }
 
-const acceptRequest = async (req, res) => {
-  const id = req.params.id
+const acceptRequest = async ({ params: { id } }, res) => {
   await User.findByIdAndUpdate(id, {
     $set: {
       state: 'active'
@@ -73,8 +73,7 @@ const acceptRequest = async (req, res) => {
   })
 }
 
-const refuseRequest = async (req, res) => {
-  const id = req.params.id
+const refuseRequest = async ({ params: { id } }, res) => {
   const user = await User.findByIdAndRemove(id)
 
   if (!user) {
@@ -88,8 +87,7 @@ const refuseRequest = async (req, res) => {
   })
 }
 
-const toggleState = async (req, res) => {
-  const id = req.params.id
+const toggleState = async ({ params: { id } }, res) => {
   const user = await User.findById(id)
 
   const updated = await user.update({
@@ -101,9 +99,7 @@ const toggleState = async (req, res) => {
   res.status(200).json(updated)
 }
 
-const resetPassword = async (req, res) => {
-  const id = req.params.id
-
+const resetPassword = async ({ params: { id } }, res) => {
   const password = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7)
   const salt = await bcrypt.genSalt(10)
   const hash = await bcrypt.hash(password, salt)
@@ -116,9 +112,7 @@ const resetPassword = async (req, res) => {
   })
 }
 
-const update = async (req, res) => {
-  const { service, tag } = req.body
-
+const update = async ({ body: { service, tag } }, res) => {
   if (!process.env.UPDATER_URL) {
     return res.status(422).json({
       messages: ['Updater non disponibile.']
