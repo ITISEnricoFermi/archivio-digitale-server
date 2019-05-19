@@ -74,8 +74,16 @@ router.patch('/users/:id',
   checkAdminById,
   checkUserById,
   body('email')
-    .isEmail()
-    .normalizeEmail(),
+    .not().isEmpty().withMessage('L\'indirizzo email è obbligatorio.')
+    .isEmail().withMessage('L\'indirizzo email non è valido.')
+    // .custom((value, { req: { params: { id } } }) => User.findByEmail(value)
+    //   .then(user => {
+    //     if (!user || String(user.id) !== id) {
+    //       return Promise.reject(new Error('L\'indirizzo email è già in uso.'))
+    //     }
+    //   }))
+    .trim()
+    .escape(),
   checkErrors,
   asyncMiddleware(patchUser))
 
@@ -134,7 +142,7 @@ router.delete('/requests/:id',
 router.post('/update',
   authenticate,
   logged,
-  // checkAdminById,
+  checkAdminById,
   body('service', 'Devi specificare il nome del servizio')
     .isLength({ min: 3 })
     .toString(),
