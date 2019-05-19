@@ -75,7 +75,7 @@ router.get('/recent/:page/:number/:type?',
   authenticate,
   asyncMiddleware(getRecentDocuments))
 
-router.post('/search/partial/:query',
+router.get('/search/partial/:query',
   authenticate,
   logged,
   asyncMiddleware(partialSearchDocuments))

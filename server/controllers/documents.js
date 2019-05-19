@@ -146,7 +146,8 @@ const getRecentDocuments = async ({ params: { page, number, type }, user }, res)
   }
 }
 
-const partialSearchDocuments = async ({ body: { query } }, res) => {
+const partialSearchDocuments = async ({ params: { query } }, res) => {
+  console.log(query)
   const regex = query.split(' ').join('|')
 
   const documents = await Document.find({
