@@ -11,7 +11,7 @@ const users = require('../../seed/seeds/user.json')
 const uploader = require('../../../lib/uploader')
 
 const master = fs.createReadStream(path.join(__dirname, '..', '..', '..', 'assets', 'profile.svg'))
-const mimetypes = ['image/jpeg', 'image/png', 'image/gif']
+const mimetypes = ['image/svg+xml']
 const store = uploader('image/jpeg', mimetypes)
 
 const loadUsers = new Promise((resolve, reject) => {

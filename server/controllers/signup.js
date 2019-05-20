@@ -14,7 +14,7 @@ const signup = async (req, res) => {
 
   const user = new User(body)
   const master = fs.createReadStream(path.join(__dirname, '..', 'assets', 'profile.svg'))
-  const mimetypes = ['image/jpeg', 'image/png', 'image/gif']
+  const mimetypes = ['image/svg+xml']
   const store = uploader('image/jpeg', mimetypes)
 
   try {
