@@ -1,11 +1,18 @@
 const client = require('../../lib/minio')
 
-const buckets = [client.bucketExists('documents'), client.bucketExists('pics')]
+const exist = [client.bucketExists('documents'), client.bucketExists('pics')]
 
-Promise.all(buckets)
+Promise.all(exist)
   .then(([documents, pics]) => {
-    if (!documents) client.makeBucket('documents')
-    if (!pics) client.makeBucket('pics')
+    const bucktes = []
+    if (!documents.length) bucktes.push(client.makeBucket('documents'))
+    if (!pics.length) bucktes.push(client.makeBucket('pics'))
+
+    // Distinguere per ogni bucket
+    return Promise.all(bucktes)
+      .then(([documents, pics]) => {
+        console.log('Bucket di default creati con successo.')
+      })
   })
   .catch(e => {
     console.log('Impossibile creare i Bucket di default.')

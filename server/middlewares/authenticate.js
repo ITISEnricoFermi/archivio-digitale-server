@@ -40,8 +40,7 @@ const signin = (req, res, next) => passport.authenticate('login', {
   failureFlash: true
 }, (err, user, info) => {
   if (err) {
-    const { name } = err
-    switch (name) {
+    switch (err.name) {
       case 'bad_email':
         err.code = 404
         next(err)

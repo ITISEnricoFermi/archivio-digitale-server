@@ -49,7 +49,7 @@ router.post('/',
     .escape(),
   body('accesses')
     .not().isEmpty().withMessage('Le autorizzazioni sono obbligatorie.')
-    .custom(value => Subject.count({
+    .custom(value => Subject.countDocuments({
       _id: {
         $in: value
       }
