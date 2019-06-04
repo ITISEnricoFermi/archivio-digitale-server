@@ -13,7 +13,10 @@ Promise.all(exist)
       .then(([documents, pics]) => {
         console.log('Bucket di default creati con successo.')
       })
+      .catch(e => {
+        console.log('Impossibile creare i Bucket di default.')
+      })
   })
   .catch(e => {
-    console.log('Impossibile creare i Bucket di default.')
+    console.log('I bucket di default sono già stati creati.')
   })

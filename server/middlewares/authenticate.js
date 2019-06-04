@@ -53,6 +53,10 @@ const signin = (req, res, next) => passport.authenticate('login', {
         err.code = 401
         next(err)
         break
+      case 'account_pending':
+        err.code = 401
+        next(err)
+        break
       default:
         next(new Error('Si è verificato un errore durante il login.'))
         break
