@@ -15,12 +15,6 @@ class Uploader {
   constructor (mimetype, mimetypes) {
     this.mimetype = mimetype
     this.mimetypes = mimetypes
-
-    // this.checker.on('error', e => {
-    //   this.res.status(415).json({
-    //     messages: ['Impossibile caricare il file.']
-    //   })
-    // })
   }
 
   /**
@@ -30,16 +24,30 @@ class Uploader {
    * @param  {WritableStream}  master   Lo stream del file da salvare nello store.
    * @return {Promise}          [description]
    */
-  async upload (bucket, filename, master) {
+  upload (bucket, filename, master, checker) {
+    return new Promise((resolve, reject) => {
+      client.putObject(bucket, filename,
+        master
+
+        //   master.pipe(new MimeChecker({
+        //   mimetypes: this.mimetypes
+        // }).on('error', e => {
+        //   console.log('Errore:', e)
+        //   reject(new Error('Impossibile caricare il file.')) // questo non viene catturato perché sta dentro la funzione dell'evento error
+        // }))
+
+        , {
+          'Content-type': this.mimetype
+        })
+        .then(resolve)
+    })
+  }
+
+  async file (filename, master) {
     try {
-      return client.putObject(bucket, filename, master.pipe(new MimeChecker({
-        mimetypes: this.mimetypes
-      })), {
-        'Content-type': this.mimetype
-      })
+      return this.upload('documents', filename, master)
     } catch (e) {
-      console.log(e)
-      throw new Error('Impossibile caricare il file.')
+      throw new Error('Impossibile caricare il documento.')
     }
   }
 
@@ -70,19 +78,28 @@ class Uploader {
     const avatars = (xy) => sharp()
       .resize(xy, xy)
       .toFormat('jpeg')
+      .on('error', e => {
+        console.log('Errore')
+      })
 
     const pics = []
 
     for (let i = 0; i < sizes.length; i++) {
       pics.push(avatars(sizes[i].xy))
     }
-
+    /*
+      IL PROBLEMA È IN QUESTA FUNZIONE. IL PROBLEMA DEL MEMORY LEAK.
+      IL PROBLEMA DEL NON CARICAMENTO STA NELL'IF DEL MIME CHECKER.
+      IL MIME CHECKER VIENE ESEGUITO NELLA FUNZIONE UPLOAD, QUINDI È GIÀ PASSATO IN JPEG E IO VOGLIO SVG
+      PROBLEMA DELLE PROMISE NON CATTURATE PERCHÉ LA FUNZIONE STA NELL'EVENT
+     */
+    // master.pipe.pipe(mimechecker.pipe(tee(...pics)))
     master.pipe(tee(...pics))
 
     const uploads = []
 
     for (let i = 0; i < sizes.length; i++) {
-      uploads.push(this.upload('pics', id + '/' + sizes[i].path, pics[i]))
+      uploads.push(this.upload('pics', id.concat('/', sizes[i].path), pics[i]))
     }
 
     return Promise.all(uploads)

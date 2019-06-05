@@ -8,6 +8,7 @@ class MimeChecker extends Transform {
     this.data = []
     this.mimeFound = false
     this.options = options
+    // this.setMaxListeners(11)
   }
 
   _transform (chunk, encoding, done) {
@@ -17,26 +18,26 @@ class MimeChecker extends Transform {
     }
 
     this.data.push(chunk)
-    // if (this.data.length < 20) {
-    //   return done()
-    // } else if (this.data.length === 20) {
-    // this.pause()
+
     const buffered = Buffer.concat(this.data)
     const checker = new Magic(MAGIC_MIME_TYPE)
     checker.detect = promisify(checker.detect)
-    checker.detect(buffered)
+
+    return checker.detect(buffered)
       .then(mime => {
         if (!this.checkFileFormat(mime)) {
-          return this.emit('error', new Error('Il formato del file non è consentito.'))
+          throw new Error('Il formato del file non è consentito.')
+        } else {
+          this.data.map(this.push.bind(this))
+          this.mimeFound = true
         }
-        this.data.map(this.push.bind(this))
-        this.mimeFound = true
-        return done()
       })
       .catch(e => {
         this.emit('error', e)
       })
-    // }
+      .finally(() => {
+        return done()
+      })
   }
 
   checkFileFormat (mime) {
