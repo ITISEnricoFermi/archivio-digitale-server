@@ -161,7 +161,7 @@ const partialSearchDocuments = async ({ params: { query } }, res) => {
     subject: false,
     visibility: false,
     description: false,
-    author: false,
+    // author: false,
     directory: false,
     __v: false
   }).limit(10)
@@ -188,14 +188,62 @@ const deleteDocumentsByUser = async ({ params: { id }, user }, res) => {
   })
 }
 
+const transferDocuments = async ({ body: { documents, to, type }, user }, res) => {
+  let filter = {}
+
+  switch (type) {
+    case 'selected':
+
+      if (!documents.length) {
+        return res.status(400).json({
+          messages: ['Non sono stati specificati i documenti.']
+        })
+      }
+      for (let i = 0; i < documents.length; i++) {
+        if (!Document.isEditable(documents[i], user)) {
+          return res.status(401).json({
+            messages: ['Non si detengono i privilegi necessari.']
+          })
+        }
+      }
+
+      filter._id = {
+        $in: documents
+      }
+      break
+    case 'all':
+      filter.author = user._id
+      break
+    default:
+      return res.status(500).json({
+        messages: ['Il tipo di operazione non esiste.']
+      })
+  }
+
+  try {
+    await Document.updateMany(filter, {
+      author: to[0]
+    })
+  } catch (e) {
+    return res.status(500).json({
+      messages: ['Impossibile trasferire i documenti.']
+    })
+  }
+
+  res.status(200).json({
+    messages: ['Documenti trasferiti.']
+  })
+}
+
 module.exports = {
   getDocument,
-  patchDocument,
   postDocument,
+  patchDocument,
   deleteDocument,
   searchDocument,
+  transferDocuments,
   getRecentDocuments,
+  deleteDocumentsByUser,
   partialSearchDocuments,
-  getCollectionsOnDocument,
-  deleteDocumentsByUser
+  getCollectionsOnDocument
 }

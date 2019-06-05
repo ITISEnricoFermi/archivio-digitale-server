@@ -7,6 +7,7 @@ const {
   postDocument,
   deleteDocument,
   searchDocument,
+  transferDocuments,
   getRecentDocuments,
   partialSearchDocuments,
   getCollectionsOnDocument
@@ -79,5 +80,10 @@ router.get('/search/partial/:query',
   authenticate,
   logged,
   asyncMiddleware(partialSearchDocuments))
+
+router.post('/transfer',
+  authenticate,
+  logged,
+  asyncMiddleware(transferDocuments))
 
 module.exports = router

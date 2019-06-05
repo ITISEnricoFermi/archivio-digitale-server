@@ -1,6 +1,7 @@
 const error = (err, req, res, next) => {
   let message
   let code
+
   switch (err.name) {
     case 'ValidationError':
       for (let field in err.errors) {
