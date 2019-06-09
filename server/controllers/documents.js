@@ -21,14 +21,11 @@ const {
 const getDocument = async ({ params: { id }, user }, res) => {
   let document = await Document.findById(id).lean()
   document = Document.isEditable(document, user)
-  const collection = await DocumentCollection.findOne({
-    documents: id
-  })
-  document.collection = collection
-  res.status(200).json({
-    ...document,
-    ...collection
-  })
+  const stat = await minioClient.statObject('documents', id)
+  const mime = stat.metaData['content-type']
+  document.mimetype = mime
+
+  res.status(200).json(document)
 }
 
 const postDocument = async ({ file, user, body }, res) => {
@@ -147,7 +144,6 @@ const getRecentDocuments = async ({ params: { page, number, type }, user }, res)
 }
 
 const partialSearchDocuments = async ({ params: { query } }, res) => {
-  console.log(query)
   const regex = query.split(' ').join('|')
 
   const documents = await Document.find({

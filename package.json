@@ -1,6 +1,6 @@
 {
   "name": "archivio-digitale-server",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Archivio Digitale",
   "main": "server/server.js",
   "scripts": {
@@ -41,7 +41,7 @@
     "lodash": "^4.17.11",
     "minio": "^7.0.8",
     "mmmagic": "^0.5.3",
-    "mongoose": "^5.5.12",
+    "mongoose": "^5.5.14",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "passport": "^0.4.0",
