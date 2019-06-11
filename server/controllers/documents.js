@@ -1,10 +1,5 @@
 const _ = require('lodash')
-const mongoose = require('mongoose')
 const fs = require('fs')
-
-const {
-  ObjectId
-} = mongoose.Types
 
 const uploader = require('../lib/uploader')
 const minioClient = require('../lib/minio')
@@ -77,16 +72,16 @@ const patchDocument = async ({ params: { id }, body }, res) => {
   }
 }
 
-const deleteDocument = async ({ params: id }, res) => {
+const deleteDocument = async ({ params: { id } }, res) => {
   try {
-    await Document.findByIdAndRemove(id)
-    await DocumentCollection.updateOne({
-      documents: ObjectId(id)
-    }, {
-      $pull: {
-        documents: ObjectId(id)
-      }
-    })
+    await Promise.all([Document.findByIdAndRemove(id),
+      DocumentCollection.updateOne({
+        documents: [id]
+      }, {
+        $pull: {
+          documents: [id]
+        }
+      })])
 
     await minioClient.removeObject('documents', id)
 
@@ -98,9 +93,7 @@ const deleteDocument = async ({ params: id }, res) => {
   }
 }
 
-const getCollectionsOnDocument = async (req, res) => {
-  const id = req.params.id
-
+const getCollectionsOnDocument = async ({ params: { id } }, res) => {
   const collections = await DocumentCollection.find({
     documents: id
   })
