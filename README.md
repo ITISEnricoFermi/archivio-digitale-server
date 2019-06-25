@@ -42,7 +42,7 @@ L'Archivio Digitale è suddiviso in sette repository:
 * 📦 Updater ([archivio-digitale-updater](https://github.com/ITISEnricoFermi/archivio-digitale-updater)).
 * 📬 Mailer ([archivio-digitale-mailer](https://github.com/ITISEnricoFermi/archivio-digitale-mailer)).
 * 📧 Template Mail ([archivio-digitale-mail](https://github.com/ITISEnricoFermi/archivio-digitale-mail)).
-* 📄 Documentazione ([archivio-digitale-docs](https://github.com/ITISEnricoFermi/archivio-digitale-docs))
+* 📄 Documentazione ([archivio-digitale-docs](https://github.com/ITISEnricoFermi/archivio-digitale-docs)).
 
 <h1 align="center">
   <img src="https://github.com/ITISEnricoFermi/archivio-digitale-nginx/blob/master/project/Application%20Logic.svg" alt="Application Logic"/>
