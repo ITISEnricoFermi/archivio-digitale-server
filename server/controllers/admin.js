@@ -15,20 +15,14 @@ const postUser = async ({ body }, res) => {
 
   body.state = 'active'
   const user = new User(body)
+
   const master = fs.createReadStream(path.join(__dirname, '..', 'assets', 'profile.svg'))
   const mimetypes = ['image/svg+xml', 'image/jpeg'] // Momentaneamente per evitare errori
   // const mimetypes = ['image/svg+xml']
   const store = uploader('image/jpeg', mimetypes)
 
-  try {
-    await store.pics(master, user.id)
-    await user.save()
-    res.status(200).send({
-      messages: ['Immagine di profilo aggiornata con successo.']
-    })
-  } catch (e) {
-    throw new Error('Si è verificato un errore durante la creazione dell\'utente.')
-  }
+  await store.pics(master, user.id)
+  await user.save()
 
   res.status(200).json(user)
 }

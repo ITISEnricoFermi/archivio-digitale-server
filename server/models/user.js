@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const _ = require('lodash')
 const validator = require('validator')
+const xregexp = require('xregexp')
 
 const {
   Privilege
@@ -12,6 +13,8 @@ const {
   Subject
 } = require('../models/subject')
 
+const reg = xregexp('^\\pL+$')
+
 const UserSchema = new mongoose.Schema({
   firstname: {
     type: String,
@@ -19,7 +22,7 @@ const UserSchema = new mongoose.Schema({
     minlength: 1,
     validate: {
       validator (value) {
-        return validator.matches(value, new RegExp("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$", 'gi'))
+        return reg.test(value)
       },
       message: 'Il nome non è valido.'
     }
@@ -30,7 +33,7 @@ const UserSchema = new mongoose.Schema({
     minlength: 1,
     validate: {
       validator (value) {
-        return validator.matches(value, new RegExp("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$", 'gi'))
+        return reg.test(value)
       },
       message: 'Il cognome non è valido.'
     }
@@ -48,7 +51,7 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Inserire la password.'],
+    required: [true, 'La password è obbligatoria.'],
     trim: true,
     minlength: 6
   },
@@ -207,11 +210,9 @@ UserSchema.statics.getUsers = function () {
 UserSchema.pre('save', function (next) {
   const user = this
 
-  // nome
-  user.firstname = _.startCase(_.lowerCase(user.firstname))
-
-  // cognome
-  user.lastname = _.startCase(_.lowerCase(user.lastname))
+  // originariamente startCase ma effettua il deburring, vedere lodash v5
+  user.firstname = _.upperFirst(user.firstname)
+  user.lastname = _.upperFirst(user.lastname)
 
   if (!user.isModified('password')) {
     return next()
