@@ -130,13 +130,13 @@ DocumentSchema.statics.isEditable = function (document, user) {
 
 DocumentSchema.statics.isReadable = function (document, user) {
   const isPublic = String(document.visibility._id) === 'pubblico'
-  const isAdmin = String(user.privileges._id) === 'admin'
-  const isAuthor = String(user._id) === String(document.author._id)
 
   if (isPublic) {
     return true
   } else {
     if (user) {
+      const isAdmin = String(user.privileges._id) === 'admin'
+      const isAuthor = String(user._id) === String(document.author._id)
       return !!(isAdmin || isAuthor)
     }
   }
