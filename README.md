@@ -34,7 +34,7 @@ La piattaforma potrà essere inoltre un pratico strumento per i nuovi studenti, 
 
 # Progetto
 
-L'Archivio Digitale è suddiviso in cinque repository: 
+L'Archivio Digitale è suddiviso in sette repository: 
 
 * 🥞 Stack ([archivio-digitale-stack](https://github.com/ITISEnricoFermi/archivio-digitale-stack)).
 * 📚 API Server ([archivio-digitale-server](https://github.com/ITISEnricoFermi/archivio-digitale-server)).
@@ -42,6 +42,7 @@ L'Archivio Digitale è suddiviso in cinque repository:
 * 📦 Updater ([archivio-digitale-updater](https://github.com/ITISEnricoFermi/archivio-digitale-updater)).
 * 📬 Mailer ([archivio-digitale-mailer](https://github.com/ITISEnricoFermi/archivio-digitale-mailer)).
 * 📧 Template Mail ([archivio-digitale-mail](https://github.com/ITISEnricoFermi/archivio-digitale-mail)).
+* 📄 Documentazione ([archivio-digitale-docs](https://github.com/ITISEnricoFermi/archivio-digitale-docs))
 
 <h1 align="center">
   <img src="https://github.com/ITISEnricoFermi/archivio-digitale-nginx/blob/master/project/Application%20Logic.svg" alt="Application Logic"/>
