@@ -116,27 +116,32 @@ const DocumentSchema = new mongoose.Schema({
 })
 
 // TODO: rimuovere mimetype dai campi di Document
-
 DocumentSchema.statics.isEditable = function (document, user) {
+  const isAdmin = String(user.privileges._id) === 'admin'
+  const isAuthor = String(user._id) === String(document.author._id)
+
   if (!user) {
     document.editable = false
   } else {
-    const isAdmin = user.privileges._id === 'admin'
-    const isAuthor = user._id === document.author._id
     document.editable = !!(isAdmin || isAuthor)
   }
   return document
 }
 
 DocumentSchema.statics.isReadable = function (document, user) {
-  if (!user) {
-    const isPublic = document.visibility._id === 'pubblico'
-    return isPublic
+  const isPublic = String(document.visibility._id) === 'pubblico'
+  const isAdmin = String(user.privileges._id) === 'admin'
+  const isAuthor = String(user._id) === String(document.author._id)
+
+  if (isPublic) {
+    return true
   } else {
-    const isAdmin = user.privileges._id === 'admin'
-    const isAuthor = user._id === document.author._id
-    return !!(isAdmin || isAuthor)
+    if (user) {
+      return !!(isAdmin || isAuthor)
+    }
   }
+
+  return false
 }
 
 DocumentSchema.statics.getVisibility = function (user, visibility) {
