@@ -61,7 +61,7 @@
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^3.1.0",
+    "eslint-plugin-standard": "^4.0.0",
     "figlet": "^1.2.3",
     "ora": "^3.4.0",
     "readline-sync": "^1.4.9",
