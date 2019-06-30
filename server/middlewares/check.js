@@ -1,8 +1,7 @@
 const {
   validationResult,
-  param,
-  check
-} = require('express-validator/check')
+  param
+} = require('express-validator')
 
 const {
   User

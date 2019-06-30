@@ -107,21 +107,6 @@ const resetPassword = async ({ params: { id } }, res) => {
   })
 }
 
-const update = async ({ body: { service, tag } }, res) => {
-  if (!process.env.UPDATER_URL) {
-    return res.status(422).json({
-      messages: ['Updater non disponibile.']
-    })
-  }
-
-  const { data } = await axios.post(process.env.UPDATER_URL, {
-    service,
-    tag
-  })
-
-  res.status(200).json(data)
-}
-
 module.exports = {
   postUser,
   patchUser,
@@ -130,6 +115,5 @@ module.exports = {
   acceptRequest,
   refuseRequest,
   toggleState,
-  resetPassword,
-  update
+  resetPassword
 }

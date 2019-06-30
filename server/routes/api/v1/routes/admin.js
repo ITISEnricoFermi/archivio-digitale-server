@@ -3,12 +3,9 @@ const router = express.Router()
 const mongoose = require('mongoose')
 
 const {
+  body,
   sanitizeParam
-} = require('express-validator/filter')
-
-const {
-  body
-} = require('express-validator/check')
+} = require('express-validator')
 
 const {
   ObjectId
@@ -22,8 +19,7 @@ const {
   acceptRequest,
   refuseRequest,
   toggleState,
-  resetPassword,
-  update
+  resetPassword
 } = require('../../../../controllers/admin')
 
 // Middleware
@@ -138,18 +134,5 @@ router.delete('/requests/:id',
     }),
   checkErrors,
   asyncMiddleware(refuseRequest))
-
-router.post('/update',
-  authenticate,
-  logged,
-  checkAdminById,
-  body('service', 'Devi specificare il nome del servizio')
-    .isLength({ min: 3 })
-    .toString(),
-  body('tag', 'Devi specificare il nome del tag.')
-    .isLength({ min: 1 })
-    .toString(),
-  checkErrors,
-  asyncMiddleware(update))
 
 module.exports = router

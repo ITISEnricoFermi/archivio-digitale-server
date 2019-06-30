@@ -12,7 +12,7 @@ const {
 
 const {
   body
-} = require('express-validator/check')
+} = require('express-validator')
 
 const {
   checkErrors
