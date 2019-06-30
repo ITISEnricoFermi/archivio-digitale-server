@@ -136,15 +136,25 @@ const getRecentDocuments = async ({ params: { page, number, type }, user }, res)
   }
 }
 
-const partialSearchDocuments = async ({ params: { query } }, res) => {
-  const regex = query.split(' ').join('|')
+const partialSearchDocuments = async ({ query: { fulltext, page, perPage } }, res) => {
+  let find
+  const skip = perPage * page - perPage
+  perPage = parseInt(perPage)
+  page = parseInt(page)
 
-  const documents = await Document.find({
-    name: {
-      $regex: regex,
-      $options: 'i'
+  if (!fulltext) {
+    find = {}
+  } else {
+    const regex = fulltext.split(' ').join('|')
+    find = {
+      name: {
+        $regex: regex,
+        $options: 'i'
+      }
     }
-  }, {
+  }
+
+  const [documents, count] = await Promise.all([Document.find(find, {
     type: false,
     faculty: false,
     subject: false,
@@ -153,9 +163,18 @@ const partialSearchDocuments = async ({ params: { query } }, res) => {
     // author: false,
     directory: false,
     __v: false
-  }).limit(10)
+  }).limit(perPage)
+    .skip(skip),
+  Document.countDocuments(find)])
 
-  res.status(200).json(documents)
+  const pages = Math.ceil(count / perPage)
+
+  res.status(200).json({
+    documents,
+    page,
+    pages,
+    total: count
+  })
 }
 
 const deleteDocumentsByUser = async ({ params: { id }, user }, res) => {
