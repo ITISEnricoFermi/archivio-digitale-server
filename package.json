@@ -51,7 +51,7 @@
     "socket.io": "^2.2.0",
     "tee-1": "^0.2.0",
     "through": "^2.3.8",
-    "validator": "^11.0.0",
+    "validator": "^11.1.0",
     "xregexp": "^4.2.4"
   },
   "devDependencies": {
