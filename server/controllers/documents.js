@@ -34,7 +34,6 @@ const postDocument = async ({ file, user, body }, res) => {
   }
 
   body.author = String(user._id)
-  body.mimetype = file.mimetype
   body.name = _.upperFirst(body.name)
   body.description = _.upperFirst(body.description)
 

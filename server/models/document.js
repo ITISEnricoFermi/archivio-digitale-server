@@ -106,16 +106,9 @@ const DocumentSchema = new mongoose.Schema({
     type: String,
     required: [true, 'La descrizione è obbligatoria.'],
     minlength: 1
-  },
-  mimetype: {
-    type: String,
-    required: true,
-    minlength: 1,
-    trim: true
   }
 })
 
-// TODO: rimuovere mimetype dai campi di Document
 DocumentSchema.statics.isEditable = function (document, user) {
   if (!user) {
     document.editable = false
