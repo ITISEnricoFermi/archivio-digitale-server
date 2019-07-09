@@ -101,8 +101,8 @@ const getCollectionsOnDocument = async ({ params: { id } }, res) => {
   res.status(200).json(collections)
 }
 
-const searchDocument = async (req, res) => {
-  const body = _.pick(req.body, ['fulltext', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility'])
+const searchDocument = async ({ body, user }, res) => {
+  body = _.pick(body, ['fulltext', 'type', 'faculty', 'subject', 'grade', 'section', 'visibility'])
 
   const empty = Object.values(body).every(el => !el)
 
@@ -112,8 +112,8 @@ const searchDocument = async (req, res) => {
     })
   }
 
-  let documents = await Document.searchDocuments(body, req.user)
-  documents.map(document => Document.isEditable(document, req.user))
+  let documents = await Document.searchDocuments(body, user)
+  documents.map(document => Document.isEditable(document, user))
 
   if (documents.length) {
     res.status(200).send(documents)

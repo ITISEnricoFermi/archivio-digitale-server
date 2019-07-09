@@ -117,12 +117,11 @@ const DocumentSchema = new mongoose.Schema({
 
 // TODO: rimuovere mimetype dai campi di Document
 DocumentSchema.statics.isEditable = function (document, user) {
-  const isAdmin = String(user.privileges._id) === 'admin'
-  const isAuthor = String(user._id) === String(document.author._id)
-
   if (!user) {
     document.editable = false
   } else {
+    const isAdmin = String(user.privileges._id) === 'admin'
+    const isAuthor = String(user._id) === String(document.author._id)
     document.editable = !!(isAdmin || isAuthor)
   }
   return document
