@@ -114,11 +114,15 @@ const searchUser = async ({ params: { query }, user }, res) => {
   res.status(200).json(users)
 }
 
-const getDocumentsOnVisibility = async ({ params: { id, visibility }, user }, res) => {
+const getDocumentsOnVisibility = async ({ params: { id, visibility }, query: { page = 1, perPage = 10 }, user }, res) => {
   const query = {
     author: id,
     visibility
   }
+
+  const skip = perPage * page - perPage
+  perPage = parseInt(perPage)
+  page = parseInt(page)
 
   if (user.privileges._id !== 'admin' && user._id !== id && visibility === 'materia') {
     query.subject = {
@@ -126,11 +130,16 @@ const getDocumentsOnVisibility = async ({ params: { id, visibility }, user }, re
     }
   }
 
-  let documents = await Document.find(query)
+  let [documents, count] = await Promise.all([Document.find(query)
     .sort({
       _id: 1
     })
-    .lean()
+    .limit(perPage)
+    .skip(skip)
+    .lean(),
+  Document.countDocuments(query)])
+
+  const pages = Math.ceil(count / perPage)
 
   documents.map(document => Document.isEditable(document, user))
 
@@ -140,13 +149,12 @@ const getDocumentsOnVisibility = async ({ params: { id, visibility }, user }, re
     })
   }
 
-  // for (let i = 0; i < documents.length; i++) {
-  //   if (String(documents[i].author._id) === String(req.user._id) || req.user.privileges._id === 'admin') {
-  //     documents[i].own = true
-  //   }
-  // }
-
-  res.status(200).json(documents)
+  res.status(200).json({
+    documents,
+    page,
+    pages,
+    total: count
+  })
 }
 
 const countDocumentsOnVisibility = async ({ params: { id, visibility } }, res) => {
