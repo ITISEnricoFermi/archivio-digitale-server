@@ -57,13 +57,8 @@
   },
   "devDependencies": {
     "chalk": "^2.4.2",
-<<<<<<< HEAD
-    "eslint": "^6.1.0",
-    "eslint-config-standard": "^13.0.1",
-=======
     "eslint": "^6.2.2",
     "eslint-config-standard": "^13.0.0",
->>>>>>> 32440e8eb8ae9e3fd1a2224ab284b071ec5df491
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.2.1",
