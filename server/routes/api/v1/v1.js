@@ -17,6 +17,7 @@ const collectionPermissions = require('./routes/collection_permissions')
 const signup = require('./routes/signup')
 const login = require('./routes/login')
 const logout = require('./routes/logout')
+const auth = require('./routes/auth')
 
 router.use('/admin', admin)
 router.use('/documents', documents)
@@ -33,5 +34,6 @@ router.use('/collection_permissions', collectionPermissions)
 router.use('/login', login)
 router.use('/signup', signup)
 router.use('/logout', logout)
+router.use('/auth', auth)
 
 module.exports = router

@@ -186,6 +186,11 @@ const patchPicOfUser = async ({ params: { id }, file }, res) => {
   }
 }
 
+const getKeys = async ({ params: { id } }, res) => {
+  const { keys } = await User.findById(id)
+  res.status(200).json(keys)
+}
+
 module.exports = {
   getUser,
   patchUser,
@@ -193,5 +198,6 @@ module.exports = {
   searchUser,
   getDocumentsOnVisibility,
   countDocumentsOnVisibility,
-  patchPicOfUser
+  patchPicOfUser,
+  getKeys
 }

@@ -92,6 +92,13 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     minlength: 1,
     default: 'pending'
+  },
+  keys: {
+    type: [{
+      type: Object,
+      unique: true
+    }],
+    required: false
   }
 })
 

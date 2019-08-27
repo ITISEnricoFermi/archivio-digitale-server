@@ -43,7 +43,7 @@ const checkDocumentById = param('id')
     }))
 
 const checkDocumentEditableById = param('id')
-  .custom((value, {req}) => Document.findById(value)
+  .custom((value, { req }) => Document.findById(value)
     .then(document => {
       if (!Document.isEditable(document, req.user)) {
         return Promise.reject(new Error('Non si detengono i privilegi necessari.'))
@@ -51,7 +51,7 @@ const checkDocumentEditableById = param('id')
     }))
 
 const checkDocumentReadableById = param('id')
-  .custom((value, {req}) => Document.findById(value)
+  .custom((value, { req }) => Document.findById(value)
     .then(document => {
       if (!Document.isReadable(document, req.user)) {
         return Promise.reject(new Error('Non si detengono i privilegi necessari.'))
@@ -68,7 +68,7 @@ const checkCollectionById = param('id')
     }))
 
 const checkCollectionEditableById = param('id')
-  .custom((value, {req}) => DocumentCollection.findById(value)
+  .custom((value, { req }) => DocumentCollection.findById(value)
     .then(collection => {
       if (!DocumentCollection.isEditable(collection, req.user)) {
         return Promise.reject(new Error('Non si detengono i privilegi necessari.'))
