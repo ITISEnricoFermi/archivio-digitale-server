@@ -15,7 +15,7 @@ const cookieParser = require('cookie-parser')
 // VARS
 const port = process.env.PORT || 3000
 const env = process.env.NODE_ENV || 'development'
-const {version, author} = require('../package.json')
+const { version, author } = require('../package.json')
 process.env.root = __dirname
 
 // Middleware
