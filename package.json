@@ -48,7 +48,7 @@
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",
     "passport-local": "^1.0.0",
-    "sharp": "^0.23.3",
+    "sharp": "^0.24.1",
     "socket.io": "^2.3.0",
     "tee-1": "^0.2.0",
     "through": "^2.3.8",
