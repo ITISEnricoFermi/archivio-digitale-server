@@ -40,7 +40,7 @@
     "helmet": "^3.21.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.13",
-    "minio": "^7.0.12",
+    "minio": "^7.0.14",
     "mmmagic": "^0.5.3",
     "mongoose": "^5.7.12",
     "morgan": "^1.9.1",
