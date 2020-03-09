@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 
 const {
   body,
-  sanitizeParam
+  param
 } = require('express-validator')
 
 const {
@@ -117,7 +117,7 @@ router.patch('/requests/:id',
   authenticate,
   logged,
   checkAdminById,
-  sanitizeParam('id')
+  param('id')
     .customSanitizer(value => {
       return ObjectId(value)
     }),
@@ -128,7 +128,7 @@ router.delete('/requests/:id',
   authenticate,
   logged,
   checkAdminById,
-  sanitizeParam('id')
+  param('id')
     .customSanitizer(value => {
       return ObjectId(value)
     }),
