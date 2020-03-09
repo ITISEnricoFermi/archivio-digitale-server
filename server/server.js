@@ -51,6 +51,7 @@ app.use((req, res, next) => {
   req.messages = []
   next()
 })
+
 // Routes
 app.use('/static', require('./routes/static'))
 app.use('/api', require('./routes/api/api'))
