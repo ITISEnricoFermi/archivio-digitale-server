@@ -130,7 +130,7 @@ const getDocumentsOnVisibility = async ({ params: { id, visibility }, query: { p
     }
   }
 
-  let [documents, count] = await Promise.all([Document.find(query)
+  const [documents, count] = await Promise.all([Document.find(query)
     .sort({
       _id: 1
     })

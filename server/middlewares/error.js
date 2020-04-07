@@ -1,11 +1,11 @@
-const error = (err, req, res, next) => {
+module.exports = () => (err, req, res, next) => {
   let message
   let code
 
   switch (err.name) {
     case 'ValidationError':
-      for (let field in err.errors) {
-        let e = err.errors[field]
+      for (const field in err.errors) {
+        const e = err.errors[field]
         message = e.message
         code = 400
       }
@@ -22,5 +22,3 @@ const error = (err, req, res, next) => {
   })
   next(err)
 }
-
-module.exports = () => error

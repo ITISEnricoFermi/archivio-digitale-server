@@ -9,7 +9,7 @@ module.exports = async () => {
   }).start()
   try {
     const messages = await loader
-    for (let message in messages) {
+    for (const message in messages) {
       spinner.succeed(chalk.green(messages[message]))
     }
     // console.log(chalk.yellow('\nIl database è stato popolato.\n'))

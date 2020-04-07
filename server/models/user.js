@@ -137,7 +137,7 @@ UserSchema.methods.generateAuthToken = async function () {
 UserSchema.statics.findByToken = function (token) {
   const User = this
   try {
-    let decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
     if (decoded) {
       return User.findById(decoded._id)
     }
@@ -164,7 +164,7 @@ UserSchema.statics.findByCredentials = async function (email, password) {
   const User = this
 
   try {
-    let user = await User.findOne({
+    const user = await User.findOne({
       email
     })
 

@@ -8,18 +8,15 @@ Promise.all([client.bucketExists('documents'), client.bucketExists('pics')])
     if (!pics) bucktes.push(client.makeBucket('pics'))
 
     if (!bucktes.length) {
-      throw new Error()
+      return console.log(yellow('I bucket di default sono già stati creati.'))
     }
 
     // Distinguere per ogni bucket
     return Promise.all(bucktes)
-      .then(([documents, pics]) => {
+      .then((buckets) => {
         console.log(green('Bucket di default creati con successo.'))
-      })
-      .catch(e => {
-        console.log(red('Impossibile creare i Bucket di default.'))
       })
   })
   .catch(e => {
-    console.log(yellow('I bucket di default sono già stati creati.'))
+    console.log(red('Impossibile creare i Bucket di default.'))
   })
